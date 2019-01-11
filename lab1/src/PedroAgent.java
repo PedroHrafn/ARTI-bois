@@ -34,6 +34,7 @@ public class PedroAgent implements Agent {
             if (percept.equals("BUMP")) {
                 if (facing == 1) {
                     yCurr--;
+                    // þetta á örugglega að vera yMax = yCurr;
                     yMax = yCurr - 1;
                 } else if (facing == 2) {
                     xCurr--;
