@@ -15,6 +15,8 @@ public class AlexAgent implements Agent {
     /*---------------------*/
     // Tells us if we have found all 4 walls, so we can calculate number of tiles
     private boolean setVisited = false;
+    // Start counting visited tiles
+    private boolean startVisited = false;
     // Returning to init position
     private boolean goHome = false;
     // Tiles visited
@@ -57,6 +59,7 @@ public class AlexAgent implements Agent {
         System.out.println("\nx max: " + xMax + ", y max: " + yMax);
         System.out.println("\nx min: " + xMin + ", y min: " + yMin);
         System.out.println("\nx curr: " + xCurr + ", y curr: " + yCurr);
+        System.out.println("\nVisited: " + visited + "\n");
         if (wallsFound == 4) {
             return spiral();
         }
@@ -66,12 +69,14 @@ public class AlexAgent implements Agent {
 
     private String spiral() {
         if (!setVisited) {
-            // (xMax/yMax + 2) ==> +1 offset, +1 counting from zero
+            // (xMax/yMax + 1) ==> +1 counting from zero
             // + yMax ==> Number of revisited tiles.
-            numOfTiles = (xMax + 2) * (yMax + 2) + yMax;
+            numOfTiles = (xMax + 1) * (yMax + 1) + yMax;
             setVisited = true;
         }
-        if (visited == numOfTiles && numOfTiles != 0 || goHome) {
+
+        System.out.println("\nNumOfTiles: " + numOfTiles + "\n");
+        if (visited == numOfTiles && numOfTiles != 0) {
             return "TURN_OFF";
         }
         if (facing == 1 && yCurr == yMax) {
@@ -90,7 +95,12 @@ public class AlexAgent implements Agent {
         return go();
     }
 
-    private String 
+    private String returnHome() {
+        // if(xCurr != 0) {
+        // if(xCurr < 0 ) {}
+        // }
+        return "";
+    }
 
     private String rotate(boolean clockwise) {
         if (clockwise) {
@@ -118,16 +128,19 @@ public class AlexAgent implements Agent {
         } else {
             xCurr--;
         }
-        visited++;
+        if (startVisited)
+            visited++;
         return "GO";
     }
 
     private String bump() {
+        boolean right = true;
         if (facing == 1) {
-            // TODO: Check if left side is wall, if not go to left wall and turn around
             yCurr--;
-            yMax = yCurr - 1;
+            yMax = yCurr;
         } else if (facing == 2) {
+            // Start counting visited tiles
+            startVisited = true;
             xCurr--;
             xMax = xCurr - 1;
         } else if (facing == 3) {
@@ -137,9 +150,10 @@ public class AlexAgent implements Agent {
             xCurr++;
             xMin = xCurr + 1;
         }
-        visited--;
+        if (startVisited && visited > 0)
+            visited--;
         wallsFound++;
-        return rotate(true);
+        return rotate(right);
     }
 
     public void reset() {
