@@ -96,9 +96,10 @@ public class AlexAgent implements Agent {
     }
 
     private String returnHome() {
-        // if(xCurr != 0) {
-        // if(xCurr < 0 ) {}
-        // }
+        if (xCurr != 0) {
+            if (xCurr < 0) {
+            }
+        }
         return "";
     }
 
