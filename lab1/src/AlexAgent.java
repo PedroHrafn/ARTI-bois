@@ -10,6 +10,8 @@ public class AlexAgent implements Agent {
     private int xMin;
     private int yMax;
     private int yMin;
+    private int width;
+    private int height;
 
     // Agent
     /*---------------------*/
@@ -69,14 +71,12 @@ public class AlexAgent implements Agent {
 
     private String spiral() {
         if (!setVisited) {
-            // (xMax/yMax + 1) ==> +1 counting from zero
-            // + yMax ==> Number of revisited tiles.
-            numOfTiles = (xMax + 1) * (yMax + 1) + yMax;
+            numOfTiles = width * height;
             setVisited = true;
         }
-
         System.out.println("\nNumOfTiles: " + numOfTiles + "\n");
-        if (visited == numOfTiles && numOfTiles != 0) {
+
+        if (visited >= numOfTiles && numOfTiles != 0) {
             return "TURN_OFF";
         }
         if (facing == 1 && yCurr == yMax) {
@@ -136,23 +136,34 @@ public class AlexAgent implements Agent {
 
     private String bump() {
         boolean right = true;
+        int OFFSET = 1;
         if (facing == 1) {
             yCurr--;
             yMax = yCurr;
         } else if (facing == 2) {
             // Start counting visited tiles
             startVisited = true;
+            // Count current tile as well
+            visited++;
             xCurr--;
-            xMax = xCurr - 1;
+            xMax = xCurr - OFFSET;
         } else if (facing == 3) {
             yCurr++;
-            yMin = yCurr + 1;
+            yMin = yCurr + OFFSET;
+            height = visited - OFFSET;
         } else {
             xCurr++;
-            xMin = xCurr + 1;
+            xMin = xCurr + OFFSET;
+            // add the one we are in
+            width = visited - height;
         }
-        if (startVisited && visited > 0)
+        System.out.println("\nWidth: " + width + "\n");
+        System.out.println("\nheight: " + height + "\n");
+        System.out.println("visited: " + visited);
+        if (startVisited && visited > 1) {
+            System.out.println("Bye one Visit !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
             visited--;
+        }
         wallsFound++;
         return rotate(right);
     }
