@@ -42,6 +42,8 @@ public class AlexAgent implements Agent {
             hasStarted = true;
             return "TURN_ON";
         }
+        if (goHome)
+            return returnHome();
         // The only things the agent can percieve is DIRT and BUMP
         for (String percept : percepts) {
             // We should only bump each side of the border once
@@ -77,7 +79,8 @@ public class AlexAgent implements Agent {
 
         System.out.println("\nNumOfTiles: " + numOfTiles + "\n");
         if (visited == numOfTiles && numOfTiles != 0) {
-            return "TURN_OFF";
+            goHome = true;
+            return returnHome();
         }
         if (facing == 1 && yCurr == yMax) {
             yMax--;
@@ -96,11 +99,33 @@ public class AlexAgent implements Agent {
     }
 
     private String returnHome() {
-        if (xCurr != 0) {
-            if (xCurr < 0) {
-            }
+        if (xCurr == 0 && yCurr == 0)
+            return "TURN_OFF";
+        if (facing == 1) {
+            if (yCurr < 0)
+                return go();
+            if (xCurr < 0)
+                return rotate(true);
+            return rotate(false);
+
+        } else if (facing == 2) {
+            if (xCurr < 0)
+                return go();
+            if (yCurr > 0)
+                return rotate(true);
+            return rotate(false);
+        } else if (facing == 3) {
+            if (yCurr > 0)
+                return go();
+            if (xCurr > 0)
+                return rotate(true);
+            return rotate(false);
         }
-        return "";
+        if (xCurr > 0)
+            return go();
+        if (yCurr < 0)
+            return rotate(true);
+        return rotate(false);
     }
 
     private String rotate(boolean clockwise) {
