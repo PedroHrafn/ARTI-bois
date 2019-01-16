@@ -2,7 +2,7 @@ import java.security.Principal;
 import java.util.Collection;
 import java.util.Random;
 
-public class AlexAgent implements Agent {
+public class OurAgent implements Agent {
     private boolean hasStarted = false;
     // Grid
     /*---------------------*/
@@ -27,7 +27,6 @@ public class AlexAgent implements Agent {
     private int numOfTiles = 0;
     // starts at 0 and increments to 4 when all borders are found
     private int wallsFound = 0;
-    //
 
     // NOTE: initial position of agent is set to 0 on both axis with the agent
     // facing north
@@ -36,7 +35,6 @@ public class AlexAgent implements Agent {
 
     // represents direction facing with int values from 1 to 4:
     // 1 = N , 2 = E, 3 = S, 4 = W
-    /// TODO: --- can be changed to enum?
     private int facing = 1;
 
     public String nextAction(Collection<String> percepts) {
@@ -52,6 +50,7 @@ public class AlexAgent implements Agent {
             // If we bump a border it means we didn't move so we correct
             // current position and also set the coordinate of the border
             if (percept.equals("BUMP")) {
+                System.out.println("\nHELLLO GUYS\n");
                 return bump();
                 // If we percieve DIRT then we SUCK it up
             } else if (percept.equals("DIRT")) {
@@ -60,10 +59,6 @@ public class AlexAgent implements Agent {
         }
         // If we have already found all borders, we check if we need to rotate
         // and change the borders of the box we move in order to make a spiral
-        System.out.println("\nx max: " + xMax + ", y max: " + yMax);
-        System.out.println("\nx min: " + xMin + ", y min: " + yMin);
-        System.out.println("\nx curr: " + xCurr + ", y curr: " + yCurr);
-        System.out.println("\nVisited: " + visited + "\n");
         if (wallsFound == 4) {
             return spiral();
         }
@@ -76,7 +71,6 @@ public class AlexAgent implements Agent {
             numOfTiles = width * height;
             setVisited = true;
         }
-        System.out.println("\nNumOfTiles: " + numOfTiles + "\n");
         if (visited == numOfTiles && numOfTiles != 0) {
             goHome = true;
             return returnHome();
@@ -181,11 +175,7 @@ public class AlexAgent implements Agent {
             // add the one we are in
             width = visited - height;
         }
-        System.out.println("\nWidth: " + width + "\n");
-        System.out.println("\nheight: " + height + "\n");
-        System.out.println("visited: " + visited);
         if (startVisited && visited > 1) {
-            System.out.println("Bye one Visit !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
             visited--;
         }
         wallsFound++;
