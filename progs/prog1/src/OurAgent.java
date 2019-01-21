@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 
 public class OurAgent implements Agent {
 	private Random random = new Random();
-
 	/*
 	 * init(Collection<String> percepts) is called once before you have to select
 	 * the first action. Use it to find a plan. Store the plan and just execute it
@@ -57,12 +56,12 @@ public class OurAgent implements Agent {
 							.matcher(percept);
 					if (m.matches()) {
 						if (m.group(1).equals("DIRT")) {
-							dirtX.add(Integer.parseInt(m.group(4)));
-							dirtY.add(Integer.parseInt(m.group(5)));
+							dirtX.add(Integer.parseInt(m.group(4)) - 1);
+							dirtY.add(Integer.parseInt(m.group(5)) - 1);
 							// System.out.println("dirt at " + m.group(4) + "," + m.group(5));
 						} else {
-							blockX.add(Integer.parseInt(m.group(4)));
-							blockY.add(Integer.parseInt(m.group(5)));
+							blockX.add(Integer.parseInt(m.group(4)) - 1);
+							blockY.add(Integer.parseInt(m.group(5)) - 1);
 							// System.out.println("obstacle at " + m.group(4) + "," + m.group(5));
 						}
 					}
@@ -79,12 +78,30 @@ public class OurAgent implements Agent {
 		System.out.println("current position: " + posX + ", " + posY);
 		System.out.println("orientation: " + orientation);
 		System.out.println("size of grid: " + sizeX + ", " + sizeY);
+
+		// ATH: grid[col][row]
+		char[][] grid = new char[sizeX][sizeY];
+		for (int x = 0; x < sizeX; x++) {
+			for (int y = 0; y < sizeY; y++) {
+				grid[x][y] = '0';
+			}
+		}
+
 		for (int i = 0; i < dirtX.size(); i++) {
 			System.out.println("dirt at: " + dirtX.get(i) + ", " + dirtY.get(i));
 		}
 		for (int i = 0; i < blockX.size(); i++) {
 			System.out.println("obstacle at: " + blockX.get(i) + ", " + blockY.get(i));
+			grid[blockX.get(i)][blockY.get(i)] = 'X';
 		}
+		for (int y = sizeY - 1; y >= 0; y--) {
+			for (int x = 0; x < sizeX; x++) {
+				System.out.print(grid[x][y]);
+			}
+			System.out.println();
+		}
+		// TODO: perform flood fill algorithm on grid and mark reachable points as 'R'
+		// TODO: loop dirts and check if it is reachable, remove if it isn't
 	}
 
 	public String nextAction(Collection<String> percepts) {
