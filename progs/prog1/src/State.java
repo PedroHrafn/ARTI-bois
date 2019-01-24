@@ -7,8 +7,7 @@ public class State {
     public int dirtsCleaned;
     char[][] grid;
 
-    public State(int posX, int posY, char orientation, char[][] grid)
-    {
+    public State(int posX, int posY, char orientation, char[][] grid) {
         this.posX = posX;
         this.posY = posY;
         this.orientation = orientation;
@@ -54,14 +53,14 @@ public class State {
         return tmp;
     }
 
-    private char getOriention(boolean right) {
+    private char getOriention(boolean clockwise) {
         if (orientation == 'N') {
-            return right ? 'E' : 'W';
+            return clockwise ? 'E' : 'W';
         } else if (orientation == 'E') {
-            return right ? 'S' : 'N';
+            return clockwise ? 'S' : 'N';
         } else if (orientation == 'S') {
-            return right ? 'W' : 'E';
+            return clockwise ? 'W' : 'E';
         }
-        return right ? 'N' : 'S';
+        return clockwise ? 'N' : 'S';
     }
 }
