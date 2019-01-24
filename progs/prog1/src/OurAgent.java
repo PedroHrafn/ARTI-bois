@@ -1,8 +1,10 @@
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.ArrayDeque;
 import java.util.Random;
+import java.util.Stack;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,7 +12,7 @@ import java.util.regex.Pattern;
 public class OurAgent implements Agent {
 	private Random random = new Random();
 	private int posX, posY, sizeX, sizeY;
-	private List<String> moves = new ArrayList<String>();
+	private Stack<String> moves = new Stack<String>();
 	private char[][] grid;
 	private char orientation = ' ';
 	int dirts = 0;
@@ -123,16 +125,16 @@ public class OurAgent implements Agent {
 		long startTime = System.nanoTime();
 		Node endNode = DFSearch();
 		long endTime = System.nanoTime();
+		moves.push("TURN_OFF");
 		while (endNode != null) {
 			System.out.println();
 			printGrid(endNode.state.grid);
-			moves.add(0, endNode.move);
+			moves.push(endNode.move);
 			endNode = endNode.parent;
 			System.out.println();
 			System.out.println();
 		}
-		moves.add(0, "TURN_ON");
-		moves.add("TURN_OFF");
+		System.out.println("search algorithm runtime in ms: " + (endTime - startTime) / 1000000);
 	}
 
 	private void floodFill(int x, int y) {
@@ -171,7 +173,7 @@ public class OurAgent implements Agent {
 		State rState = new State(posX, posY, orientation, grid, dirts);
 		Node root = new Node(null, rState, "TURN_ON");
 		queue.add(root);
-		TreeSet<String> visited = new TreeSet<String>();
+		HashSet<String> visited = new HashSet<String>();
 		while (!queue.isEmpty()) {
 			Node curNode = queue.pop();
 			State currState = curNode.state;
@@ -182,9 +184,9 @@ public class OurAgent implements Agent {
 			// System.out.println(currState.dirtsLeft);
 			if (!visited.contains(currState.getHash())) {
 				visited.add(currState.getHash());
-				//printGrid(currState.grid);
+				// printGrid(currState.grid);
 				for (String move : currState.availableMoves(sizeX, sizeY)) {
-					//System.out.println(move);
+					// System.out.println(move);
 					Node newNode = new Node(curNode, currState.execute(move), move);
 					queue.add(newNode);
 				}
@@ -225,12 +227,14 @@ public class OurAgent implements Agent {
 	}
 
 	public String nextAction(Collection<String> percepts) {
-		System.out.print("perceiving:");
-		for (String percept : percepts) {
-			System.out.print("'" + percept + "', ");
-		}
-		System.out.println("");
-		String[] actions = { "TURN_ON", "TURN_OFF", "TURN_RIGHT", "TURN_LEFT", "GO", "SUCK" };
-		return actions[random.nextInt(actions.length)];
+		String ret = moves.pop();
+		System.out.println(ret);
+		return ret;
+		/*
+		 * System.out.print("perceiving:"); for (String percept : percepts) {
+		 * System.out.print("'" + percept + "', "); } System.out.println(""); String[]
+		 * actions = { "TURN_ON", "TURN_OFF", "TURN_RIGHT", "TURN_LEFT", "GO", "SUCK" };
+		 * return actions[random.nextInt(actions.length)];
+		 */
 	}
 }
