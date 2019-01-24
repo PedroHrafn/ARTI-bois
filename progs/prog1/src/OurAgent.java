@@ -138,6 +138,8 @@ public class OurAgent implements Agent {
 		}
 	}
 
+	
+
 	public String nextAction(Collection<String> percepts) {
 		System.out.print("perceiving:");
 		for (String percept : percepts) {
