@@ -115,7 +115,7 @@ public class OurAgent implements Agent {
 				System.out.println("unreachable dirt at: " + pos.x + ", " + pos.y);
 				dirt.remove(i);
 			} else {
-				grid[pos.x][pos.y] = 'D';
+				grid[pos.x][pos.y] = 'd';
 			}
 		}
 		System.out.println();
