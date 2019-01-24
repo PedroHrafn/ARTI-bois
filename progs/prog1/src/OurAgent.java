@@ -121,7 +121,7 @@ public class OurAgent implements Agent {
 		grid[posX][posY] = orientation;
 		printGrid();
 		long startTime = System.nanoTime();
-		Node endNode = BFSearch();
+		Node endNode = DFSearch();
 		long endTime = System.nanoTime();
 		while (endNode != null) {
 			System.out.println();
@@ -192,6 +192,36 @@ public class OurAgent implements Agent {
 		}
 		System.out.println("BFS FAILED");
 		return new Node();
+	}
+
+	public void DFSRecurs(Node root, TreeSet<String> visited, Node endNode) {
+		State currState = root.state;
+		if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY == posY) {
+			System.out.println("found the end");
+			endNode.state = root.state;
+			endNode.parent = root.parent;
+			endNode.move = root.move;
+			return;
+		}
+		if (!visited.contains(currState.getHash())) {
+			visited.add(currState.getHash());
+			//printGrid(currState.grid);
+			for (String move : currState.availableMoves(sizeX, sizeY)) {
+				//System.out.println(move);
+				Node newNode = new Node(root, currState.execute(move), move);
+				DFSRecurs(newNode, visited, endNode);
+			}
+		}
+	}
+
+	public Node DFSearch() {
+		TreeSet<String> visited = new TreeSet<String>();
+		State rState = new State(posX, posY, orientation, grid, dirts);
+		Node root = new Node(null, rState, "TURN_ON");
+		Node endNode = new Node(null, rState, "TURN_ON");
+		DFSRecurs(root, visited, endNode);
+
+		return endNode;
 	}
 
 	public String nextAction(Collection<String> percepts) {
