@@ -7,7 +7,8 @@ import java.util.regex.Pattern;
 
 public class OurAgent implements Agent {
 	private Random random = new Random();
-
+	private int posX, posY, sizeX, sizeY;
+	private char[][] grid;
 	/*
 	 * init(Collection<String> percepts) is called once before you have to select
 	 * the first action. Use it to find a plan. Store the plan and just execute it
@@ -25,9 +26,8 @@ public class OurAgent implements Agent {
 		 * the x coordinate of the robots position. The robot is turned off initially,
 		 * so don't forget to turn it on.
 		 */
-		Pattern perceptNamePattern = Pattern.compile("\\(\\s*([^\\s]+).*");
-		int posX, posY, sizeX, sizeY;
 		posX = posY = sizeX = sizeY = 0;
+		Pattern perceptNamePattern = Pattern.compile("\\(\\s*([^\\s]+).*");
 		String orientation = "";
 
 		List<Position> dirt = new ArrayList<Position>();
@@ -81,7 +81,7 @@ public class OurAgent implements Agent {
 		System.out.println("size of grid: " + sizeX + ", " + sizeY);
 
 		// ATH: grid[col][row]
-		char[][] grid = new char[sizeX][sizeY];
+		grid = new char[sizeX][sizeY];
 		for (int x = 0; x < sizeX; x++) {
 			for (int y = 0; y < sizeY; y++) {
 				grid[x][y] = '0';
@@ -96,14 +96,46 @@ public class OurAgent implements Agent {
 			Position pos = block.get(i);
 			grid[pos.x][pos.y] = 'X';
 		}
+		// TODO: perform flood fill algorithm on grid and mark reachable points as 'R'
+		// TODO: loop dirts and check if it is reachable, remove if it isn't
+
+		// grid[3][2] = 'X';
+		printGrid();
+		floodFill(posX, posY);
+
+		for (int i = 0; i < dirt.size(); i++) {
+			Position pos = dirt.get(i);
+			if (grid[pos.x][pos.y] != 'R') {
+				System.out.println("unreachable dirt at: " + pos.x + ", " + pos.y);
+				dirt.remove(i);
+			} else {
+				grid[pos.x][pos.y] = 'D';
+			}
+		}
+		System.out.println();
+		grid[posX][posY] = orientation.charAt(0);
+		printGrid();
+	}
+
+	private void floodFill(int x, int y) {
+		if (x < 0 || y < 0 || x >= sizeX || y >= sizeY)
+			return;
+		if (grid[x][y] == '0') {
+			grid[x][y] = 'R';
+			floodFill(x + 1, y);
+			floodFill(x - 1, y);
+			floodFill(x, y + 1);
+			floodFill(x, y - 1);
+		}
+	}
+
+	public void printGrid() {
 		for (int y = sizeY - 1; y >= 0; y--) {
 			for (int x = 0; x < sizeX; x++) {
 				System.out.print(grid[x][y]);
 			}
 			System.out.println();
 		}
-		// TODO: perform flood fill algorithm on grid and mark reachable points as 'R'
-		// TODO: loop dirts and check if it is reachable, remove if it isn't
 	}
 
 	public String nextAction(Collection<String> percepts) {
