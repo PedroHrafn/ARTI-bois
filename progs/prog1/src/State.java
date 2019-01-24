@@ -4,7 +4,6 @@ import java.util.ArrayList;
 public class State {
     public int posX, posY, dirtsLeft;
     public char orientation;
-    public int dirtsCleaned;
     char[][] grid;
 
     public State(int posX, int posY, char orientation, char[][] grid, int dirts) {
@@ -27,7 +26,7 @@ public class State {
 
     public Collection<String> availableMoves(int sizeX, int sizeY) {
         Collection<String> moves = new ArrayList<String>();
-        if (grid[posX][posY] == 'D') {
+        if (Character.isLowerCase(grid[posX][posY])) {
             moves.add("SUCK");
         } else {
             moves.add("TURN_LEFT");
@@ -72,8 +71,10 @@ public class State {
             tmp.dirtsLeft--;
             System.out.println(dirtsLeft);
         }
-        if(tmp.grid[tmp.posX][tmp.posY] != 'D')
+        if (tmp.grid[tmp.posX][tmp.posY] != 'd')
             tmp.grid[tmp.posX][tmp.posY] = tmp.orientation;
+        else
+            tmp.grid[tmp.posX][tmp.posY] = Character.toLowerCase(orientation);
         return tmp;
     }
 
