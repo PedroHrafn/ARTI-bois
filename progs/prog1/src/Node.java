@@ -1,9 +1,9 @@
 public class Node {
 
-    private Node parent;
-    private State state;
-    private int cost;
-    private String move;
+    public Node parent;
+    public State state;
+    public int cost;
+    public String move;
 	
 	public Node(Node parent, State state, String move) {
         this.parent = parent;

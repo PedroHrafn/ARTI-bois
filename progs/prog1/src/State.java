@@ -24,6 +24,22 @@ public class State {
         if (grid[posX][posY] == 'D') {
             moves.add("SUCK");
         }
+        else {
+            moves.add("TURN_LEFT");
+            moves.add("TURN_RIGHT");
+            if(orientation == 'N' && posY != sizeY && grid[posX][posY+1] != 'X') {
+                moves.add("GO");
+            }
+            else if(orientation == 'E' && posX != sizeX && grid[posX+1][posY] != 'X') {
+                moves.add("GO");
+            }
+            else if(orientation == 'S' && posY != 0 && grid[posX][posY-1] != 'X') {
+                moves.add("GO");
+            }
+            else if(orientation == 'W' && posX != 0 && grid[posX-1][posY] != 'X') {
+                moves.add("GO");
+            }
+        }
 
         return moves;
     }
