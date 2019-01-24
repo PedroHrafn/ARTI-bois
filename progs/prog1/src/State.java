@@ -3,17 +3,17 @@ import java.util.ArrayList;
 
 public class State {
     public int posX, posY;
-    public boolean on;
-    public String orientation;
+    public char orientation;
     public int dirtsCleaned;
+    char[][] grid;
 
     public Collection<String> availableMoves(int sizeX, int sizeY) {
         Collection<String> moves = new ArrayList<String>();
-        if (!on) {
-            moves.add("TURN_ON");
-            return moves;
+        if (grid[posX][posY] == 'D') {
+            moves.add("SUCK");
         }
-        moves.add("GO");
+
+        // moves.add("GO");
         return moves;
     }
 
@@ -21,45 +21,40 @@ public class State {
         State tmp = new State();
         tmp.posX = this.posX;
         tmp.posY = this.posY;
-        tmp.on = this.on;
         tmp.orientation = this.orientation;
         tmp.dirtsCleaned = this.dirtsCleaned;
-        if (move.equals("TURN_ON")) {
-            tmp.on = true;
-        } else if (move.equals("GO")) {
-            if (orientation.equals("NORTH")) {
+        if (move.equals("GO")) {
+            if (orientation == 'N') {
                 tmp.posY++;
-            } else if (orientation.equals("EAST")) {
+            } else if (orientation == 'E') {
                 tmp.posX++;
-            } else if (orientation.equals("SOUTH")) {
+            } else if (orientation == 'S') {
                 tmp.posY--;
             } else {
                 tmp.posX--;
             }
         } else if (move.equals("TURN_LEFT")) {
-            if (orientation.equals("NORTH")) {
-                tmp.orientation = "WEST";
-            } else if (orientation.equals("EAST")) {
-                tmp.orientation = "NORTH";
-            } else if (orientation.equals("SOUTH")) {
-                tmp.orientation = "EAST";
+            if (orientation == 'N') {
+                tmp.orientation = 'W';
+            } else if (orientation == 'E') {
+                tmp.orientation = 'N';
+            } else if (orientation == 'S') {
+                tmp.orientation = 'E';
             } else {
-                tmp.orientation = "SOUTH";
+                tmp.orientation = 'S';
             }
         } else if (move.equals("TURN_RIGHT")) {
-            if (orientation.equals("NORTH")) {
-                tmp.orientation = "EAST";
-            } else if (orientation.equals("EAST")) {
-                tmp.orientation = "SOUTH";
-            } else if (orientation.equals("SOUTH")) {
-                tmp.orientation = "WEST";
+            if (orientation == 'N') {
+                tmp.orientation = 'E';
+            } else if (orientation == 'E') {
+                tmp.orientation = 'S';
+            } else if (orientation == 'S') {
+                tmp.orientation = 'W';
             } else {
-                tmp.orientation = "NORTH";
+                tmp.orientation = 'N';
             }
         } else if (move.equals("SUCK")) {
-            dirtsCleaned++;
-        } else {
-            tmp.on = false;
+            tmp.dirtsCleaned++;
         }
         return tmp;
     }
