@@ -4,7 +4,6 @@ import java.util.ArrayList;
 public class State {
     public int posX, posY, dirtsLeft;
     public char orientation;
-    public int dirtsCleaned;
     char[][] grid;
 
     public State(int posX, int posY, char orientation, char[][] grid, int dirts) {
