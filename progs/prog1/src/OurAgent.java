@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 public class OurAgent implements Agent {
 	private Random random = new Random();
 	private int posX, posY, sizeX, sizeY;
+	private List<String> moves = new ArrayList<String>();
 	private char[][] grid;
 	/*
 	 * init(Collection<String> percepts) is called once before you have to select
@@ -26,6 +27,7 @@ public class OurAgent implements Agent {
 		 * the x coordinate of the robots position. The robot is turned off initially,
 		 * so don't forget to turn it on.
 		 */
+		moves.add("TURN_ON");
 		posX = posY = sizeX = sizeY = 0;
 		Pattern perceptNamePattern = Pattern.compile("\\(\\s*([^\\s]+).*");
 		String orientation = "";
@@ -57,11 +59,13 @@ public class OurAgent implements Agent {
 							.matcher(percept);
 					if (m.matches()) {
 						if (m.group(1).equals("DIRT")) {
-							Position pos = new Position(Integer.parseInt(m.group(4)) - 1, Integer.parseInt(m.group(5)) - 1);
+							Position pos = new Position(Integer.parseInt(m.group(4)) - 1,
+									Integer.parseInt(m.group(5)) - 1);
 							dirt.add(pos);
 							// System.out.println("dirt at " + m.group(4) + "," + m.group(5));
 						} else {
-							Position pos = new Position(Integer.parseInt(m.group(4)) - 1, Integer.parseInt(m.group(5)) - 1);
+							Position pos = new Position(Integer.parseInt(m.group(4)) - 1,
+									Integer.parseInt(m.group(5)) - 1);
 							block.add(pos);
 							// System.out.println("obstacle at " + m.group(4) + "," + m.group(5));
 						}
@@ -96,10 +100,7 @@ public class OurAgent implements Agent {
 			Position pos = block.get(i);
 			grid[pos.x][pos.y] = 'X';
 		}
-		// TODO: perform flood fill algorithm on grid and mark reachable points as 'R'
-		// TODO: loop dirts and check if it is reachable, remove if it isn't
 
-		// grid[3][2] = 'X';
 		printGrid();
 		floodFill(posX, posY);
 
