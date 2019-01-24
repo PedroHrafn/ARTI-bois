@@ -148,7 +148,12 @@ public class OurAgent implements Agent {
 		queue.add(root);
 
 		while (!queue.isEmpty()) {
-
+			Node curNode = queue.pop();
+			
+			for (String move : curNode.state.availableMoves(sizeX, sizeY)) {
+				Node newNode = new Node(curNode, curNode.state.execute(move), move);
+				queue.add(newNode);
+			}
 		}
 	}
 
