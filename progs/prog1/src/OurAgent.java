@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.ArrayDeque;
 import java.util.Random;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,6 +13,8 @@ public class OurAgent implements Agent {
 	private List<String> moves = new ArrayList<String>();
 	private char[][] grid;
 	private char orientation = ' ';
+	int dirts = 0;
+
 	/*
 	 * init(Collection<String> percepts) is called once before you have to select
 	 * the first action. Use it to find a plan. Store the plan and just execute it
@@ -29,10 +32,8 @@ public class OurAgent implements Agent {
 		 * the x coordinate of the robots position. The robot is turned off initially,
 		 * so don't forget to turn it on.
 		 */
-		moves.add("TURN_ON");
 		posX = posY = sizeX = sizeY = 0;
 		Pattern perceptNamePattern = Pattern.compile("\\(\\s*([^\\s]+).*");
-		
 
 		List<Position> dirt = new ArrayList<Position>();
 
@@ -45,8 +46,8 @@ public class OurAgent implements Agent {
 				if (perceptName.equals("HOME")) {
 					Matcher m = Pattern.compile("\\(\\s*HOME\\s+([0-9]+)\\s+([0-9]+)\\s*\\)").matcher(percept);
 					if (m.matches()) {
-						posX = Integer.parseInt(m.group(1));
-						posY = Integer.parseInt(m.group(2));
+						posX = Integer.parseInt(m.group(1)) - 1;
+						posY = Integer.parseInt(m.group(2)) - 1;
 						// System.out.println("robot is at " + m.group(1) + "," + m.group(2));
 					}
 				} else if (perceptName.equals("SIZE")) {
@@ -108,7 +109,7 @@ public class OurAgent implements Agent {
 
 		for (int i = 0; i < dirt.size(); i++) {
 			Position pos = dirt.get(i);
-			if (grid[pos.x][pos.y] != 'R') {
+			if (grid[pos.x][pos.y] != ' ') {
 				System.out.println("unreachable dirt at: " + pos.x + ", " + pos.y);
 				dirt.remove(i);
 			} else {
@@ -116,15 +117,29 @@ public class OurAgent implements Agent {
 			}
 		}
 		System.out.println();
+		dirts = dirt.size();
 		grid[posX][posY] = orientation;
 		printGrid();
+		long startTime = System.nanoTime();
+		Node endNode = BFSearch();
+		long endTime = System.nanoTime();
+		while (endNode != null) {
+			System.out.println();
+			printGrid(endNode.state.grid);
+			moves.add(0, endNode.move);
+			endNode = endNode.parent;
+			System.out.println();
+			System.out.println();
+		}
+		moves.add(0, "TURN_ON");
+		moves.add("TURN_OFF");
 	}
 
 	private void floodFill(int x, int y) {
 		if (x < 0 || y < 0 || x >= sizeX || y >= sizeY)
 			return;
 		if (grid[x][y] == '0') {
-			grid[x][y] = 'R';
+			grid[x][y] = ' ';
 			floodFill(x + 1, y);
 			floodFill(x - 1, y);
 			floodFill(x, y + 1);
@@ -141,22 +156,43 @@ public class OurAgent implements Agent {
 		}
 	}
 
-	public void BFSearch() {
-		ArrayDeque<Node> queue = new ArrayDeque<Node>();
-		State rState = new State(posX, posY, orientation, grid);
-		Node root = new Node(null, rState, null);
-		queue.add(root);
-
-		while (!queue.isEmpty()) {
-			Node curNode = queue.pop();
-			
-			for (String move : curNode.state.availableMoves(sizeX, sizeY)) {
-				Node newNode = new Node(curNode, curNode.state.execute(move), move);
-				queue.add(newNode);
+	public void printGrid(char[][] ngrid) {
+		for (int y = sizeY - 1; y >= 0; y--) {
+			System.out.print(" ");
+			for (int x = 0; x < sizeX; x++) {
+				System.out.print(ngrid[x][y]);
 			}
+			System.out.println();
 		}
 	}
 
+	public Node BFSearch() {
+		ArrayDeque<Node> queue = new ArrayDeque<Node>();
+		State rState = new State(posX, posY, orientation, grid, dirts);
+		Node root = new Node(null, rState, "TURN_ON");
+		queue.add(root);
+		TreeSet<String> visited = new TreeSet<String>();
+		while (!queue.isEmpty()) {
+			Node curNode = queue.pop();
+			State currState = curNode.state;
+			if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY == posY) {
+				System.out.println("found the end");
+				return curNode;
+			}
+			// System.out.println(currState.dirtsLeft);
+			if (!visited.contains(currState.getHash())) {
+				visited.add(currState.getHash());
+				//printGrid(currState.grid);
+				for (String move : currState.availableMoves(sizeX, sizeY)) {
+					//System.out.println(move);
+					Node newNode = new Node(curNode, currState.execute(move), move);
+					queue.add(newNode);
+				}
+			}
+		}
+		System.out.println("BFS FAILED");
+		return new Node();
+	}
 
 	public String nextAction(Collection<String> percepts) {
 		System.out.print("perceiving:");
