@@ -1,6 +1,7 @@
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.ArrayDeque;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,6 +11,7 @@ public class OurAgent implements Agent {
 	private int posX, posY, sizeX, sizeY;
 	private List<String> moves = new ArrayList<String>();
 	private char[][] grid;
+	private char orientation = ' ';
 	/*
 	 * init(Collection<String> percepts) is called once before you have to select
 	 * the first action. Use it to find a plan. Store the plan and just execute it
@@ -30,7 +32,7 @@ public class OurAgent implements Agent {
 		moves.add("TURN_ON");
 		posX = posY = sizeX = sizeY = 0;
 		Pattern perceptNamePattern = Pattern.compile("\\(\\s*([^\\s]+).*");
-		String orientation = "";
+		
 
 		List<Position> dirt = new ArrayList<Position>();
 
@@ -71,7 +73,7 @@ public class OurAgent implements Agent {
 						}
 					}
 				} else if (perceptName.equals("ORIENTATION")) {
-					orientation = percept.substring(percept.indexOf(' ') + 1, percept.indexOf(')'));
+					orientation = percept.charAt(percept.indexOf(' ') + 1);
 					// System.out.println("Orientation: " + orientation);
 				} else {
 					System.out.println("other percept: " + percept);
@@ -114,7 +116,7 @@ public class OurAgent implements Agent {
 			}
 		}
 		System.out.println();
-		grid[posX][posY] = orientation.charAt(0);
+		grid[posX][posY] = orientation;
 		printGrid();
 	}
 
@@ -139,7 +141,17 @@ public class OurAgent implements Agent {
 		}
 	}
 
-	
+	public void BFSearch() {
+		ArrayDeque<Node> queue = new ArrayDeque<Node>();
+		State rState = new State(posX, posY, orientation, grid);
+		Node root = new Node(null, rState, null);
+		queue.add(root);
+
+		while (!queue.isEmpty()) {
+
+		}
+	}
+
 
 	public String nextAction(Collection<String> percepts) {
 		System.out.print("perceiving:");

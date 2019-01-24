@@ -7,6 +7,18 @@ public class State {
     public int dirtsCleaned;
     char[][] grid;
 
+    public State(int posX, int posY, char orientation, char[][] grid)
+    {
+        this.posX = posX;
+        this.posY = posY;
+        this.orientation = orientation;
+        this.grid = grid;
+    }
+
+    public State() {
+
+    }
+
     public Collection<String> availableMoves(int sizeX, int sizeY) {
         Collection<String> moves = new ArrayList<String>();
         if (grid[posX][posY] == 'D') {
@@ -42,7 +54,7 @@ public class State {
         return tmp;
     }
 
-    private char getOriention(bool right) {
+    private char getOriention(boolean right) {
         if (orientation == 'N') {
             return right ? 'E' : 'W';
         } else if (orientation == 'E') {
