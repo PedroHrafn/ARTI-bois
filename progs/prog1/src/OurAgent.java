@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 public class OurAgent implements Agent {
 	private Random random = new Random();
+
 	/*
 	 * init(Collection<String> percepts) is called once before you have to select
 	 * the first action. Use it to find a plan. Store the plan and just execute it
@@ -28,10 +29,10 @@ public class OurAgent implements Agent {
 		int posX, posY, sizeX, sizeY;
 		posX = posY = sizeX = sizeY = 0;
 		String orientation = "";
-		List<Integer> dirtX = new ArrayList<Integer>();
-		List<Integer> dirtY = new ArrayList<Integer>();
-		List<Integer> blockX = new ArrayList<Integer>();
-		List<Integer> blockY = new ArrayList<Integer>();
+
+		List<Position> dirt = new ArrayList<Position>();
+
+		List<Position> block = new ArrayList<Position>();
 		for (String percept : percepts) {
 			System.out.println("current percept:" + percept);
 			Matcher perceptNameMatcher = perceptNamePattern.matcher(percept);
@@ -56,12 +57,12 @@ public class OurAgent implements Agent {
 							.matcher(percept);
 					if (m.matches()) {
 						if (m.group(1).equals("DIRT")) {
-							dirtX.add(Integer.parseInt(m.group(4)) - 1);
-							dirtY.add(Integer.parseInt(m.group(5)) - 1);
+							Position pos = new Position(Integer.parseInt(m.group(4)) - 1, Integer.parseInt(m.group(5)) - 1);
+							dirt.add(pos);
 							// System.out.println("dirt at " + m.group(4) + "," + m.group(5));
 						} else {
-							blockX.add(Integer.parseInt(m.group(4)) - 1);
-							blockY.add(Integer.parseInt(m.group(5)) - 1);
+							Position pos = new Position(Integer.parseInt(m.group(4)) - 1, Integer.parseInt(m.group(5)) - 1);
+							block.add(pos);
 							// System.out.println("obstacle at " + m.group(4) + "," + m.group(5));
 						}
 					}
@@ -87,12 +88,13 @@ public class OurAgent implements Agent {
 			}
 		}
 
-		for (int i = 0; i < dirtX.size(); i++) {
-			System.out.println("dirt at: " + dirtX.get(i) + ", " + dirtY.get(i));
+		for (int i = 0; i < dirt.size(); i++) {
+			System.out.println("dirt at: " + dirt.get(i));
 		}
-		for (int i = 0; i < blockX.size(); i++) {
-			System.out.println("obstacle at: " + blockX.get(i) + ", " + blockY.get(i));
-			grid[blockX.get(i)][blockY.get(i)] = 'X';
+		for (int i = 0; i < block.size(); i++) {
+			System.out.println("obstacle at: " + block.get(i));
+			Position pos = block.get(i);
+			grid[pos.x][pos.y] = 'X';
 		}
 		for (int y = sizeY - 1; y >= 0; y--) {
 			for (int x = 0; x < sizeX; x++) {

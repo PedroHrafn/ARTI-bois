@@ -57,7 +57,7 @@ public class State {
                 tmp.orientation = "NORTH";
             }
         } else if (move.equals("SUCK")) {
-            dirtsCleaned++;
+            tmp.dirtsCleaned++;
         } else {
             tmp.on = false;
         }
