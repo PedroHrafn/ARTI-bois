@@ -100,10 +100,7 @@ public class OurAgent implements Agent {
 			Position pos = block.get(i);
 			grid[pos.x][pos.y] = 'X';
 		}
-		// TODO: perform flood fill algorithm on grid and mark reachable points as 'R'
-		// TODO: loop dirts and check if it is reachable, remove if it isn't
 
-		// grid[3][2] = 'X';
 		printGrid();
 		floodFill(posX, posY);
 

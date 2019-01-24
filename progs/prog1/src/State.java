@@ -13,7 +13,6 @@ public class State {
             moves.add("SUCK");
         }
 
-        // moves.add("GO");
         return moves;
     }
 
@@ -34,28 +33,23 @@ public class State {
                 tmp.posX--;
             }
         } else if (move.equals("TURN_LEFT")) {
-            if (orientation == 'N') {
-                tmp.orientation = 'W';
-            } else if (orientation == 'E') {
-                tmp.orientation = 'N';
-            } else if (orientation == 'S') {
-                tmp.orientation = 'E';
-            } else {
-                tmp.orientation = 'S';
-            }
+            tmp.orientation = getOriention(false);
         } else if (move.equals("TURN_RIGHT")) {
-            if (orientation == 'N') {
-                tmp.orientation = 'E';
-            } else if (orientation == 'E') {
-                tmp.orientation = 'S';
-            } else if (orientation == 'S') {
-                tmp.orientation = 'W';
-            } else {
-                tmp.orientation = 'N';
-            }
+            tmp.orientation = getOriention(true);
         } else if (move.equals("SUCK")) {
             tmp.dirtsCleaned++;
         }
         return tmp;
+    }
+
+    private char getOriention(bool right) {
+        if (orientation == 'N') {
+            return right ? 'E' : 'W';
+        } else if (orientation == 'E') {
+            return right ? 'S' : 'N';
+        } else if (orientation == 'S') {
+            return right ? 'W' : 'E';
+        }
+        return right ? 'N' : 'S';
     }
 }
