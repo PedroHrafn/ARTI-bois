@@ -3,6 +3,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.ArrayDeque;
+import java.util.PriorityQueue;
 import java.util.Random;
 import java.util.Stack;
 import java.util.TreeSet;
@@ -193,6 +194,35 @@ public class OurAgent implements Agent {
 			}
 		}
 		System.out.println("BFS FAILED");
+		return new Node();
+	}
+
+	public Node uniformSearchCost() {
+		PriorityQueue<Node> queue = new PriorityQueue<Node>();
+		State rState = new State(posX, posY, orientation, grid, dirts);
+		Node root = new Node(null, rState, "TURN_ON");
+		queue.add(root);
+		HashSet<String> visited = new HashSet<String>();
+		while (!queue.isEmpty()) {
+			Node curNode = queue.pop();
+			State currState = curNode.state;
+			if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY == posY) {
+				System.out.println("found the end");
+				return curNode;
+			}
+			// System.out.println(currState.dirtsLeft);
+			if (!visited.contains(currState.getHash())) {
+				visited.add(currState.getHash());
+				// printGrid(currState.grid);
+				for (String move : currState.availableMoves(sizeX, sizeY)) {
+					// System.out.println(move);
+					Node newNode = new Node(curNode, currState.execute(move), move);
+					queue.add(newNode);
+
+				}
+			}
+		}
+		System.out.println("USC FAILED");
 		return new Node();
 	}
 
