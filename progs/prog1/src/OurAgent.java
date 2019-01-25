@@ -1,4 +1,5 @@
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
@@ -124,7 +125,7 @@ public class OurAgent implements Agent {
 		grid[posX][posY] = orientation;
 		printGrid();
 		long startTime = System.nanoTime();
-		Node endNode = DFSearch();
+		Node endNode = uniformSearchCost();
 		long endTime = System.nanoTime();
 		moves.push("TURN_OFF");
 		while (endNode != null) {
@@ -198,13 +199,13 @@ public class OurAgent implements Agent {
 	}
 
 	public Node uniformSearchCost() {
-		PriorityQueue<Node> queue = new PriorityQueue<Node>();
+		PriorityQueue<Node> queue = new PriorityQueue<Node>(30, new MyComparator());
 		State rState = new State(posX, posY, orientation, grid, dirts);
 		Node root = new Node(null, rState, "TURN_ON");
 		queue.add(root);
 		HashSet<String> visited = new HashSet<String>();
 		while (!queue.isEmpty()) {
-			Node curNode = queue.pop();
+			Node curNode = queue.poll();
 			State currState = curNode.state;
 			if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY == posY) {
 				System.out.println("found the end");
@@ -226,6 +227,17 @@ public class OurAgent implements Agent {
 		return new Node();
 	}
 
+	class MyComparator implements Comparator<Node> {
+
+		public int compare(Node a, Node b) {
+			if (a.cost < b.cost)
+				return -1;
+			if (a.cost > b.cost)
+				return 1;
+			return 0;
+		}
+	}
+
 	public void DFSRecurs(Node root, TreeSet<String> visited, Node endNode) {
 		State currState = root.state;
 		if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY == posY) {
@@ -237,9 +249,9 @@ public class OurAgent implements Agent {
 		}
 		if (!visited.contains(currState.getHash())) {
 			visited.add(currState.getHash());
-			//printGrid(currState.grid);
+			// printGrid(currState.grid);
 			for (String move : currState.availableMoves(sizeX, sizeY)) {
-				//System.out.println(move);
+				// System.out.println(move);
 				Node newNode = new Node(root, currState.execute(move), move);
 				DFSRecurs(newNode, visited, endNode);
 			}
