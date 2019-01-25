@@ -19,4 +19,16 @@ public class Node {
 
     public Node() {
     }
+
+    @Override
+    public int compare(Node node1, Node node2)
+    {
+        if (node1.cost < node2.cost)
+            return -1;
+        if (node1.cost > node2.cost)
+            return 1;
+        if (node1.node < node2.node)
+            return -1;
+        return 0;
+    }
 }
