@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.ArrayDeque;
 import java.util.PriorityQueue;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.Stack;
 import java.util.TreeSet;
@@ -108,7 +109,7 @@ public class OurAgent implements Agent {
 			grid[pos.x][pos.y] = 'X';
 		}
 
-		printGrid();
+		// printGrid();
 		floodFill(posX, posY);
 
 		for (int i = 0; i < dirt.size(); i++) {
@@ -120,21 +121,18 @@ public class OurAgent implements Agent {
 				grid[pos.x][pos.y] = 'd';
 			}
 		}
-		System.out.println();
 		dirts = dirt.size();
 		grid[posX][posY] = orientation;
-		printGrid();
+		// printGrid();
 		long startTime = System.nanoTime();
 		Node endNode = uniformSearchCost();
 		long endTime = System.nanoTime();
 		moves.push("TURN_OFF");
 		while (endNode != null) {
 			System.out.println();
-			printGrid(endNode.state.grid);
+			// printGrid(endNode.state.grid);
 			moves.push(endNode.move);
 			endNode = endNode.parent;
-			System.out.println();
-			System.out.println();
 		}
 		System.out.println("search algorithm runtime in ms: " + (endTime - startTime) / 1000000);
 	}
@@ -199,19 +197,34 @@ public class OurAgent implements Agent {
 	}
 
 	public Node uniformSearchCost() {
-		PriorityQueue<Node> queue = new PriorityQueue<Node>(30, new MyComparator());
+		// 30 is the initial capacity of the queue
+		PriorityQueue<Node> queue = new PriorityQueue<Node>(30, new NodeComparator());
+		HashSet<String> visited = new HashSet<String>();
 		State rState = new State(posX, posY, orientation, grid, dirts);
 		Node root = new Node(null, rState, "TURN_ON");
+		Node endNode = new Node();
+
 		queue.add(root);
-		HashSet<String> visited = new HashSet<String>();
+
 		while (!queue.isEmpty()) {
 			Node curNode = queue.poll();
+
+			// If the rest of the queue has a greater cost than the
+			// shortest current path, the scp is optimal
+			if (endNode.cost != 0 && queue.peek().cost > endNode.cost) {
+				break;
+			}
+
 			State currState = curNode.state;
 			if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY == posY) {
+				System.out.println("Endnode cost: " + endNode.cost);
+				// If this path is shorter return it instead.
+				if (curNode.cost < endNode.cost || endNode.cost == 0)
+					endNode = curNode;
+
 				System.out.println("found the end");
-				return curNode;
 			}
-			// System.out.println(currState.dirtsLeft);
+
 			if (!visited.contains(currState.getHash())) {
 				visited.add(currState.getHash());
 				// printGrid(currState.grid);
@@ -224,10 +237,10 @@ public class OurAgent implements Agent {
 			}
 		}
 		System.out.println("USC FAILED");
-		return new Node();
+		return endNode;
 	}
 
-	class MyComparator implements Comparator<Node> {
+	class NodeComparator implements Comparator<Node> {
 
 		public int compare(Node a, Node b) {
 			if (a.cost < b.cost)

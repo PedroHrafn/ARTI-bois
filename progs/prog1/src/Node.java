@@ -18,5 +18,13 @@ public class Node {
     }
 
     public Node() {
+        this.parent = null;
+        this.state = null;
+        this.move = "";
+        this.cost = 0;
+    }
+
+    public String toString() {
+        return "" + this.cost;
     }
 }
