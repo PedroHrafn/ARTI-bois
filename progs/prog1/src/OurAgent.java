@@ -1,5 +1,4 @@
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
@@ -13,10 +12,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class OurAgent implements Agent {
-	private Random random = new Random();
 	private int posX, posY, sizeX, sizeY;
 	private Stack<String> moves = new Stack<String>();
 	private char[][] grid;
+	private List<Position> dirt = new ArrayList<Position>();
+	private List<Position> block = new ArrayList<Position>();
 	private char orientation = ' ';
 	int dirts = 0;
 
@@ -38,60 +38,8 @@ public class OurAgent implements Agent {
 		 * so don't forget to turn it on.
 		 */
 		posX = posY = sizeX = sizeY = 0;
-		Pattern perceptNamePattern = Pattern.compile("\\(\\s*([^\\s]+).*");
 
-		List<Position> dirt = new ArrayList<Position>();
-
-		List<Position> block = new ArrayList<Position>();
-		for (String percept : percepts) {
-			System.out.println("current percept:" + percept);
-			Matcher perceptNameMatcher = perceptNamePattern.matcher(percept);
-			if (perceptNameMatcher.matches()) {
-				String perceptName = perceptNameMatcher.group(1);
-				if (perceptName.equals("HOME")) {
-					Matcher m = Pattern.compile("\\(\\s*HOME\\s+([0-9]+)\\s+([0-9]+)\\s*\\)").matcher(percept);
-					if (m.matches()) {
-						posX = Integer.parseInt(m.group(1)) - 1;
-						posY = Integer.parseInt(m.group(2)) - 1;
-						// System.out.println("robot is at " + m.group(1) + "," + m.group(2));
-					}
-				} else if (perceptName.equals("SIZE")) {
-					Matcher m = Pattern.compile("\\(\\s*SIZE\\s+([0-9]+)\\s+([0-9]+)\\s*\\)").matcher(percept);
-					if (m.matches()) {
-						sizeX = Integer.parseInt(m.group(1));
-						sizeY = Integer.parseInt(m.group(2));
-						// System.out.println("size of grid is " + m.group(1) + "," + m.group(2));
-					}
-				} else if (perceptName.equals("AT")) {
-					Matcher m = Pattern.compile("\\(\\s*AT\\s+((DIRT)|(OBSTACLE))\\s+([0-9]+)\\s+([0-9]+)\\s*\\)")
-							.matcher(percept);
-					if (m.matches()) {
-						if (m.group(1).equals("DIRT")) {
-							Position pos = new Position(Integer.parseInt(m.group(4)) - 1,
-									Integer.parseInt(m.group(5)) - 1);
-							dirt.add(pos);
-							// System.out.println("dirt at " + m.group(4) + "," + m.group(5));
-						} else {
-							Position pos = new Position(Integer.parseInt(m.group(4)) - 1,
-									Integer.parseInt(m.group(5)) - 1);
-							block.add(pos);
-							// System.out.println("obstacle at " + m.group(4) + "," + m.group(5));
-						}
-					}
-				} else if (perceptName.equals("ORIENTATION")) {
-					orientation = percept.charAt(percept.indexOf(' ') + 1);
-					// System.out.println("Orientation: " + orientation);
-				} else {
-					System.out.println("other percept: " + percept);
-				}
-			} else {
-				System.err.println("strange percept that does not match pattern: " + percept);
-			}
-		}
-		System.out.println("current position: " + posX + ", " + posY);
-		System.out.println("orientation: " + orientation);
-		System.out.println("size of grid: " + sizeX + ", " + sizeY);
-
+		constructGrid(percepts);
 		// ATH: grid[col][row]
 		grid = new char[sizeX][sizeY];
 		for (int x = 0; x < sizeX; x++) {
@@ -100,16 +48,22 @@ public class OurAgent implements Agent {
 			}
 		}
 
+		System.out.println("DIRTS: " + dirt);
+
+		// FIXME: MUNA AÐ TAKA ÚT FYRIR SKIL
 		for (int i = 0; i < dirt.size(); i++) {
 			System.out.println("dirt at: " + dirt.get(i));
 		}
+
+		System.out.println("Hello2");
 		for (int i = 0; i < block.size(); i++) {
 			System.out.println("obstacle at: " + block.get(i));
 			Position pos = block.get(i);
 			grid[pos.x][pos.y] = 'X';
 		}
 
-		// printGrid();
+		System.out.println("Hello3");
+		printGrid();
 		floodFill(posX, posY);
 
 		for (int i = 0; i < dirt.size(); i++) {
@@ -147,6 +101,60 @@ public class OurAgent implements Agent {
 			floodFill(x, y + 1);
 			floodFill(x, y - 1);
 		}
+	}
+
+	private void constructGrid(Collection<String> percepts) {
+		Pattern perceptNamePattern = Pattern.compile("\\(\\s*([^\\s]+).*");
+
+		for (String percept : percepts) {
+			System.out.println("current percept:" + percept);
+			Matcher perceptNameMatcher = perceptNamePattern.matcher(percept);
+			if (perceptNameMatcher.matches()) {
+				String perceptName = perceptNameMatcher.group(1);
+				if (perceptName.equals("HOME")) {
+					Matcher m = Pattern.compile("\\(\\s*HOME\\s+([0-9]+)\\s+([0-9]+)\\s*\\)").matcher(percept);
+					if (m.matches()) {
+						posX = Integer.parseInt(m.group(1)) - 1;
+						posY = Integer.parseInt(m.group(2)) - 1;
+						System.out.println("robot is at " + m.group(1) + "," + m.group(2));
+					}
+				} else if (perceptName.equals("SIZE")) {
+					Matcher m = Pattern.compile("\\(\\s*SIZE\\s+([0-9]+)\\s+([0-9]+)\\s*\\)").matcher(percept);
+					if (m.matches()) {
+						sizeX = Integer.parseInt(m.group(1));
+						sizeY = Integer.parseInt(m.group(2));
+						System.out.println("size of grid is " + m.group(1) + "," + m.group(2));
+					}
+				} else if (perceptName.equals("AT")) {
+					Matcher m = Pattern.compile("\\(\\s*AT\\s+((DIRT)|(OBSTACLE))\\s+([0-9]+)\\s+([0-9]+)\\s*\\)")
+							.matcher(percept);
+					if (m.matches()) {
+						if (m.group(1).equals("DIRT")) {
+							Position pos = new Position(Integer.parseInt(m.group(4)) - 1,
+									Integer.parseInt(m.group(5)) - 1);
+							dirt.add(pos);
+							System.out.println("dirt at " + m.group(4) + "," + m.group(5));
+						} else {
+							Position pos = new Position(Integer.parseInt(m.group(4)) - 1,
+									Integer.parseInt(m.group(5)) - 1);
+							block.add(pos);
+							System.out.println("obstacle at " + m.group(4) + "," + m.group(5));
+						}
+					}
+				} else if (perceptName.equals("ORIENTATION")) {
+					orientation = percept.charAt(percept.indexOf(' ') + 1);
+					System.out.println("Orientation: " + orientation);
+				} else {
+					System.out.println("other percept: " + percept);
+				}
+			} else {
+				System.err.println("strange percept that does not match pattern: " + percept);
+			}
+		}
+		System.out.println("current position: " + posX + ", " + posY);
+		System.out.println("orientation: " + orientation);
+		System.out.println("size of grid: " + sizeX + ", " + sizeY);
+
 	}
 
 	public void printGrid() {
@@ -211,7 +219,7 @@ public class OurAgent implements Agent {
 
 			// If the rest of the queue has a greater cost than the
 			// shortest current path, the scp is optimal
-			if (endNode.cost != 0 && queue.peek().cost > endNode.cost) {
+			if (endNode.cost != 0 && !queue.isEmpty() && queue.peek().cost > endNode.cost) {
 				break;
 			}
 
@@ -227,9 +235,7 @@ public class OurAgent implements Agent {
 
 			if (!visited.contains(currState.getHash())) {
 				visited.add(currState.getHash());
-				// printGrid(currState.grid);
 				for (String move : currState.availableMoves(sizeX, sizeY)) {
-					// System.out.println(move);
 					Node newNode = new Node(curNode, currState.execute(move), move);
 					queue.add(newNode);
 
@@ -238,17 +244,6 @@ public class OurAgent implements Agent {
 		}
 		System.out.println("USC FAILED");
 		return endNode;
-	}
-
-	class NodeComparator implements Comparator<Node> {
-
-		public int compare(Node a, Node b) {
-			if (a.cost < b.cost)
-				return -1;
-			if (a.cost > b.cost)
-				return 1;
-			return 0;
-		}
 	}
 
 	public void DFSRecurs(Node root, TreeSet<String> visited, Node endNode) {

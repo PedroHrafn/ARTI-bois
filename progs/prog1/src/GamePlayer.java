@@ -105,6 +105,7 @@ public class GamePlayer extends NanoHTTPD {
 			// System.err.println("found: " + fluent);
 			result.add(fluent);
 		}
+		System.out.println("----------------H:;;;;;;;;;;;;;;;;;;;;;;");
 		return result;
 	}
 
