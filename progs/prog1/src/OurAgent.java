@@ -48,28 +48,24 @@ public class OurAgent implements Agent {
 			}
 		}
 
-		System.out.println("DIRTS: " + dirt);
-
 		// FIXME: MUNA AÐ TAKA ÚT FYRIR SKIL
 		for (int i = 0; i < dirt.size(); i++) {
 			System.out.println("dirt at: " + dirt.get(i));
 		}
 
-		System.out.println("Hello2");
 		for (int i = 0; i < block.size(); i++) {
 			System.out.println("obstacle at: " + block.get(i));
 			Position pos = block.get(i);
 			grid[pos.x][pos.y] = 'X';
 		}
 
-		System.out.println("Hello3");
 		printGrid();
 		floodFill(posX, posY);
 
 		for (int i = 0; i < dirt.size(); i++) {
 			Position pos = dirt.get(i);
 			if (grid[pos.x][pos.y] != ' ') {
-				System.out.println("unreachable dirt at: " + pos.x + ", " + pos.y);
+				// System.out.println("unreachable dirt at: " + pos.x + ", " + pos.y);
 				dirt.remove(i);
 			} else {
 				grid[pos.x][pos.y] = 'd';
@@ -88,7 +84,8 @@ public class OurAgent implements Agent {
 			moves.push(endNode.move);
 			endNode = endNode.parent;
 		}
-		System.out.println("search algorithm runtime in ms: " + (endTime - startTime) / 1000000);
+		// System.out.println("search algorithm runtime in ms: " + (endTime - startTime)
+		// / 1000000);
 	}
 
 	private void floodFill(int x, int y) {
@@ -107,7 +104,7 @@ public class OurAgent implements Agent {
 		Pattern perceptNamePattern = Pattern.compile("\\(\\s*([^\\s]+).*");
 
 		for (String percept : percepts) {
-			System.out.println("current percept:" + percept);
+			// System.out.println("current percept:" + percept);
 			Matcher perceptNameMatcher = perceptNamePattern.matcher(percept);
 			if (perceptNameMatcher.matches()) {
 				String perceptName = perceptNameMatcher.group(1);
@@ -116,14 +113,14 @@ public class OurAgent implements Agent {
 					if (m.matches()) {
 						posX = Integer.parseInt(m.group(1)) - 1;
 						posY = Integer.parseInt(m.group(2)) - 1;
-						System.out.println("robot is at " + m.group(1) + "," + m.group(2));
+						// System.out.println("robot is at " + m.group(1) + "," + m.group(2));
 					}
 				} else if (perceptName.equals("SIZE")) {
 					Matcher m = Pattern.compile("\\(\\s*SIZE\\s+([0-9]+)\\s+([0-9]+)\\s*\\)").matcher(percept);
 					if (m.matches()) {
 						sizeX = Integer.parseInt(m.group(1));
 						sizeY = Integer.parseInt(m.group(2));
-						System.out.println("size of grid is " + m.group(1) + "," + m.group(2));
+						// System.out.println("size of grid is " + m.group(1) + "," + m.group(2));
 					}
 				} else if (perceptName.equals("AT")) {
 					Matcher m = Pattern.compile("\\(\\s*AT\\s+((DIRT)|(OBSTACLE))\\s+([0-9]+)\\s+([0-9]+)\\s*\\)")
@@ -133,27 +130,27 @@ public class OurAgent implements Agent {
 							Position pos = new Position(Integer.parseInt(m.group(4)) - 1,
 									Integer.parseInt(m.group(5)) - 1);
 							dirt.add(pos);
-							System.out.println("dirt at " + m.group(4) + "," + m.group(5));
+							// System.out.println("dirt at " + m.group(4) + "," + m.group(5));
 						} else {
 							Position pos = new Position(Integer.parseInt(m.group(4)) - 1,
 									Integer.parseInt(m.group(5)) - 1);
 							block.add(pos);
-							System.out.println("obstacle at " + m.group(4) + "," + m.group(5));
+							// System.out.println("obstacle at " + m.group(4) + "," + m.group(5));
 						}
 					}
 				} else if (perceptName.equals("ORIENTATION")) {
 					orientation = percept.charAt(percept.indexOf(' ') + 1);
-					System.out.println("Orientation: " + orientation);
+					// System.out.println("Orientation: " + orientation);
 				} else {
-					System.out.println("other percept: " + percept);
+					// System.out.println("other percept: " + percept);
 				}
 			} else {
 				System.err.println("strange percept that does not match pattern: " + percept);
 			}
 		}
-		System.out.println("current position: " + posX + ", " + posY);
-		System.out.println("orientation: " + orientation);
-		System.out.println("size of grid: " + sizeX + ", " + sizeY);
+		// System.out.println("current position: " + posX + ", " + posY);
+		// System.out.println("orientation: " + orientation);
+		// System.out.println("size of grid: " + sizeX + ", " + sizeY);
 
 	}
 
