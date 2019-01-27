@@ -176,7 +176,7 @@ public class OurAgent implements Agent {
 	public Node BFSearch() {
 		ArrayDeque<Node> queue = new ArrayDeque<Node>();
 		State rState = new State(posX, posY, orientation, grid, dirts);
-		Node root = new Node(null, rState, "TURN_ON");
+		Node root = new Node(null, rState, "TURN_ON", false);
 		queue.add(root);
 		HashSet<String> visited = new HashSet<String>();
 		while (!queue.isEmpty()) {
@@ -222,7 +222,6 @@ public class OurAgent implements Agent {
 
 			State currState = curNode.state;
 			if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY == posY) {
-				System.out.println("Endnode cost: " + endNode.cost);
 				// If this path is shorter return it instead.
 				if (curNode.cost < endNode.cost || endNode.cost == 0)
 					endNode = curNode;
