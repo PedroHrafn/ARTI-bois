@@ -10,17 +10,22 @@ public class Node {
         this.state = state;
         this.move = move;
 
-        // TODO: Alter cost so that suck + 5, go +1 and so on.
-        int cost = 1;
         if (parent == null) {
             this.cost = 0;
         } else {
-            this.cost = astar ? parent.cost + cost + heuristic() : parent.cost + cost;
+            this.cost = parent.cost + cost(astar, move, state);
         }
     }
 
-    private int heuristic() {
-        return 0;
+    private int cost(boolean astar, String move, State state) {
+        if (astar && (move == "GO" || move == "TURN_RIGHT" || move == "TURN_LEFT")) {
+            return 1 + heuristic(move);
+        } else if (move == "SUCK") {
+            return 5;
+        } else if (move == "TURN_ON") {
+            return 
+        }
+        return 1;
     }
 
     public Node() {
