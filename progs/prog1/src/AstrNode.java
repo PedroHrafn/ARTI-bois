@@ -71,6 +71,9 @@ public class AstrNode {
         }
     }
 
+    // Our heuristic is the square of the dirts plus the distanse
+    // to the square plus the distance from square to start point
+    // plus 2 for each dirt left
     private int heuristic(int startX, int startY) {
         int dirtsLeft = state.dirtsLeft;
         if (dirtsLeft != 0) {

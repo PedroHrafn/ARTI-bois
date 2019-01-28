@@ -19,6 +19,7 @@ public class OurAgent implements Agent {
 	private CopyOnWriteArrayList<Position> dirtList;
 	private List<Position> block;
 	private char orientation = ' ';
+	int expansions;
 	int dirts = 0;
 
 	/*
@@ -42,6 +43,7 @@ public class OurAgent implements Agent {
 		dirtList = new CopyOnWriteArrayList<Position>();
 		block = new ArrayList<Position>();
 		moves = new Stack<String>();
+		expansions = 0;
 
 		constructGrid(percepts);
 		// ATH: grid[col][row]
@@ -198,7 +200,7 @@ public class OurAgent implements Agent {
 		while (!queue.isEmpty()) {
 			Node curNode = queue.pop();
 			State currState = curNode.state;
-
+			expansions++;
 			for (String move : currState.availableMoves(sizeX, sizeY)) {
 				Node newNode = new Node(curNode, currState.execute(move), move);
 				State newState = newNode.state;
@@ -223,6 +225,7 @@ public class OurAgent implements Agent {
 		HashSet<String> visited = new HashSet<String>();
 		while (!queue.isEmpty()) {
 			AstrNode curNode = queue.poll();
+			expansions++;
 			State currState = curNode.state;
 			// System.out.println("ey: " + curNode.value + " , " + curNode.cost);
 			if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY == posY) {
@@ -253,6 +256,7 @@ public class OurAgent implements Agent {
 		HashSet<String> visited = new HashSet<String>();
 		while (!queue.isEmpty()) {
 			Node curNode = queue.poll();
+			expansions++;
 			State currState = curNode.state;
 			if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY == posY) {
 				System.out.println("found the end");
@@ -324,8 +328,6 @@ public class OurAgent implements Agent {
 	}
 
 	public String nextAction(Collection<String> percepts) {
-		String ret = moves.pop();
-		System.out.println(ret);
-		return ret;
+		return moves.pop();
 	}
 }
