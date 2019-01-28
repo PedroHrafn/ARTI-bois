@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.Stack;
 import java.util.TreeSet;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,7 +16,7 @@ public class OurAgent implements Agent {
 	private int posX, posY, sizeX, sizeY;
 	private Stack<String> moves;
 	private char[][] grid;
-	private List<Position> dirt;
+	private CopyOnWriteArrayList<Position> dirtList;
 	private List<Position> block;
 	private char orientation = ' ';
 	int dirts = 0;
@@ -38,7 +39,7 @@ public class OurAgent implements Agent {
 		 * so don't forget to turn it on.
 		 */
 		posX = posY = sizeX = sizeY = 0;
-		dirt = new ArrayList<Position>();
+		dirtList = new CopyOnWriteArrayList<Position>();
 		block = new ArrayList<Position>();
 		moves = new Stack<String>();
 
@@ -52,8 +53,8 @@ public class OurAgent implements Agent {
 		}
 
 		// FIXME: MUNA AÐ TAKA ÚT FYRIR SKIL
-		for (int i = 0; i < dirt.size(); i++) {
-			System.out.println("dirt at: " + dirt.get(i));
+		for (int i = 0; i < dirtList.size(); i++) {
+			System.out.println("dirt at: " + dirtList.get(i));
 		}
 
 		for (int i = 0; i < block.size(); i++) {
@@ -62,27 +63,41 @@ public class OurAgent implements Agent {
 			grid[pos.x][pos.y] = 'X';
 		}
 
-		printGrid();
+		// printGrid();
 		floodFill(posX, posY);
-
-		for (int i = 0; i < dirt.size(); i++) {
-			Position pos = dirt.get(i);
+		int DxMin = sizeX;
+		int DxMax = 0;
+		int DyMin = sizeY;
+		int DyMax = 0;
+		for (int i = 0; i < dirtList.size(); i++) {
+			Position pos = dirtList.get(i);
 			if (grid[pos.x][pos.y] != ' ') {
-				// System.out.println("unreachable dirt at: " + pos.x + ", " + pos.y);
-				dirt.remove(i);
+				System.out.println("unreachable dirt at: " + pos.x + ", " + pos.y);
+				dirtList.remove(i);
 			} else {
+				if (pos.x > DxMax)
+					DxMax = pos.x;
+				if (pos.x < DxMin)
+					DxMin = posX;
+				if (pos.y > DyMax)
+					DyMax = pos.y;
+				if (pos.y < DyMin)
+					DyMin = pos.y;
 				grid[pos.x][pos.y] = 'd';
 			}
 		}
-		dirts = dirt.size();
-		grid[posX][posY] = orientation;
-		// printGrid();
+		System.out.println("x min: " + DxMin + ", max: " + DxMax + ", ymin: " + DyMin + ", max: " + DyMax);
+
+		dirts = dirtList.size();
+		grid[posX][posY] = (grid[posX][posY] != 'd') ? orientation : Character.toLowerCase(orientation);
+		printGrid();
 		long startTime = System.nanoTime();
-		Node endNode = BFSearch();
+		// Node endNode = uniformSearchCost();
+		AstrNode endNode = AstrSearch(DxMin, DxMax, DyMin, DyMax, dirtList);
 		long endTime = System.nanoTime();
 		moves.push("TURN_OFF");
 		while (endNode != null) {
-			System.out.println();
+			// System.out.println();
 			// printGrid(endNode.state.grid);
 			moves.push(endNode.move);
 			endNode = endNode.parent;
@@ -131,7 +146,7 @@ public class OurAgent implements Agent {
 						if (m.group(1).equals("DIRT")) {
 							Position pos = new Position(Integer.parseInt(m.group(4)) - 1,
 									Integer.parseInt(m.group(5)) - 1);
-							dirt.add(pos);
+							dirtList.add(pos);
 							// System.out.println("dirt at " + m.group(4) + "," + m.group(5));
 						} else {
 							Position pos = new Position(Integer.parseInt(m.group(4)) - 1,
@@ -201,80 +216,63 @@ public class OurAgent implements Agent {
 		return new Node();
 	}
 
-	public Node Astr() {
-		// 30 is the initial capacity of the queue
-		PriorityQueue<Node> queue = new PriorityQueue<Node>(30, (a, b) -> a.cost - b.cost);
-		HashSet<String> visited = new HashSet<String>();
+	public AstrNode AstrSearch(int DxMin, int DxMax, int DyMin, int DyMax, CopyOnWriteArrayList<Position> dirtList) {
+		PriorityQueue<AstrNode> queue = new PriorityQueue<AstrNode>(30, (a, b) -> a.value - b.value);
 		State rState = new State(posX, posY, orientation, grid, dirts);
-		Node root = new Node(null, rState, "TURN_ON");
-		Node endNode = new Node();
-
+		AstrNode root = new AstrNode(null, rState, "TURN_ON", DxMin, DxMax, DyMin, DyMax, dirtList, posX, posY);
 		queue.add(root);
-
+		HashSet<String> visited = new HashSet<String>();
 		while (!queue.isEmpty()) {
-			Node curNode = queue.poll();
-
-			// If the rest of the queue has a greater cost than the
-			// shortest current path, the scp is optimal
-			if (endNode.cost != 0 && !queue.isEmpty() && queue.peek().cost > endNode.cost) {
-				break;
-			}
-
+			AstrNode curNode = queue.poll();
 			State currState = curNode.state;
+			// System.out.println("ey: " + curNode.value + " , " + curNode.cost);
 			if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY == posY) {
-				// If this path is shorter return it instead.
-				if (curNode.cost < endNode.cost || endNode.cost == 0)
-					endNode = curNode;
+				System.out.println("found the end");
+				return curNode;
 			}
-
 			if (!visited.contains(currState.getHash())) {
 				visited.add(currState.getHash());
+				// printGrid(currState.grid);
 				for (String move : currState.availableMoves(sizeX, sizeY)) {
-					Node newNode = new Node(curNode, currState.execute(move), move);
+					// System.out.println(move);
+					AstrNode newNode = new AstrNode(curNode, currState.execute(move), move, curNode.xMin, curNode.xMax,
+							curNode.yMin, curNode.yMax, curNode.dirtList, posX, posY);
 					queue.add(newNode);
 
 				}
 			}
 		}
-		return endNode;
+		System.out.println("USC FAILED");
+		return new AstrNode();
 	}
 
 	public Node uniformSearchCost() {
-		// 30 is the initial capacity of the queue
 		PriorityQueue<Node> queue = new PriorityQueue<Node>(30, (a, b) -> a.cost - b.cost);
-		HashSet<String> visited = new HashSet<String>();
 		State rState = new State(posX, posY, orientation, grid, dirts);
 		Node root = new Node(null, rState, "TURN_ON");
-		Node endNode = new Node();
-
 		queue.add(root);
-
+		HashSet<String> visited = new HashSet<String>();
 		while (!queue.isEmpty()) {
 			Node curNode = queue.poll();
-
-			// If the rest of the queue has a greater cost than the
-			// shortest current path, the scp is optimal
-			if (endNode.cost != 0 && !queue.isEmpty() && queue.peek().cost > endNode.cost) {
-				break;
-			}
-
 			State currState = curNode.state;
 			if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY == posY) {
-				// If this path is shorter return it instead.
-				if (curNode.cost < endNode.cost || endNode.cost == 0)
-					endNode = curNode;
+				System.out.println("found the end");
+				return curNode;
 			}
-
 			if (!visited.contains(currState.getHash())) {
+				System.out.println("ey: " + curNode.state.dirtsLeft);
 				visited.add(currState.getHash());
+				// printGrid(currState.grid);
 				for (String move : currState.availableMoves(sizeX, sizeY)) {
+					// System.out.println(move);
 					Node newNode = new Node(curNode, currState.execute(move), move);
 					queue.add(newNode);
 
 				}
 			}
 		}
-		return endNode;
+		System.out.println("USC FAILED");
+		return new Node();
 	}
 
 	public void DFSRecurs(Node root, TreeSet<String> visited, Node endNode) {

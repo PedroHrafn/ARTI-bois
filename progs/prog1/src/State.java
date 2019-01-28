@@ -69,7 +69,7 @@ public class State {
         } else if (move.equals("SUCK")) {
             tmp.grid[posX][posY] = ' ';
             tmp.dirtsLeft--;
-            System.out.println(dirtsLeft);
+            // System.out.println(dirtsLeft);
         }
         if (tmp.grid[tmp.posX][tmp.posY] != 'd')
             tmp.grid[tmp.posX][tmp.posY] = tmp.orientation;
