@@ -52,7 +52,6 @@ public class OurAgent implements Agent {
 			}
 		}
 
-		// FIXME: MUNA AÐ TAKA ÚT FYRIR SKIL
 		for (int i = 0; i < dirtList.size(); i++) {
 			System.out.println("dirt at: " + dirtList.get(i));
 		}
@@ -63,7 +62,6 @@ public class OurAgent implements Agent {
 			grid[pos.x][pos.y] = 'X';
 		}
 
-		// printGrid();
 		floodFill(posX, posY);
 		int DxMin = sizeX;
 		int DxMax = 0;
@@ -85,19 +83,17 @@ public class OurAgent implements Agent {
 				grid[pos.x][pos.y] = 'd';
 			}
 		}
-		System.out.println("x min: " + DxMin + ", max: " + DxMax + ", ymin: " + DyMin + ", max: " + DyMax);
 
 		dirts = dirtList.size();
 		grid[posX][posY] = (grid[posX][posY] != 'd') ? orientation : Character.toLowerCase(orientation);
 		printGrid();
 		long startTime = System.nanoTime();
+		Node endNode = DFSearch();
 		// Node endNode = uniformSearchCost();
-		AstrNode endNode = AstrSearch(DxMin, DxMax, DyMin, DyMax, dirtList);
+		// AstrNode endNode = AstrSearch(DxMin, DxMax, DyMin, DyMax, dirtList);
 		long endTime = System.nanoTime();
 		moves.push("TURN_OFF");
 		while (endNode != null) {
-			// System.out.println();
-			// printGrid(endNode.state.grid);
 			moves.push(endNode.move);
 			endNode = endNode.parent;
 		}
@@ -120,7 +116,6 @@ public class OurAgent implements Agent {
 		Pattern perceptNamePattern = Pattern.compile("\\(\\s*([^\\s]+).*");
 
 		for (String percept : percepts) {
-			// System.out.println("current percept:" + percept);
 			Matcher perceptNameMatcher = perceptNamePattern.matcher(percept);
 			if (perceptNameMatcher.matches()) {
 				String perceptName = perceptNameMatcher.group(1);
@@ -129,14 +124,12 @@ public class OurAgent implements Agent {
 					if (m.matches()) {
 						posX = Integer.parseInt(m.group(1)) - 1;
 						posY = Integer.parseInt(m.group(2)) - 1;
-						// System.out.println("robot is at " + m.group(1) + "," + m.group(2));
 					}
 				} else if (perceptName.equals("SIZE")) {
 					Matcher m = Pattern.compile("\\(\\s*SIZE\\s+([0-9]+)\\s+([0-9]+)\\s*\\)").matcher(percept);
 					if (m.matches()) {
 						sizeX = Integer.parseInt(m.group(1));
 						sizeY = Integer.parseInt(m.group(2));
-						// System.out.println("size of grid is " + m.group(1) + "," + m.group(2));
 					}
 				} else if (perceptName.equals("AT")) {
 					Matcher m = Pattern.compile("\\(\\s*AT\\s+((DIRT)|(OBSTACLE))\\s+([0-9]+)\\s+([0-9]+)\\s*\\)")
@@ -146,28 +139,20 @@ public class OurAgent implements Agent {
 							Position pos = new Position(Integer.parseInt(m.group(4)) - 1,
 									Integer.parseInt(m.group(5)) - 1);
 							dirtList.add(pos);
-							// System.out.println("dirt at " + m.group(4) + "," + m.group(5));
 						} else {
 							Position pos = new Position(Integer.parseInt(m.group(4)) - 1,
 									Integer.parseInt(m.group(5)) - 1);
 							block.add(pos);
-							// System.out.println("obstacle at " + m.group(4) + "," + m.group(5));
 						}
 					}
 				} else if (perceptName.equals("ORIENTATION")) {
 					orientation = percept.charAt(percept.indexOf(' ') + 1);
-					// System.out.println("Orientation: " + orientation);
 				} else {
-					// System.out.println("other percept: " + percept);
 				}
 			} else {
 				System.err.println("strange percept that does not match pattern: " + percept);
 			}
 		}
-		// System.out.println("current position: " + posX + ", " + posY);
-		// System.out.println("orientation: " + orientation);
-		// System.out.println("size of grid: " + sizeX + ", " + sizeY);
-
 	}
 
 	public void printGrid() {
@@ -224,16 +209,12 @@ public class OurAgent implements Agent {
 		while (!queue.isEmpty()) {
 			AstrNode curNode = queue.poll();
 			State currState = curNode.state;
-			// System.out.println("ey: " + curNode.value + " , " + curNode.cost);
 			if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY == posY) {
-				System.out.println("found the end");
 				return curNode;
 			}
 			if (!visited.contains(currState.getHash())) {
 				visited.add(currState.getHash());
-				// printGrid(currState.grid);
 				for (String move : currState.availableMoves(sizeX, sizeY)) {
-					// System.out.println(move);
 					AstrNode newNode = new AstrNode(curNode, currState.execute(move), move, curNode.xMin, curNode.xMax,
 							curNode.yMin, curNode.yMax, curNode.dirtList, posX, posY);
 					queue.add(newNode);
@@ -241,7 +222,6 @@ public class OurAgent implements Agent {
 				}
 			}
 		}
-		System.out.println("USC FAILED");
 		return new AstrNode();
 	}
 
@@ -255,22 +235,17 @@ public class OurAgent implements Agent {
 			Node curNode = queue.poll();
 			State currState = curNode.state;
 			if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY == posY) {
-				System.out.println("found the end");
 				return curNode;
 			}
 			if (!visited.contains(currState.getHash())) {
-				System.out.println("ey: " + curNode.state.dirtsLeft);
 				visited.add(currState.getHash());
-				// printGrid(currState.grid);
 				for (String move : currState.availableMoves(sizeX, sizeY)) {
-					// System.out.println(move);
 					Node newNode = new Node(curNode, currState.execute(move), move);
 					queue.add(newNode);
 
 				}
 			}
 		}
-		System.out.println("USC FAILED");
 		return new Node();
 	}
 
@@ -284,9 +259,7 @@ public class OurAgent implements Agent {
 		}
 		if (!visited.contains(currState.getHash())) {
 			visited.add(currState.getHash());
-			// printGrid(currState.grid);
 			for (String move : currState.availableMoves(sizeX, sizeY)) {
-				// System.out.println(move);
 				Node newNode = new Node(root, currState.execute(move), move);
 				DFSRecurs(newNode, visited, endNode);
 			}
@@ -325,7 +298,6 @@ public class OurAgent implements Agent {
 
 	public String nextAction(Collection<String> percepts) {
 		String ret = moves.pop();
-		System.out.println(ret);
 		return ret;
 	}
 }
