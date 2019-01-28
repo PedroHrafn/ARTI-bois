@@ -13,10 +13,10 @@ import java.util.regex.Pattern;
 
 public class OurAgent implements Agent {
 	private int posX, posY, sizeX, sizeY;
-	private Stack<String> moves = new Stack<String>();
+	private Stack<String> moves;
 	private char[][] grid;
-	private List<Position> dirt = new ArrayList<Position>();
-	private List<Position> block = new ArrayList<Position>();
+	private List<Position> dirt;
+	private List<Position> block;
 	private char orientation = ' ';
 	int dirts = 0;
 
@@ -38,6 +38,9 @@ public class OurAgent implements Agent {
 		 * so don't forget to turn it on.
 		 */
 		posX = posY = sizeX = sizeY = 0;
+		dirt = new ArrayList<Position>();
+		block = new ArrayList<Position>();
+		moves = new Stack<String>();
 
 		constructGrid(percepts);
 		// ATH: grid[col][row]
@@ -192,7 +195,7 @@ public class OurAgent implements Agent {
 				// printGrid(currState.grid);
 				for (String move : currState.availableMoves(sizeX, sizeY)) {
 					// System.out.println(move);
-					Node newNode = new Node(curNode, currState.execute(move), move);
+					Node newNode = new Node(curNode, currState.execute(move), move, false);
 					queue.add(newNode);
 				}
 			}
@@ -206,7 +209,7 @@ public class OurAgent implements Agent {
 		PriorityQueue<Node> queue = new PriorityQueue<Node>(30, new NodeComparator());
 		HashSet<String> visited = new HashSet<String>();
 		State rState = new State(posX, posY, orientation, grid, dirts);
-		Node root = new Node(null, rState, "TURN_ON");
+		Node root = new Node(null, rState, "TURN_ON", false);
 		Node endNode = new Node();
 
 		queue.add(root);
@@ -232,7 +235,7 @@ public class OurAgent implements Agent {
 			if (!visited.contains(currState.getHash())) {
 				visited.add(currState.getHash());
 				for (String move : currState.availableMoves(sizeX, sizeY)) {
-					Node newNode = new Node(curNode, currState.execute(move), move);
+					Node newNode = new Node(curNode, currState.execute(move), move, false);
 					queue.add(newNode);
 
 				}
@@ -256,7 +259,7 @@ public class OurAgent implements Agent {
 			// printGrid(currState.grid);
 			for (String move : currState.availableMoves(sizeX, sizeY)) {
 				// System.out.println(move);
-				Node newNode = new Node(root, currState.execute(move), move);
+				Node newNode = new Node(root, currState.execute(move), move, false);
 				DFSRecurs(newNode, visited, endNode);
 			}
 		}
@@ -265,8 +268,8 @@ public class OurAgent implements Agent {
 	public Node DFSearch() {
 		TreeSet<String> visited = new TreeSet<String>();
 		State rState = new State(posX, posY, orientation, grid, dirts);
-		Node root = new Node(null, rState, "TURN_ON");
-		Node endNode = new Node(null, rState, "TURN_ON");
+		Node root = new Node(null, rState, "TURN_ON", false);
+		Node endNode = new Node(null, rState, "TURN_ON", false);
 		DFSRecurs(root, visited, endNode);
 
 		return endNode;

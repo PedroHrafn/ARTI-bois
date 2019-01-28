@@ -23,9 +23,13 @@ public class Node {
         } else if (move == "SUCK") {
             return 5;
         } else if (move == "TURN_ON") {
-            return 
+            return 0;
         }
         return 1;
+    }
+
+    private int heuristic(String move) {
+        return 0;
     }
 
     public Node() {
