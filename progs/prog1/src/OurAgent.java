@@ -16,7 +16,9 @@ public class OurAgent implements Agent {
 	private CopyOnWriteArrayList<Position> dirtList;
 	private List<Position> block;
 	private char orientation = ' ';
+	int expansions;
 	int dirts = 0;
+	int maxQue;
 
 	/*
 	 * init(Collection<String> percepts) is called once before you have to select
@@ -39,6 +41,8 @@ public class OurAgent implements Agent {
 		dirtList = new CopyOnWriteArrayList<Position>();
 		block = new ArrayList<Position>();
 		moves = new Stack<String>();
+		expansions = 0;
+		maxQue = 0;
 
 		constructGrid(percepts);
 		// ATH: grid[col][row]
@@ -90,11 +94,13 @@ public class OurAgent implements Agent {
 		// AstrNode endNode = AstrSearch(DxMin, DxMax, DyMin, DyMax, dirtList);
 		long endTime = System.nanoTime();
 		moves.push("TURN_OFF");
+		int cost = endNode.cost;
 		while (endNode != null) {
 			moves.push(endNode.move);
 			endNode = endNode.parent;
 		}
 		System.out.println("search algorithm runtime in ms: " + (endTime - startTime) / 1000000);
+		System.out.println("Expansions: " + expansions + ", Cost: " + (cost + 2) + "Max frontier: " + maxQue);
 	}
 
 	private void floodFill(int x, int y) {
@@ -179,10 +185,11 @@ public class OurAgent implements Agent {
 		HashSet<String> visited = new HashSet<String>();
 		visited.add(rState.getHash());
 		while (!queue.isEmpty()) {
-
+			if (queue.size() > maxQue)
+				maxQue = queue.size();
 			Node curNode = queue.pop();
 			State currState = curNode.state;
-
+			expansions++;
 			for (String move : currState.availableMoves(sizeX, sizeY)) {
 				Node newNode = new Node(curNode, currState.execute(move), move);
 				State newState = newNode.state;
@@ -206,7 +213,10 @@ public class OurAgent implements Agent {
 		queue.add(root);
 		HashSet<String> visited = new HashSet<String>();
 		while (!queue.isEmpty()) {
+			if (queue.size() > maxQue)
+				maxQue = queue.size();
 			AstrNode curNode = queue.poll();
+			expansions++;
 			State currState = curNode.state;
 			if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY == posY) {
 				return curNode;
@@ -231,7 +241,10 @@ public class OurAgent implements Agent {
 		queue.add(root);
 		HashSet<String> visited = new HashSet<String>();
 		while (!queue.isEmpty()) {
+			if (queue.size() > maxQue)
+				maxQue = queue.size();
 			Node curNode = queue.poll();
+			expansions++;
 			State currState = curNode.state;
 			if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY == posY) {
 				return curNode;
@@ -261,7 +274,9 @@ public class OurAgent implements Agent {
 		while (!stack.isEmpty()) {
 			Node curNode = stack.pop();
 			State currState = curNode.state;
-
+			if (stack.size() > maxQue)
+				maxQue = stack.size();
+			expansions++;
 			for (String move : currState.availableMoves(sizeX, sizeY)) {
 				Node newNode = new Node(curNode, currState.execute(move), move);
 				State newState = newNode.state;
@@ -279,7 +294,6 @@ public class OurAgent implements Agent {
 	}
 
 	public String nextAction(Collection<String> percepts) {
-		String ret = moves.pop();
-		return ret;
+		return moves.pop();
 	}
 }
