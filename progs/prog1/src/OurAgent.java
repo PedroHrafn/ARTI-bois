@@ -69,11 +69,10 @@ public class OurAgent implements Agent {
 		int DxMax = 0;
 		int DyMin = sizeY;
 		int DyMax = 0;
-		for (int i = 0; i < dirtList.size(); i++) {
-			Position pos = dirtList.get(i);
+		for (Position pos : dirtList) {
 			if (grid[pos.x][pos.y] != ' ') {
 				System.out.println("unreachable dirt at: " + pos.x + ", " + pos.y);
-				dirtList.remove(i);
+				dirtList.remove(pos);
 			} else {
 				if (pos.x > DxMax)
 					DxMax = pos.x;
