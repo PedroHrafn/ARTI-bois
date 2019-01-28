@@ -32,7 +32,7 @@ public class AstrNode {
         } else {
             this.cost = parent.cost + 1;
         }
-        this.value = heuristic(startX, startY) * 2 + cost;
+        this.value = heuristic(startX, startY) + cost;
         // System.out.println(value);
     }
 
