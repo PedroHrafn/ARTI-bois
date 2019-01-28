@@ -1,4 +1,5 @@
 .DS_Store
+dist/
 
 # Created by https://www.gitignore.io/api/java,code-java
 # Edit at https://www.gitignore.io/?templates=java,code-java
