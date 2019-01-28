@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class AstrNode {
@@ -32,7 +30,7 @@ public class AstrNode {
         } else {
             this.cost = parent.cost + 1;
         }
-        this.value = heuristic(startX, startY) + cost;
+        this.value = heuristic(startX, startY) + this.cost;
         // System.out.println(value);
     }
 
