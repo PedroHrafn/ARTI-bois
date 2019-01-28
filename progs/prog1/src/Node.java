@@ -18,12 +18,8 @@ public class Node {
     }
 
     private int cost(boolean astar, String move, State state) {
-        if (astar && (move == "GO" || move == "TURN_RIGHT" || move == "TURN_LEFT")) {
+        if (astar) {
             return 1 + heuristic(move);
-        } else if (move == "SUCK") {
-            return 5;
-        } else if (move == "TURN_ON") {
-            return 0;
         }
         return 1;
     }

@@ -78,7 +78,7 @@ public class OurAgent implements Agent {
 		grid[posX][posY] = orientation;
 		// printGrid();
 		long startTime = System.nanoTime();
-		Node endNode = uniformSearchCost();
+		Node endNode = BFSearch();
 		long endTime = System.nanoTime();
 		moves.push("TURN_OFF");
 		while (endNode != null) {
@@ -87,8 +87,7 @@ public class OurAgent implements Agent {
 			moves.push(endNode.move);
 			endNode = endNode.parent;
 		}
-		// System.out.println("search algorithm runtime in ms: " + (endTime - startTime)
-		// / 1000000);
+		System.out.println("search algorithm runtime in ms: " + (endTime - startTime) / 1000000);
 	}
 
 	private void floodFill(int x, int y) {
@@ -185,22 +184,26 @@ public class OurAgent implements Agent {
 		while (!queue.isEmpty()) {
 			Node curNode = queue.pop();
 			State currState = curNode.state;
-			if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY == posY) {
-				System.out.println("found the end");
-				return curNode;
-			}
-			// System.out.println(currState.dirtsLeft);
-			if (!visited.contains(currState.getHash())) {
-				visited.add(currState.getHash());
-				// printGrid(currState.grid);
-				for (String move : currState.availableMoves(sizeX, sizeY)) {
-					// System.out.println(move);
-					Node newNode = new Node(curNode, currState.execute(move), move, false);
+
+			// if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY ==
+			// posY) {
+			// System.out.println("found the end");
+			// return curNode;
+			// }
+
+			for (String move : currState.availableMoves(sizeX, sizeY)) {
+				Node newNode = new Node(curNode, currState.execute(move), move, false);
+				State newState = newNode.state;
+				if (!visited.contains(newState.getHash())) {
+					visited.add(currState.getHash());
+					if (newState.dirtsLeft == 0 && newState.posX == posX && newState.posY == posY) {
+						return curNode;
+					}
 					queue.add(newNode);
 				}
+
 			}
 		}
-		System.out.println("BFS FAILED");
 		return new Node();
 	}
 
@@ -228,8 +231,6 @@ public class OurAgent implements Agent {
 				// If this path is shorter return it instead.
 				if (curNode.cost < endNode.cost || endNode.cost == 0)
 					endNode = curNode;
-
-				System.out.println("found the end");
 			}
 
 			if (!visited.contains(currState.getHash())) {
@@ -241,14 +242,12 @@ public class OurAgent implements Agent {
 				}
 			}
 		}
-		System.out.println("USC FAILED");
 		return endNode;
 	}
 
 	public void DFSRecurs(Node root, TreeSet<String> visited, Node endNode) {
 		State currState = root.state;
 		if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY == posY) {
-			System.out.println("found the end");
 			endNode.state = root.state;
 			endNode.parent = root.parent;
 			endNode.move = root.move;
@@ -279,11 +278,5 @@ public class OurAgent implements Agent {
 		String ret = moves.pop();
 		System.out.println(ret);
 		return ret;
-		/*
-		 * System.out.print("perceiving:"); for (String percept : percepts) {
-		 * System.out.print("'" + percept + "', "); } System.out.println(""); String[]
-		 * actions = { "TURN_ON", "TURN_OFF", "TURN_RIGHT", "TURN_LEFT", "GO", "SUCK" };
-		 * return actions[random.nextInt(actions.length)];
-		 */
 	}
 }
