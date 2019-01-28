@@ -178,41 +178,35 @@ public class OurAgent implements Agent {
 	public Node BFSearch() {
 		ArrayDeque<Node> queue = new ArrayDeque<Node>();
 		State rState = new State(posX, posY, orientation, grid, dirts);
-		Node root = new Node(null, rState, "TURN_ON", false);
+		Node root = new Node(null, rState, "TURN_ON");
 		queue.add(root);
 		HashSet<String> visited = new HashSet<String>();
 		while (!queue.isEmpty()) {
 			Node curNode = queue.pop();
 			State currState = curNode.state;
 
-			// if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY ==
-			// posY) {
-			// System.out.println("found the end");
-			// return curNode;
-			// }
-
 			for (String move : currState.availableMoves(sizeX, sizeY)) {
-				Node newNode = new Node(curNode, currState.execute(move), move, false);
+				Node newNode = new Node(curNode, currState.execute(move), move);
 				State newState = newNode.state;
 				if (!visited.contains(newState.getHash())) {
-					visited.add(currState.getHash());
+					visited.add(newState.getHash());
 					if (newState.dirtsLeft == 0 && newState.posX == posX && newState.posY == posY) {
-						return curNode;
+						return newNode;
 					}
 					queue.add(newNode);
 				}
-
 			}
+
 		}
 		return new Node();
 	}
 
-	public Node uniformSearchCost() {
+	public Node Astr() {
 		// 30 is the initial capacity of the queue
-		PriorityQueue<Node> queue = new PriorityQueue<Node>(30, new NodeComparator());
+		PriorityQueue<Node> queue = new PriorityQueue<Node>(30, (a, b) -> a.cost - b.cost);
 		HashSet<String> visited = new HashSet<String>();
 		State rState = new State(posX, posY, orientation, grid, dirts);
-		Node root = new Node(null, rState, "TURN_ON", false);
+		Node root = new Node(null, rState, "TURN_ON");
 		Node endNode = new Node();
 
 		queue.add(root);
@@ -236,7 +230,45 @@ public class OurAgent implements Agent {
 			if (!visited.contains(currState.getHash())) {
 				visited.add(currState.getHash());
 				for (String move : currState.availableMoves(sizeX, sizeY)) {
-					Node newNode = new Node(curNode, currState.execute(move), move, false);
+					Node newNode = new Node(curNode, currState.execute(move), move);
+					queue.add(newNode);
+
+				}
+			}
+		}
+		return endNode;
+	}
+
+	public Node uniformSearchCost() {
+		// 30 is the initial capacity of the queue
+		PriorityQueue<Node> queue = new PriorityQueue<Node>(30, (a, b) -> a.cost - b.cost);
+		HashSet<String> visited = new HashSet<String>();
+		State rState = new State(posX, posY, orientation, grid, dirts);
+		Node root = new Node(null, rState, "TURN_ON");
+		Node endNode = new Node();
+
+		queue.add(root);
+
+		while (!queue.isEmpty()) {
+			Node curNode = queue.poll();
+
+			// If the rest of the queue has a greater cost than the
+			// shortest current path, the scp is optimal
+			if (endNode.cost != 0 && !queue.isEmpty() && queue.peek().cost > endNode.cost) {
+				break;
+			}
+
+			State currState = curNode.state;
+			if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY == posY) {
+				// If this path is shorter return it instead.
+				if (curNode.cost < endNode.cost || endNode.cost == 0)
+					endNode = curNode;
+			}
+
+			if (!visited.contains(currState.getHash())) {
+				visited.add(currState.getHash());
+				for (String move : currState.availableMoves(sizeX, sizeY)) {
+					Node newNode = new Node(curNode, currState.execute(move), move);
 					queue.add(newNode);
 
 				}
@@ -258,17 +290,37 @@ public class OurAgent implements Agent {
 			// printGrid(currState.grid);
 			for (String move : currState.availableMoves(sizeX, sizeY)) {
 				// System.out.println(move);
-				Node newNode = new Node(root, currState.execute(move), move, false);
+				Node newNode = new Node(root, currState.execute(move), move);
 				DFSRecurs(newNode, visited, endNode);
 			}
 		}
 	}
+	// public void DFSRecurs(Node root, TreeSet<String> visited, Node endNode) {
+	// State currState = root.state;
+
+	// // printGrid(currState.grid);
+	// for (String move : currState.availableMoves(sizeX, sizeY)) {
+	// // System.out.println(move);
+	// Node newNode = new Node(root, currState.execute(move), move, false);
+	// if (!visited.contains(newNode.state.getHash())) {
+	// if (newNode.state.dirtsLeft == 0 && newNode.state.posX == posX &&
+	// newNode.state.posY == posY) {
+	// endNode.state = newNode.state;
+	// endNode.parent = newNode.parent;
+	// endNode.move = newNode.move;
+	// return;
+	// }
+	// visited.add(newNode.state.getHash());
+	// DFSRecurs(newNode, visited, endNode);
+	// }
+	// }
+	// }
 
 	public Node DFSearch() {
 		TreeSet<String> visited = new TreeSet<String>();
 		State rState = new State(posX, posY, orientation, grid, dirts);
-		Node root = new Node(null, rState, "TURN_ON", false);
-		Node endNode = new Node(null, rState, "TURN_ON", false);
+		Node root = new Node(null, rState, "TURN_ON");
+		Node endNode = new Node(null, rState, "TURN_ON");
 		DFSRecurs(root, visited, endNode);
 
 		return endNode;
