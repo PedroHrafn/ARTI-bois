@@ -4,10 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.ArrayDeque;
 import java.util.PriorityQueue;
-import java.util.Iterator;
-import java.util.Random;
 import java.util.Stack;
-import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -86,9 +83,9 @@ public class OurAgent implements Agent {
 
 		dirts = dirtList.size();
 		grid[posX][posY] = (grid[posX][posY] != 'd') ? orientation : Character.toLowerCase(orientation);
-		printGrid();
+
 		long startTime = System.nanoTime();
-		Node endNode = DFSearch();
+		Node endNode = BFSearch();
 		// Node endNode = uniformSearchCost();
 		// AstrNode endNode = AstrSearch(DxMin, DxMax, DyMin, DyMax, dirtList);
 		long endTime = System.nanoTime();
@@ -180,7 +177,9 @@ public class OurAgent implements Agent {
 		Node root = new Node(null, rState, "TURN_ON");
 		queue.add(root);
 		HashSet<String> visited = new HashSet<String>();
+		visited.add(rState.getHash());
 		while (!queue.isEmpty()) {
+
 			Node curNode = queue.pop();
 			State currState = curNode.state;
 
@@ -249,51 +248,34 @@ public class OurAgent implements Agent {
 		return new Node();
 	}
 
-	public void DFSRecurs(Node root, TreeSet<String> visited, Node endNode) {
-		State currState = root.state;
-		if (currState.dirtsLeft == 0 && currState.posX == posX && currState.posY == posY) {
-			endNode.state = root.state;
-			endNode.parent = root.parent;
-			endNode.move = root.move;
-			return;
-		}
-		if (!visited.contains(currState.getHash())) {
-			visited.add(currState.getHash());
-			for (String move : currState.availableMoves(sizeX, sizeY)) {
-				Node newNode = new Node(root, currState.execute(move), move);
-				DFSRecurs(newNode, visited, endNode);
-			}
-		}
-	}
-	// public void DFSRecurs(Node root, TreeSet<String> visited, Node endNode) {
-	// State currState = root.state;
-
-	// // printGrid(currState.grid);
-	// for (String move : currState.availableMoves(sizeX, sizeY)) {
-	// // System.out.println(move);
-	// Node newNode = new Node(root, currState.execute(move), move, false);
-	// if (!visited.contains(newNode.state.getHash())) {
-	// if (newNode.state.dirtsLeft == 0 && newNode.state.posX == posX &&
-	// newNode.state.posY == posY) {
-	// endNode.state = newNode.state;
-	// endNode.parent = newNode.parent;
-	// endNode.move = newNode.move;
-	// return;
-	// }
-	// visited.add(newNode.state.getHash());
-	// DFSRecurs(newNode, visited, endNode);
-	// }
-	// }
-	// }
-
 	public Node DFSearch() {
-		TreeSet<String> visited = new TreeSet<String>();
+		Stack<Node> stack = new Stack<Node>();
+		HashSet<String> visited = new HashSet<String>();
+
 		State rState = new State(posX, posY, orientation, grid, dirts);
 		Node root = new Node(null, rState, "TURN_ON");
-		Node endNode = new Node(null, rState, "TURN_ON");
-		DFSRecurs(root, visited, endNode);
 
-		return endNode;
+		stack.add(root);
+		visited.add(rState.getHash());
+
+		while (!stack.isEmpty()) {
+			Node curNode = stack.pop();
+			State currState = curNode.state;
+
+			for (String move : currState.availableMoves(sizeX, sizeY)) {
+				Node newNode = new Node(curNode, currState.execute(move), move);
+				State newState = newNode.state;
+				if (!visited.contains(newState.getHash())) {
+					visited.add(newState.getHash());
+					if (newState.dirtsLeft == 0 && newState.posX == posX && newState.posY == posY) {
+						return newNode;
+					}
+					stack.add(newNode);
+				}
+			}
+
+		}
+		return new Node();
 	}
 
 	public String nextAction(Collection<String> percepts) {
