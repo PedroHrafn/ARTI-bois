@@ -155,6 +155,61 @@ public class Main {
 		// csp.addConstraint(new SuccessorConstraint(var1, var2)); // meaning var1 == var2 + 1
 		// csp.addConstraint(new DifferByOneConstraint(var1, var2)); // meaning var1 == var2 + 1 or var1 == var2 - 1 
 
+		csp.addConstraint(new NotEqualConstraint(red, green));
+		csp.addConstraint(new NotEqualConstraint(red, ivory));
+		csp.addConstraint(new NotEqualConstraint(red, yellow));
+		csp.addConstraint(new NotEqualConstraint(red, blue));
+		csp.addConstraint(new NotEqualConstraint(green, ivory));
+		csp.addConstraint(new NotEqualConstraint(green, yellow));
+		csp.addConstraint(new NotEqualConstraint(green, blue));
+		csp.addConstraint(new NotEqualConstraint(ivory, yellow));
+		csp.addConstraint(new NotEqualConstraint(ivory, blue));
+		csp.addConstraint(new NotEqualConstraint(yellow, blue));
+
+		csp.addConstraint(new NotEqualConstraint(englishman, spaniard));
+		csp.addConstraint(new NotEqualConstraint(englishman, norweigan));
+		csp.addConstraint(new NotEqualConstraint(englishman, ukrainian));
+		csp.addConstraint(new NotEqualConstraint(englishman, japanese));
+		csp.addConstraint(new NotEqualConstraint(spaniard, norweigan));
+		csp.addConstraint(new NotEqualConstraint(spaniard, ukrainian));
+		csp.addConstraint(new NotEqualConstraint(spaniard, japanese));
+		csp.addConstraint(new NotEqualConstraint(norweigan, ukrainian));
+		csp.addConstraint(new NotEqualConstraint(norweigan, japanese));
+		csp.addConstraint(new NotEqualConstraint(ukrainian, japanese));
+
+		csp.addConstraint(new NotEqualConstraint(oldGold, kools));
+		csp.addConstraint(new NotEqualConstraint(oldGold, chesterfields));
+		csp.addConstraint(new NotEqualConstraint(oldGold, luckyStrike));
+		csp.addConstraint(new NotEqualConstraint(oldGold, parliaments));
+		csp.addConstraint(new NotEqualConstraint(kools, chesterfields));
+		csp.addConstraint(new NotEqualConstraint(kools, luckyStrike));
+		csp.addConstraint(new NotEqualConstraint(kools, parliaments));
+		csp.addConstraint(new NotEqualConstraint(chesterfields, luckyStrike));
+		csp.addConstraint(new NotEqualConstraint(chesterfields, parliaments));
+		csp.addConstraint(new NotEqualConstraint(luckyStrike, parliaments));
+
+		csp.addConstraint(new NotEqualConstraint(water, orangeJuice));
+		csp.addConstraint(new NotEqualConstraint(water, tea));
+		csp.addConstraint(new NotEqualConstraint(water, coffee));
+		csp.addConstraint(new NotEqualConstraint(water, milk));
+		csp.addConstraint(new NotEqualConstraint(orangeJuice, tea));
+		csp.addConstraint(new NotEqualConstraint(orangeJuice, coffe));
+		csp.addConstraint(new NotEqualConstraint(orangeJuice, milk));
+		csp.addConstraint(new NotEqualConstraint(tea, coffe));
+		csp.addConstraint(new NotEqualConstraint(tea, milk));
+		csp.addConstraint(new NotEqualConstraint(coffe, milk));
+
+		csp.addConstraint(new NotEqualConstraint(zebra, dog));
+		csp.addConstraint(new NotEqualConstraint(zebra, fox));
+		csp.addConstraint(new NotEqualConstraint(zebra, snails));
+		csp.addConstraint(new NotEqualConstraint(zebra, horse));
+		csp.addConstraint(new NotEqualConstraint(dog, fox));
+		csp.addConstraint(new NotEqualConstraint(dog, snails));
+		csp.addConstraint(new NotEqualConstraint(dog, horse));
+		csp.addConstraint(new NotEqualConstraint(fox, snails));
+		csp.addConstraint(new NotEqualConstraint(fox, horse));
+		csp.addConstraint(new NotEqualConstraint(snails, horse));		
+
 		csp.addConstraint(new EqualConstraint(red, englishman));
 		csp.addConstraint(new EqualConstraint(spaniard, dog));
 		csp.addConstraint(new EqualConstraint(green, coffee));
@@ -165,6 +220,9 @@ public class Main {
 		csp.addConstraint(new EqualConstraint(milk, 3));
 		csp.addConstraint(new EqualConstraint(norweigan, 1));
 		csp.addConstraint(new DifferByOneConstraint(chesterfields, fox));
+		csp.addConstraint(new DifferByOneConstraint(kools, horse));
+		csp.addConstraint(new EqualConstraint(luckyStrike, orangeJuice));
+		csp.addConstraint(new EqualConstraint(japanese, parliaments));
 		csp.addConstraint(new SuccessorConstraint(blue, norweigan));
 		
 		return csp;
