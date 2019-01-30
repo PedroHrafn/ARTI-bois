@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.ArrayList;
 
 import aima.core.search.csp.Assignment;
 import aima.core.search.csp.CSP;
@@ -73,7 +74,7 @@ public class Main {
 		Variable snails = new Variable(pet[3]);
 		Variable horse = new Variable(pet[4]);
 		
-		List<Variable> variables = null;
+		List<Variable> variables = new ArrayList<Variable>();
 		// TODO add all your variables to this list, e.g.,
 		// variables.add(var1);
 		// variables.add(var2);
@@ -118,6 +119,7 @@ public class Main {
 
 		Domain d1 = new Domain(new Integer[]{1,2,3,4,5});
 		Domain d2 = new Domain(new Integer[]{1});
+		Domain d3 = new Domain(new Integer[]{3});
 
 		csp.setDomain(red, d1);
 		csp.setDomain(green, d1);
@@ -141,7 +143,7 @@ public class Main {
 		csp.setDomain(orangeJuice, d1);
 		csp.setDomain(tea, d1);
 		csp.setDomain(coffee, d1);
-		csp.setDomain(milk, d1);
+		csp.setDomain(milk, d3);
 
 		csp.setDomain(zebra, d1);
 		csp.setDomain(dog, d1);
@@ -193,11 +195,11 @@ public class Main {
 		csp.addConstraint(new NotEqualConstraint(water, coffee));
 		csp.addConstraint(new NotEqualConstraint(water, milk));
 		csp.addConstraint(new NotEqualConstraint(orangeJuice, tea));
-		csp.addConstraint(new NotEqualConstraint(orangeJuice, coffe));
+		csp.addConstraint(new NotEqualConstraint(orangeJuice, coffee));
 		csp.addConstraint(new NotEqualConstraint(orangeJuice, milk));
-		csp.addConstraint(new NotEqualConstraint(tea, coffe));
+		csp.addConstraint(new NotEqualConstraint(tea, coffee));
 		csp.addConstraint(new NotEqualConstraint(tea, milk));
-		csp.addConstraint(new NotEqualConstraint(coffe, milk));
+		csp.addConstraint(new NotEqualConstraint(coffee, milk));
 
 		csp.addConstraint(new NotEqualConstraint(zebra, dog));
 		csp.addConstraint(new NotEqualConstraint(zebra, fox));
@@ -217,8 +219,6 @@ public class Main {
 		csp.addConstraint(new SuccessorConstraint(green, ivory));
 		csp.addConstraint(new EqualConstraint(oldGold, snails));
 		csp.addConstraint(new EqualConstraint(kools, yellow));
-		csp.addConstraint(new EqualConstraint(milk, 3));
-		csp.addConstraint(new EqualConstraint(norweigan, 1));
 		csp.addConstraint(new DifferByOneConstraint(chesterfields, fox));
 		csp.addConstraint(new DifferByOneConstraint(kools, horse));
 		csp.addConstraint(new EqualConstraint(luckyStrike, orangeJuice));
@@ -234,6 +234,13 @@ public class Main {
 		// Object value = solution.getAssignment(var); 
 		// For debugging it might be useful to print the complete assignment and check whether
 		// it makes sense.
+		Variable Zebra = new Variable("Zebra");
+		Variable Water = new Variable("Water");
+		Object solZebra = solution.getAssignment(Zebra);
+		Object solWater = solution.getAssignment(Water);
+		System.out.println("who drinks water? Who owns the zebra?");
+		System.out.println("The person in house number " + solWater + " drinks water");
+		System.out.println("The person in house number " + solZebra + " owns a zebra");
 		System.out.println("solution:" + solution);
 	}
 	
