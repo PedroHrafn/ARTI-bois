@@ -16,20 +16,20 @@ public class Main {
 //		In five houses, each with a different color, live five persons of different nationality,
 //		each of whom prefers a different brand of cigarettes, a different drink, and a different pet.
 //		The five houses are arranged in a row (no house has more than 2 neighbors).   
-//		# The Englishman lives in the red house.
-//		# The Spaniard owns the dog.
-//		# Coffee is drunk in the green house.
+//		The Englishman lives in the red house.
+//		The Spaniard owns the dog.
+//		Coffee is drunk in the green house.
 //		# The Ukrainian drinks tea.
-//		# The green house is immediately to the right of the ivory house.
+//		The green house is immediately to the right of the ivory house.
 //		# The Old Gold smoker owns snails.
 //		# Kools are smoked in the yellow house.
 //		# Milk is drunk in the middle house.
-//		# The Norwegian lives in the first house.
+//		The Norwegian lives in the first house.
 //		# The man who smokes Chesterfields lives in the house next to the man with the fox.
 //		# Kools are smoked in the house next to the house where the horse is kept.
 //		# The Lucky Strike smoker drinks orange juice.
 //		# The Japanese smokes Parliaments.
-//		# The Norwegian lives next to the blue house.
+//		The Norwegian lives next to the blue house.
 //
 //		Now, who drinks water? Who owns the zebra?
 				
@@ -42,11 +42,71 @@ public class Main {
 		// TODO create variables, e.g.,
 		// Variable var1 = new Variable("name of the variable 1");
 		// Variable var2 = new Variable("name of the variable 2");
+
+		Variable red = new Variable(colors[0]);
+		Variable green = new Variable(colors[1]);
+		Variable ivory = new Variable(colors[2]);
+		Variable yellow = new Variable(colors[3]);
+		Variable blue = new Variable(colors[4]);
+
+		Variable englishman = new Variable(nations[0]);
+		Variable spaniard = new Variable(nations[1]);
+		Variable norweigan = new Variable(nations[2]);
+		Variable ukrainian = new Variable(nations[3]);
+		Variable japanese = new Variable(nations[4]);
+
+		Variable oldGold = new Variable(cigarettes[0]);
+		Variable kools = new Variable(cigarettes[1]);
+		Variable chesterfields = new Variable(cigarettes[2]);
+		Variable luckyStrike = new Variable(cigarettes[3]);
+		Variable parliaments = new Variable(cigarettes[4]);
+
+		Variable water = new Variable(drink[0]);
+		Variable orangeJuice = new Variable(drink[1]);
+		Variable tea = new Variable(drink[2]);
+		Variable coffee = new Variable(drink[3]);
+		Variable milk = new Variable(drink[4]);
+
+		Variable zebra = new Variable(pet[0]);
+		Variable dog = new Variable(pet[1]);
+		Variable fox = new Variable(pet[2]);
+		Variable snails = new Variable(pet[3]);
+		Variable horse = new Variable(pet[4]);
 		
 		List<Variable> variables = null;
 		// TODO add all your variables to this list, e.g.,
 		// variables.add(var1);
 		// variables.add(var2);
+
+		variables.add(red);
+		variables.add(green);
+		variables.add(ivory);
+		variables.add(yellow);
+		variables.add(blue);
+
+		variables.add(englishman);
+		variables.add(spaniard);
+		variables.add(norweigan);
+		variables.add(ukrainian);
+		variables.add(japanese);
+
+		variables.add(oldGold);
+		variables.add(kools);
+		variables.add(chesterfields);
+		variables.add(luckyStrike);
+		variables.add(parliaments);
+
+		variables.add(water);
+		variables.add(orangeJuice);
+		variables.add(tea);
+		variables.add(coffee);
+		variables.add(milk);
+
+		variables.add(zebra);
+		variables.add(dog);
+		variables.add(fox);
+		variables.add(snails);
+		variables.add(horse);
 		
 		csp = new CSP(variables);
 
@@ -55,12 +115,57 @@ public class Main {
 		// csp.setDomain(var1, d1);
 		// Domain d2 = new Domain(new Integer[]{1, 2});
 		// csp.setDomain(var2, d2);
+
+		Domain d1 = new Domain(new Integer[]{1,2,3,4,5});
+		Domain d2 = new Domain(new Integer[]{1});
+
+		csp.setDomain(red, d1);
+		csp.setDomain(green, d1);
+		csp.setDomain(ivory, d1);
+		csp.setDomain(yellow, d1);
+		csp.setDomain(blue, d1);
+
+		csp.setDomain(englishman, d1);
+		csp.setDomain(spaniard, d1);
+		csp.setDomain(norweigan, d2);
+		csp.setDomain(ukrainian, d1);
+		csp.setDomain(japanese, d1);
+
+		csp.setDomain(oldGold, d1);
+		csp.setDomain(kools, d1);
+		csp.setDomain(chesterfields, d1);
+		csp.setDomain(luckyStrike, d1);
+		csp.setDomain(parliaments, d1);
+
+		csp.setDomain(water, d1);
+		csp.setDomain(orangeJuice, d1);
+		csp.setDomain(tea, d1);
+		csp.setDomain(coffee, d1);
+		csp.setDomain(milk, d1);
+
+		csp.setDomain(zebra, d1);
+		csp.setDomain(dog, d1);
+		csp.setDomain(fox, d1);
+		csp.setDomain(snails, d1);
+		csp.setDomain(horse, d1);
 		
 		// TODO add constraints, e.g.,
 		// csp.addConstraint(new NotEqualConstraint(var1, var2)); // meaning var1 != var2
 		// csp.addConstraint(new EqualConstraint(var1, var2)); // meaning var1 == var2
 		// csp.addConstraint(new SuccessorConstraint(var1, var2)); // meaning var1 == var2 + 1
 		// csp.addConstraint(new DifferByOneConstraint(var1, var2)); // meaning var1 == var2 + 1 or var1 == var2 - 1 
+
+		csp.addConstraint(new EqualConstraint(red, englishman));
+		csp.addConstraint(new EqualConstraint(spaniard, dog));
+		csp.addConstraint(new EqualConstraint(green, coffee));
+		csp.addConstraint(new EqualConstraint(ukrainian , tea));
+		csp.addConstraint(new SuccessorConstraint(green, ivory));
+		csp.addConstraint(new EqualConstraint(oldGold, snails));
+		csp.addConstraint(new EqualConstraint(kools, yellow));
+		csp.addConstraint(new EqualConstraint(milk, 3));
+		csp.addConstraint(new EqualConstraint(norweigan, 1));
+		csp.addConstraint(new DifferByOneConstraint(chesterfields, fox));
+		csp.addConstraint(new SuccessorConstraint(blue, norweigan));
 		
 		return csp;
 	}
