@@ -1,9 +1,12 @@
 import java.util.Collection;
+import java.util.List;
 import java.util.ArrayList;
+import java.awt.Point;
 
 public class State {
     public int xSize, ySize;
     char[][] grid;
+    public List<Point> whitePawns;
 
     public State(int xSize, int ySize, char[][] grid) {
         this.xSize = xSize;
@@ -20,7 +23,7 @@ public class State {
     }
 
     public State execute(String move) {
-        State tmp = new State(this.grid);
+        State tmp = new State(this.xSize, this.ySize, this.grid);
 
         return tmp;
     }
