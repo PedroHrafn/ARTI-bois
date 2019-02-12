@@ -1,7 +1,6 @@
 public class Environment {
-
     public int width, height;
-    String role; 
+    String role;
     int playclock;
 
     public Environment(String role, int width, int height, int playclock) {
@@ -9,7 +8,7 @@ public class Environment {
         this.width = width;
         this.height = height;
         this.playclock = playclock;
-        
+
     }
 
 }

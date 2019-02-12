@@ -1,19 +1,16 @@
 import java.util.Collection;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.awt.Point;
 
 public class State {
-    public int xSize, ySize;
-    char[][] grid;
-    public List<Point> whitePawns;
+    public Environment env;
+    public CopyOnWriteArrayList<Point> whites;
+    public CopyOnWriteArrayList<Point> blacks;
 
-    public State(int xSize, int ySize, char[][] grid) {
-        this.xSize = xSize;
-        this.ySize = ySize;
-        for (int i = 0; i < grid.length; i++) {
-            System.arraycopy(grid[i], 0, this.grid[i], 0, grid[i].length);
-        }
+    public State(Environment env, CopyOnWriteArrayList<Point> whites, CopyOnWriteArrayList<Point> blacks) {
+        this.env = env;
+        this.whites = new CopyOnWriteArrayList<Point>(whites);
+        this.blacks = new CopyOnWriteArrayList<Point>(blacks);
     }
 
     public Collection<String> availableMoves(int sizeX, int sizeY) {
