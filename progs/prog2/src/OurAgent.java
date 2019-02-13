@@ -89,10 +89,11 @@ public class OurAgent implements Agent {
 	private int[] getBestMove() {
 		int[] move = new int[4];
 		int h = 2;
+		// TODO: JOI VEIT
 		while (h <= 10) {
 			move = ABSearchRoot(h);
-			h++;
 			System.out.println("trying depth = " + h);
+			h++;
 		}
 		// try {
 		// while (h <= 10) {
@@ -108,6 +109,8 @@ public class OurAgent implements Agent {
 
 	int ABSearch(State currState, int alpha, int beta, int h) {
 		// IF TIME IS UP THROW EXCEPTION
+
+		// TODO: ORDER MOVES SO THAT THE PRUNING WILL PRUNE MORE
 		List<int[]> moves = currState.availableMoves();
 		if (currState.isTerminal) {
 			if (currState.winner == 'W') {
@@ -124,7 +127,9 @@ public class OurAgent implements Agent {
 		int value;
 		int bestValue = Integer.MIN_VALUE;
 		for (int[] move : moves) {
+			// TODO: INSTEAD OF DOING NEXTSTATE, TO SAVE MEMORY DO DOMOVE
 			value = ABSearch(currState.nextState(move), -beta, -alpha, h - 1);
+			// TODO: AND UNDOMOVE HERE
 			if (value > bestValue) {
 				bestValue = value;
 			}
