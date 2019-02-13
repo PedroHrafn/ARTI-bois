@@ -1,6 +1,7 @@
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.awt.Point;
+import java.util.List;
 
 public class OurAgent implements Agent {
 	private Random random = new Random();
@@ -11,6 +12,8 @@ public class OurAgent implements Agent {
 	private boolean myTurn; // whether it is this agent's turn or not
 	private int width, height; // dimensions of the board
 
+	private State state;
+
 	/*
 	 * init(String role, int playclock) is called once before you have to select the
 	 * first action. Use it to initialize the agent. role is either "white" or
@@ -18,6 +21,7 @@ public class OurAgent implements Agent {
 	 * return.
 	 */
 	public void init(String role, int width, int height, int playclock) {
+		System.out.println("IN INIT");
 		this.role = role;
 		this.playclock = playclock;
 		myTurn = !role.equals("white");
@@ -25,16 +29,21 @@ public class OurAgent implements Agent {
 		this.height = height;
 		// TODO: add your own initialization code here
 		Environment env = new Environment(role, width, height, playclock);
-		CopyOnWriteArrayList<Point> whites = new CopyOnWriteArrayList<Point>();
-		CopyOnWriteArrayList<Point> blacks = new CopyOnWriteArrayList<Point>();
 		// indexes start at 1
-		for (int i = 0; i < width; i++) {
-			whites.add(new Point(i + 1, 1));
-			whites.add(new Point(i + 1, 2));
-			blacks.add(new Point(i + 1, height));
-			blacks.add(new Point(i + 1, height - 1));
+		char[][] grid = new char[width][height];
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (y < 2) {
+					grid[x][y] = 'W';
+				} else if (y > height - 3) {
+					grid[x][y] = 'B';
+				} else {
+					grid[x][y] = ' ';
+				}
+
+			}
 		}
-		State startState = new State(env, whites, blacks);
+		state = new State(env, grid, !myTurn);
 	}
 
 	// lastMove is null the first time nextAction gets called (in the initial state)
@@ -50,8 +59,12 @@ public class OurAgent implements Agent {
 				roleOfLastPlayer = "black";
 			}
 			System.out.println(roleOfLastPlayer + " moved from " + x1 + "," + y1 + " to " + x2 + "," + y2);
-			// TODO: 1. update your internal world model according to the action that was
-			// just executed
+			for (int i = 0; i < 4; i++) {
+				lastMove[i]--;
+			}
+
+			state = state.nextState(lastMove);
+			printGrid(state.grid);
 
 		}
 
@@ -59,30 +72,131 @@ public class OurAgent implements Agent {
 		myTurn = !myTurn;
 		if (myTurn) {
 			// TODO: 2. run alpha-beta search to determine the best move
-
+			int[] move = getBestMove();
 			// Here we just construct a random move (that will most likely not even be
 			// possible),
 			// this needs to be replaced with the actual best move.
-			int x1, y1, x2, y2;
-			x1 = random.nextInt(width) + 1;
-			x2 = x1 + random.nextInt(3) - 1;
-			if (role.equals("white")) {
-				y1 = random.nextInt(height - 1);
-				y2 = y1 + 1;
-			} else {
-				y1 = random.nextInt(height - 1) + 2;
-				y2 = y1 - 1;
-			}
-			return "(move " + x1 + " " + y1 + " " + x2 + " " + y2 + ")";
+			// List<int[]> moves = state.availableMoves();
+			String moveString = "(move " + (move[0] + 1) + " " + (move[1] + 1) + " " + (move[2] + 1) + " "
+					+ (move[3] + 1) + ")";
+			System.out.println("OUR MOVE:  " + moveString);
+			return moveString;
 		} else {
 			return "noop";
 		}
+	}
+
+	private int[] getBestMove() {
+		int[] move = new int[4];
+		int h = 2;
+		while (h <= 10) {
+			move = ABSearchRoot(h);
+			h++;
+			System.out.println("trying depth = " + h);
+		}
+		// try {
+		// while (h <= 10) {
+		// move = ABSearchRoot(h);
+		// h++;
+		// System.out.println("trying depth = " + h);
+		// }
+		// } catch (Exception exception) {
+		// System.out.print("DID NOT FINISH AT DEPTH = " + h);
+		// }
+		return move;
+	}
+
+	int ABSearch(State currState, int alpha, int beta, int h) {
+		// IF TIME IS UP THROW EXCEPTION
+		List<int[]> moves = currState.availableMoves();
+		if (currState.isTerminal) {
+			if (currState.winner == 'W') {
+				return 100;
+			} else if (currState.winner == 'B') {
+				return -100;
+			}
+			return 0;
+		}
+		if (h == 0) {
+			return 0; // EVALUATION FUNCTION HERE
+		}
+		// printGrid(currState.grid);
+		int value;
+		int bestValue = Integer.MIN_VALUE;
+		for (int[] move : moves) {
+			value = ABSearch(currState.nextState(move), -beta, -alpha, h - 1);
+			if (value > bestValue) {
+				bestValue = value;
+			}
+		}
+		return bestValue;
+	}
+
+	int evaluateState(State evalState) {
+		int blackDist = 0;
+		int whiteDist = 0;
+		int y = 0;
+		boolean found = false;
+		while (y < state.grid[0].length && !found) {
+			for (int x = 0; x < state.grid.length; x++) {
+				if (evalState.grid[x][y] == 'B') {
+					blackDist = y;
+					found = true;
+					break;
+				}
+			}
+		}
+		found = false;
+		y = state.grid[0].length - 2;
+		while (y > 0 && !found) {
+			for (int x = 0; x < state.grid.length; x++) {
+				if (evalState.grid[x][y] == 'W') {
+					whiteDist = state.grid[0].length - y - 1;
+					found = true;
+					break;
+				}
+			}
+		}
+		// if we are black then return opposite! todo
+		return blackDist - whiteDist;
+	}
+
+	int[] ABSearchRoot(int h) {
+		int alpha = Integer.MIN_VALUE + 1;
+		int beta = Integer.MAX_VALUE;
+		int maxVal = -101;
+		int[] bestMove = new int[4];
+		for (int[] move : state.availableMoves()) {
+			int value = ABSearch(state.nextState(move), alpha, beta, h);
+			if (value > maxVal) {
+				maxVal = value;
+				bestMove = move;
+			}
+		}
+		return bestMove;
 	}
 
 	// is called when the game is over or the match is aborted
 	@Override
 	public void cleanup() {
 		// TODO: cleanup so that the agent is ready for the next match
+	}
+
+	public void printGrid(char[][] ngrid) {
+		System.out.println();
+		System.out.print("  ");
+		for (int i = 1; i <= ngrid.length; i++) {
+			System.out.print(" " + i);
+		}
+		System.out.println();
+		for (int y = ngrid[0].length - 1; y >= 0; y--) {
+			System.out.print(" " + (y + 1) + " ");
+			for (int x = 0; x < ngrid.length; x++) {
+				System.out.print(ngrid[x][y] + " ");
+			}
+			System.out.println();
+		}
+		System.out.println();
 	}
 
 }

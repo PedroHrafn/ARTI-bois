@@ -1,5 +1,6 @@
 import java.util.Collection;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.List;
+import java.util.ArrayList;
 
 import javafx.util.Pair;
 
@@ -7,36 +8,78 @@ import java.awt.Point;
 
 public class State {
     public Environment env;
-    public CopyOnWriteArrayList<Point> whites;
-    public CopyOnWriteArrayList<Point> blacks;
+    public char[][] grid;
+    public boolean whiteTurn;
+    public boolean isTerminal;
+    public char winner;
 
-    public State(Environment env, CopyOnWriteArrayList<Point> whites, CopyOnWriteArrayList<Point> blacks) {
+    public State(Environment env, char[][] grid, boolean whiteTurn) {
+        this.isTerminal = false;
+        this.winner = 'd';
+        this.whiteTurn = whiteTurn;
         this.env = env;
-        this.whites = new CopyOnWriteArrayList<Point>(whites);
-        this.blacks = new CopyOnWriteArrayList<Point>(blacks);
+        this.grid = new char[grid.length][grid[0].length];
+        for (int i = 0; i < grid.length; i++) {
+            System.arraycopy(grid[i], 0, this.grid[i], 0, grid[i].length);
+        }
     }
 
-    public Collection<Pair<Point, Point>> availableMoves(boolean whiteTurn) {
-        Collection<String> moves = new ArrayList<String>();
-        if (whiteTurn) {
-            for (Point from : whites) {
-                // TODO: check if from.y + 1 is empty
-
-                if (from.x != 1) {
-                    // check if there is black at (from.x - 1, from.y + 1)
-                }
-                if (from.x != env.width) {
-                    // check if there is black at (from.x - 1)
+    public List<int[]> availableMoves() {
+        List<int[]> moves = new ArrayList<int[]>();
+        int forward = 1;
+        char friendly = 'W';
+        char opponent = 'B';
+        if (!whiteTurn) {
+            friendly = 'B';
+            opponent = 'W';
+            forward = -1;
+        }
+        for (int x = 0; x < grid.length; x++) {
+            for (int y = 0; y < grid[0].length; y++) {
+                if (grid[x][y] == friendly) {
+                    if (grid[x][y + forward] == ' ') {
+                        moves.add(new int[] { x, y, x, y + forward });
+                    }
+                    if (x != 0) {
+                        if (grid[x - 1][y + forward] == opponent) {
+                            moves.add(new int[] { x, y, x - 1, y + forward });
+                        }
+                    }
+                    if (x != grid.length - 1) {
+                        if (grid[x + 1][y + forward] == opponent) {
+                            moves.add(new int[] { x, y, x + 1, y + forward });
+                        }
+                    }
                 }
             }
         }
+        // if moves is empty then its a draw
+        if (moves.isEmpty()) {
+            this.isTerminal = true;
+        }
+        // for (int[] move : moves) {
+        // System.out.println();
+        // for (int i = 0; i < 4; i++) {
+        // System.out.print(move[i] + ", ");
+        // }
+        // System.out.println();
+        // }
         return moves;
     }
 
-    public State execute(String move) {
-        State tmp = new State(this.xSize, this.ySize, this.grid);
-
-        return tmp;
+    public State nextState(int[] move) {
+        State newState = new State(this.env, this.grid, !this.whiteTurn);
+        newState.grid[move[2]][move[3]] = grid[move[0]][move[1]];
+        newState.grid[move[0]][move[1]] = ' ';
+        // if move[3] == 0 then black wins, if its Y max then white wins
+        if (move[3] == 0) {
+            newState.isTerminal = true;
+            newState.winner = 'B';
+        } else if (move[3] == grid[0].length - 1) {
+            newState.isTerminal = true;
+            newState.winner = 'W';
+        }
+        return newState;
     }
 
     public String getHash() {
