@@ -90,20 +90,16 @@ public class OurAgent implements Agent {
 		int[] move = new int[4];
 		int h = 2;
 		// TODO: JOI VEIT
-		while (h <= 10) {
-			move = ABSearchRoot(h);
-			System.out.println("trying depth = " + h);
-			h++;
+		try {
+			while (h <= 10/*move[3] != 0 || move[3] != height -1*/) {
+				move = ABSearchRoot(h);
+				
+				System.out.println("trying depth = " + h);
+				h++;
+			}
+		} catch (Exception exception) {
+			System.out.print("DID NOT FINISH AT DEPTH = " + h);
 		}
-		// try {
-		// while (h <= 10) {
-		// move = ABSearchRoot(h);
-		// h++;
-		// System.out.println("trying depth = " + h);
-		// }
-		// } catch (Exception exception) {
-		// System.out.print("DID NOT FINISH AT DEPTH = " + h);
-		// }
 		return move;
 	}
 
@@ -121,7 +117,7 @@ public class OurAgent implements Agent {
 			return 0;
 		}
 		if (h == 0) {
-			return 0; // EVALUATION FUNCTION HERE
+			return evaluateState(currState);
 		}
 		// printGrid(currState.grid);
 		int value;
@@ -142,7 +138,7 @@ public class OurAgent implements Agent {
 		int whiteDist = 0;
 		int y = 0;
 		boolean found = false;
-		while (y < state.grid[0].length && !found) {
+		while (y < state.grid[0].length || !found) {
 			for (int x = 0; x < state.grid.length; x++) {
 				if (evalState.grid[x][y] == 'B') {
 					blackDist = y;
@@ -150,10 +146,12 @@ public class OurAgent implements Agent {
 					break;
 				}
 			}
+			y++;
 		}
+		
 		found = false;
 		y = state.grid[0].length - 2;
-		while (y > 0 && !found) {
+		while (y > 0 || !found) {
 			for (int x = 0; x < state.grid.length; x++) {
 				if (evalState.grid[x][y] == 'W') {
 					whiteDist = state.grid[0].length - y - 1;
@@ -161,8 +159,11 @@ public class OurAgent implements Agent {
 					break;
 				}
 			}
+			y--;
 		}
+		
 		// if we are black then return opposite! todo
+		//System.out.println("Evaluate state: " + (blackDist - whiteDist));
 		return blackDist - whiteDist;
 	}
 
