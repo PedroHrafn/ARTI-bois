@@ -103,7 +103,9 @@ public class OurAgent implements Agent {
 		return move;
 	}
 
-	int ABSearch(State currState, int alpha, int beta, int h, boolean max) throws Exception {
+	int ABSearch(State lastState, State currState, int alpha, int beta, int h, boolean max) throws Exception {
+		// IF TIME IS UP THROW EXCEPTION
+
 		// TODO: ORDER MOVES SO THAT THE PRUNING WILL PRUNE MORE
 		List<int[]> moves = currState.availableMoves();
 		if (currState.isTerminal) {
@@ -129,7 +131,7 @@ public class OurAgent implements Agent {
 		for (int[] move : moves) {
 			// TODo: INSTEAD OF DOING NEXTSTATE, TO SAVE MEMORY DO DOMOVE
 			// value = ABSearch(currState.nextState(move), -beta, -alpha, h - 1, !max);
-			v = ABSearch(currState.nextState(move), alpha, beta, h - 1, !max);
+			v = ABSearch(currState, currState.nextState(move), alpha, beta, h - 1, !max);
 			// System.out.println("THE ALPHA: " + alpha);
 			// System.out.println("THE VALUE: " + beta);
 			// System.out.println("THE VALUE: " + v);
@@ -200,12 +202,17 @@ public class OurAgent implements Agent {
 		int maxVal = -101;
 		int[] bestMove = new int[4];
 		for (int[] move : state.availableMoves()) {
+<<<<<<< HEAD
 			int value = ABSearch(state.nextState(move), alpha, beta, h, true);
+=======
+			int value = ABSearch(state, state.nextState(move), alpha, beta, h);
+>>>>>>> b594ad77ba4f97e074c829a04f7d9373544659c8
 			if (value > maxVal) {
 				maxVal = value;
 				bestMove = move;
 			}
 		}
+		System.out.println("Max val: " + maxVal);
 		return bestMove;
 	}
 
