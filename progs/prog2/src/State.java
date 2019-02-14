@@ -17,6 +17,8 @@ public class State {
         this.isTerminal = false;
         this.winner = 'd';
         this.whiteTurn = whiteTurn;
+        this.whitePawns = grid.length * 2;
+        this.blackPawns = grid.length * 2;
         this.grid = new char[grid.length][grid[0].length];
         for (int i = 0; i < grid.length; i++) {
             System.arraycopy(grid[i], 0, this.grid[i], 0, grid[i].length);
@@ -77,6 +79,14 @@ public class State {
         } else if (move[3] == grid[0].length - 1) {
             newState.isTerminal = true;
             newState.winner = 'W';
+        }
+        else if (grid[move[2]][move[3]] == 'W')
+        {
+            whitePawns --;
+        }
+        else if (grid[move[2]][move[3]] == 'B')
+        {
+            blackPawns --;
         }
         return newState;
     }

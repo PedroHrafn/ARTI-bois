@@ -117,7 +117,7 @@ public class OurAgent implements Agent {
 			return 0;
 		}
 		if (h == 0) {
-			return evaluateState(currState);
+			return evaluateState(lastState, currState);
 		}
 
 		// Check if time has ran out
@@ -139,7 +139,7 @@ public class OurAgent implements Agent {
 		return bestValue;
 	}
 
-	int evaluateState(State evalState) {
+	int evaluateState(State lastState, State evalState) {
 		int blackDist = 0;
 		int whiteDist = 0;
 		int y = 0;
@@ -169,7 +169,8 @@ public class OurAgent implements Agent {
 		}
 		
 		// if we are black then return opposite
-		return evalState.whiteTurn ? blackDist - whiteDist : whiteDist - blackDist;
+		return role.equals("white") ? (blackDist - whiteDist) + (evalState.whitePawns - evalState.blackPawns) : 
+			(whiteDist - blackDist) + (evalState.blackPawns - evalState.whitePawns);
 	}
 
 	int[] ABSearchRoot(int h) throws Exception {
@@ -185,6 +186,7 @@ public class OurAgent implements Agent {
 			}
 		}
 		System.out.println("Max val: " + maxVal);
+		System.out.println("Pawn val: " + (state.whitePawns - state.blackPawns));
 		return bestMove;
 	}
 
