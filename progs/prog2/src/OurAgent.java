@@ -9,6 +9,7 @@ public class OurAgent implements Agent {
 	private String role; // the name of this agent's role (white or black)
 	private int playclock; // this is how much time (in seconds) we have before nextAction needs to return
 							// a move
+	private long currTime;
 	private boolean myTurn; // whether it is this agent's turn or not
 	private int width, height; // dimensions of the board
 
@@ -27,8 +28,8 @@ public class OurAgent implements Agent {
 		myTurn = !role.equals("white");
 		this.width = width;
 		this.height = height;
-		// TODO: add your own initialization code here
-		// indexes start at 1
+		currTime = 0;
+		// Initializing board
 		char[][] grid = new char[width][height];
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -90,7 +91,7 @@ public class OurAgent implements Agent {
 		int h = 2;
 		// TODO: JOI VEIT
 		try {
-			while (h <= 10/*move[3] != 0 || move[3] != height -1*/) {
+			while (true/*move[3] != 0 || move[3] != height -1*/) {
 				move = ABSearchRoot(h);
 				
 				System.out.println("trying depth = " + h);
@@ -102,7 +103,7 @@ public class OurAgent implements Agent {
 		return move;
 	}
 
-	int ABSearch(State currState, int alpha, int beta, int h) {
+	int ABSearch(State currState, int alpha, int beta, int h) throws Exception {
 		// IF TIME IS UP THROW EXCEPTION
 
 		// TODO: ORDER MOVES SO THAT THE PRUNING WILL PRUNE MORE
@@ -118,6 +119,12 @@ public class OurAgent implements Agent {
 		if (h == 0) {
 			return evaluateState(currState);
 		}
+
+		// Check if time has ran out
+		if(this.currTime - System.currentTimeMillis() > this.playclock * 1000) {
+			throw new Exception("Time ran out");
+		}
+
 		// printGrid(currState.grid);
 		int value;
 		int bestValue = Integer.MIN_VALUE;
@@ -162,10 +169,10 @@ public class OurAgent implements Agent {
 		}
 		
 		// if we are black then return opposite
-		return whiteTurn ? blackDist - whiteDist : whiteDist - blackDist;
+		return evalState.whiteTurn ? blackDist - whiteDist : whiteDist - blackDist;
 	}
 
-	int[] ABSearchRoot(int h) {
+	int[] ABSearchRoot(int h) throws Exception {
 		int alpha = Integer.MIN_VALUE + 1;
 		int beta = Integer.MAX_VALUE;
 		int maxVal = -101;
