@@ -59,11 +59,11 @@ public class State {
             this.isTerminal = true;
         }
         // for (int[] move : moves) {
-        // System.out.println();
-        // for (int i = 0; i < 4; i++) {
-        // System.out.print(move[i] + ", ");
-        // }
-        // System.out.println();
+        //     System.out.println();
+        //     for (int i = 0; i < 4; i++) {
+        //         System.out.print(move[i] + ", ");
+        //     }
+        //     System.out.println();
         // }
         return moves;
     }

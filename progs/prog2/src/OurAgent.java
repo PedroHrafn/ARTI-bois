@@ -88,7 +88,7 @@ public class OurAgent implements Agent {
 
 	private int[] getBestMove() {
 		int[] move = new int[4];
-		int h = 2;
+		int h = 1;
 		// TODO: JOI VEIT
 		try {
 			while (h <= 10/*move[3] != 0 || move[3] != height -1*/) {
@@ -104,7 +104,10 @@ public class OurAgent implements Agent {
 	}
 
 	int ABSearch(State lastState, State currState, int alpha, int beta, int h, boolean max) throws Exception {
-		// IF TIME IS UP THROW EXCEPTION
+		// Check if time has run out
+		if(this.currTime - System.currentTimeMillis() > this.playclock * 1000) {
+			throw new Exception("Time ran out");
+		}
 
 		// TODO: ORDER MOVES SO THAT THE PRUNING WILL PRUNE MORE
 		List<int[]> moves = currState.availableMoves();
@@ -120,10 +123,6 @@ public class OurAgent implements Agent {
 			return evaluateState(lastState, currState);
 		}
 
-		// Check if time has ran out
-		if(this.currTime - System.currentTimeMillis() > this.playclock * 1000) {
-			throw new Exception("Time ran out");
-		}
 
 		// successor state value
 		int v;
@@ -132,9 +131,12 @@ public class OurAgent implements Agent {
 			// TODo: INSTEAD OF DOING NEXTSTATE, TO SAVE MEMORY DO DOMOVE
 			// value = ABSearch(currState.nextState(move), -beta, -alpha, h - 1, !max);
 			v = ABSearch(currState, currState.nextState(move), alpha, beta, h - 1, !max);
+			// System.out.println("========================================");
+			// System.out.println("DEPTH: " + h);
 			// System.out.println("THE ALPHA: " + alpha);
-			// System.out.println("THE VALUE: " + beta);
+			// System.out.println("THE BETA: " + beta);
 			// System.out.println("THE VALUE: " + v);
+			// System.out.println("========================================");
 			// TODo: AND UNDOMOVE HERE
 			if(max) {
 				if (v > bestValue) {
@@ -166,8 +168,8 @@ public class OurAgent implements Agent {
 		int whiteDist = 0;
 		int y = 0;
 		boolean found = false;
-		while (y < state.grid[0].length || !found) {
-			for (int x = 0; x < state.grid.length; x++) {
+		while (y < this.height && !found) {
+			for (int x = 0; x < this.width; x++) {
 				if (evalState.grid[x][y] == 'B') {
 					blackDist = y;
 					found = true;
@@ -179,7 +181,7 @@ public class OurAgent implements Agent {
 		
 		found = false;
 		y = state.grid[0].length - 2;
-		while (y > 0 || !found) {
+		while (y > 0 && !found) {
 			for (int x = 0; x < state.grid.length; x++) {
 				if (evalState.grid[x][y] == 'W') {
 					whiteDist = state.grid[0].length - y - 1;
@@ -189,10 +191,17 @@ public class OurAgent implements Agent {
 			}
 			y--;
 		}
+
+		// printGrid(evalState.grid);
+		// System.out.println("WhiteDist: " + whiteDist);
+		// System.out.println("BlackDist: " + blackDist);
+
+		// System.out.println(role.equals("white") ? (blackDist - whiteDist) : whiteDist - blackDist);
 		
 		// if we are black then return opposite
-		return role.equals("white") ? (blackDist - whiteDist) + (evalState.whitePawns - evalState.blackPawns) : 
-			(whiteDist - blackDist) + (evalState.blackPawns - evalState.whitePawns);
+		return role.equals("white") ? (blackDist - whiteDist) : whiteDist - blackDist;
+		// return role.equals("white") ? (blackDist - whiteDist) + (evalState.whitePawns - evalState.blackPawns) : 
+		// 	(whiteDist - blackDist) + (evalState.blackPawns - evalState.whitePawns);
 	}
 
 	int[] ABSearchRoot(int h) throws Exception {
@@ -201,7 +210,8 @@ public class OurAgent implements Agent {
 		int maxVal = -101;
 		int[] bestMove = new int[4];
 		for (int[] move : state.availableMoves()) {
-			int value = ABSearch(state, state.nextState(move), alpha, beta, h, true);
+			int value = ABSearch(state, state.nextState(move), alpha, beta, h - 1, false);
+			System.out.println("value: " + value);
 			if (value > maxVal) {
 				maxVal = value;
 				bestMove = move;
