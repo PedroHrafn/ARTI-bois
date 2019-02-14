@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.awt.Point;
 
 public class State {
-    public Environment env;
     public char[][] grid;
     public boolean whiteTurn;
     public boolean isTerminal;
@@ -14,11 +13,10 @@ public class State {
     public int whitePawns;
     public int blackPawns;
 
-    public State(Environment env, char[][] grid, boolean whiteTurn) {
+    public State(char[][] grid, boolean whiteTurn) {
         this.isTerminal = false;
         this.winner = 'd';
         this.whiteTurn = whiteTurn;
-        this.env = env;
         this.grid = new char[grid.length][grid[0].length];
         for (int i = 0; i < grid.length; i++) {
             System.arraycopy(grid[i], 0, this.grid[i], 0, grid[i].length);
@@ -69,7 +67,7 @@ public class State {
     }
 
     public State nextState(int[] move) {
-        State newState = new State(this.env, this.grid, !this.whiteTurn);
+        State newState = new State(this.grid, !this.whiteTurn);
         newState.grid[move[2]][move[3]] = grid[move[0]][move[1]];
         newState.grid[move[0]][move[1]] = ' ';
         // if move[3] == 0 then black wins, if its Y max then white wins
