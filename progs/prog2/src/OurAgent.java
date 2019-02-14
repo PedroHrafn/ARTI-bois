@@ -28,7 +28,6 @@ public class OurAgent implements Agent {
 		this.width = width;
 		this.height = height;
 		// TODO: add your own initialization code here
-		Environment env = new Environment(role, width, height, playclock);
 		// indexes start at 1
 		char[][] grid = new char[width][height];
 		for (int x = 0; x < width; x++) {
@@ -43,7 +42,7 @@ public class OurAgent implements Agent {
 
 			}
 		}
-		state = new State(env, grid, !myTurn);
+		state = new State(grid, !myTurn);
 	}
 
 	// lastMove is null the first time nextAction gets called (in the initial state)
