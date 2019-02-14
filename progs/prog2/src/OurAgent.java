@@ -162,9 +162,8 @@ public class OurAgent implements Agent {
 			y--;
 		}
 		
-		// if we are black then return opposite! todo
-		//System.out.println("Evaluate state: " + (blackDist - whiteDist));
-		return blackDist - whiteDist;
+		// if we are black then return opposite
+		return whiteTurn ? blackDist - whiteDist : whiteDist - blackDist;
 	}
 
 	int[] ABSearchRoot(int h) {
