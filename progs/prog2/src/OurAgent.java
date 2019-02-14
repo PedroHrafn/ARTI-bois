@@ -202,11 +202,7 @@ public class OurAgent implements Agent {
 		int maxVal = -101;
 		int[] bestMove = new int[4];
 		for (int[] move : state.availableMoves()) {
-<<<<<<< HEAD
-			int value = ABSearch(state.nextState(move), alpha, beta, h, true);
-=======
-			int value = ABSearch(state, state.nextState(move), alpha, beta, h);
->>>>>>> b594ad77ba4f97e074c829a04f7d9373544659c8
+			int value = ABSearch(state, state.nextState(move), alpha, beta, h, true);
 			if (value > maxVal) {
 				maxVal = value;
 				bestMove = move;
