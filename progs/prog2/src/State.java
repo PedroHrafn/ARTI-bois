@@ -11,6 +11,8 @@ public class State {
     public boolean whiteTurn;
     public boolean isTerminal;
     public char winner;
+    public int whitePawns;
+    public int blackPawns;
 
     public State(Environment env, char[][] grid, boolean whiteTurn) {
         this.isTerminal = false;

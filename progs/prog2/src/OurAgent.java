@@ -91,7 +91,7 @@ public class OurAgent implements Agent {
 		int h = 2;
 		// TODO: JOI VEIT
 		try {
-			while (h <= 10/*move[3] != 0 || move[3] != height -1*/) {
+			while (h <= 10 /* move[3] != 0 || move[3] != height -1*/) {
 				move = ABSearchRoot(h);
 				
 				System.out.println("trying depth = " + h);
@@ -103,7 +103,7 @@ public class OurAgent implements Agent {
 		return move;
 	}
 
-	int ABSearch(State currState, int alpha, int beta, int h) {
+	int ABSearch(State lastState, State currState, int alpha, int beta, int h) {
 		// IF TIME IS UP THROW EXCEPTION
 
 		// TODO: ORDER MOVES SO THAT THE PRUNING WILL PRUNE MORE
@@ -124,7 +124,7 @@ public class OurAgent implements Agent {
 		int bestValue = Integer.MIN_VALUE;
 		for (int[] move : moves) {
 			// TODO: INSTEAD OF DOING NEXTSTATE, TO SAVE MEMORY DO DOMOVE
-			value = ABSearch(currState.nextState(move), -beta, -alpha, h - 1);
+			value = ABSearch(currState, currState.nextState(move), -beta, -alpha, h - 1);
 			// TODO: AND UNDOMOVE HERE
 			if (value > bestValue) {
 				bestValue = value;
@@ -173,12 +173,13 @@ public class OurAgent implements Agent {
 		int maxVal = -101;
 		int[] bestMove = new int[4];
 		for (int[] move : state.availableMoves()) {
-			int value = ABSearch(state.nextState(move), alpha, beta, h);
+			int value = ABSearch(state, state.nextState(move), alpha, beta, h);
 			if (value > maxVal) {
 				maxVal = value;
 				bestMove = move;
 			}
 		}
+		System.out.println("Max val: " + maxVal);
 		return bestMove;
 	}
 
