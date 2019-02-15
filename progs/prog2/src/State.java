@@ -17,6 +17,7 @@ public class State {
         this.isTerminal = false;
         this.winner = 'd';
         this.whiteTurn = whiteTurn;
+        System.out.println(grid.length);
         this.whitePawns = grid.length * 2;
         this.blackPawns = grid.length * 2;
         this.grid = new char[grid.length][grid[0].length];
@@ -27,20 +28,15 @@ public class State {
 
     public List<int[]> availableMoves() {
         List<int[]> moves = new ArrayList<int[]>();
-        int forward = 1;
-        char friendly = 'W';
-        char opponent = 'B';
-        if (!whiteTurn) {
-            friendly = 'B';
-            opponent = 'W';
-            forward = -1;
-        }
+        int forward = whiteTurn ? 1 : -1;
+        char friendly = whiteTurn ? 'W' : 'B';
+        char opponent = whiteTurn ? 'B' : 'W';
+
+        // TODO: implement for black
         for (int x = 0; x < grid.length; x++) {
             for (int y = 0; y < grid[0].length; y++) {
+                System.out.print(grid[x][y]);
                 if (grid[x][y] == friendly) {
-                    if (grid[x][y + forward] == ' ') {
-                        moves.add(new int[] { x, y, x, y + forward });
-                    }
                     if (x != 0) {
                         if (grid[x - 1][y + forward] == opponent) {
                             moves.add(new int[] { x, y, x - 1, y + forward });
@@ -51,8 +47,12 @@ public class State {
                             moves.add(new int[] { x, y, x + 1, y + forward });
                         }
                     }
+                    if (grid[x][y + forward] == ' ') {
+                        moves.add(new int[] { x, y, x, y + forward });
+                    }
                 }
             }
+            System.out.println();
         }
         // if moves is empty then its a draw
         if (moves.isEmpty()) {
@@ -70,6 +70,7 @@ public class State {
 
     public State nextState(int[] move) {
         State newState = new State(this.grid, !this.whiteTurn);
+        char victim = newState.grid[move[2]][move[3]];
         newState.grid[move[2]][move[3]] = grid[move[0]][move[1]];
         newState.grid[move[0]][move[1]] = ' ';
         // if move[3] == 0 then black wins, if its Y max then white wins
@@ -80,13 +81,13 @@ public class State {
             newState.isTerminal = true;
             newState.winner = 'W';
         }
-        else if (grid[move[2]][move[3]] == 'W')
+        else if (victim == 'W')
         {
-            whitePawns --;
+            newState.whitePawns --;
         }
-        else if (grid[move[2]][move[3]] == 'B')
-        {
-            blackPawns --;
+        else if (victim == 'B')
+        { 
+            newState.blackPawns --;
         }
         return newState;
     }

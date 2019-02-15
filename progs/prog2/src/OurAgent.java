@@ -94,9 +94,6 @@ public class OurAgent implements Agent {
 		try {
 			while (move[3] != 0 || move[3] != height -1) {
 				move = ABSearchRoot(h);
-				
-				System.out.println("trying depth = " + h);
-				System.out.println("New y: " + move[3]);
 				h++;
 			}
 		} catch (Exception exception) {
@@ -106,9 +103,8 @@ public class OurAgent implements Agent {
 	}
 
 	int ABSearch(State lastState, State currState, int alpha, int beta, int h, boolean max) throws Exception {
-		// Check if time has run out
+		// Check if time has run out, 1000 to change playclock to ms
 		if( System.currentTimeMillis() - this.currTime > this.playclock * 1000) {
-			System.out.println("TIME RAN OUT");
 			throw new Exception("Time ran out");
 		}
 
