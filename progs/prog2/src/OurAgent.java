@@ -189,9 +189,9 @@ public class OurAgent implements Agent {
 		}
 
 		// if we are black then return opposite
-		return role.equals("white") ? (blackDist - whiteDist) : whiteDist - blackDist;
-		// return role.equals("white") ? (blackDist - whiteDist) + (evalState.whitePawns - evalState.blackPawns) : 
-		// 	(whiteDist - blackDist) + (evalState.blackPawns - evalState.whitePawns);
+		// return role.equals("white") ? (blackDist - whiteDist) : whiteDist - blackDist;
+		return role.equals("white") ? (blackDist - whiteDist) + (evalState.whitePawns - evalState.blackPawns) : 
+			(whiteDist - blackDist) + (evalState.blackPawns - evalState.whitePawns);
 	}
 
 	int[] ABSearchRoot(int h) throws Exception {
