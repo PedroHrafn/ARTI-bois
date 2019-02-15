@@ -1,0 +1,3453 @@
+Buildfile: /Users/alexgunnarsson/skoli/ARTI/ARTI-bois/progs/prog2/build.xml
+
+clean:
+
+init:
+    [mkdir] Created dir: /Users/alexgunnarsson/skoli/ARTI/ARTI-bois/progs/prog2/build
+
+build:
+    [javac] Compiling 8 source files to /Users/alexgunnarsson/skoli/ARTI/ARTI-bois/progs/prog2/build
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 7
+    [javac] 1 warning
+      [jar] Building jar: /Users/alexgunnarsson/skoli/ARTI/ARTI-bois/progs/prog2/build/Jon Jonsson_lab2.jar
+
+dist:
+     [copy] Copying 1 file to /Users/alexgunnarsson/skoli/ARTI/ARTI-bois/progs/prog2/dist
+
+clean:
+   [delete] Deleting directory /Users/alexgunnarsson/skoli/ARTI/ARTI-bois/progs/prog2/build
+
+run:
+     [java] NanoHTTPD is listening on port 4001
+     [java] 2019-02-15 20:52:54.665 Command: (start testmatch_1 black ((width 3) (height 5) (succ 1 2) (succ 2 3) (succ 3 4) (succ 4 5) (succ 5 6) (succ 6 7) (succ 7 8) (succ 8 9) (succ 9 10) (<= (smallereq 1 ?y) (succ ?y ?z)) (<= (smallereq ?x ?y) (succ ?x1 ?x) (succ ?y1 ?y) (smallereq ?x1 ?y1)) (<= (xcoord ?x) (width ?w) (smallereq ?x ?w)) (<= (ycoord ?y) (height ?h) (smallereq ?y ?h)) (<= (forward white ?y1 ?y2) (succ ?y1 ?y2) (ycoord ?y2)) (<= (forward black ?y1 ?y2) (succ ?y2 ?y1) (ycoord ?y1)) (<= (neighbor ?x1 ?x2) (succ ?x1 ?x2) (xcoord ?x2)) (<= (neighbor ?x1 ?x2) (succ ?x2 ?x1) (xcoord ?x1)) (<= (cell ?x ?y) (xcoord ?x) (ycoord ?y)) (<= (distinctcell ?x1 ?y1 ?x2 ?y2) (cell ?x1 ?y1) (cell ?x2 ?y2) (distinct ?x1 ?x2)) (<= (distinctcell ?x1 ?y1 ?x2 ?y2) (cell ?x1 ?y1) (cell ?x2 ?y2) (distinct ?y1 ?y2)) (role white) (role black) (opponent white black) (opponent black white) (<= (base (cell ?x ?y ?p)) (cell ?x ?y) (role ?p)) (<= (base (control ?p)) (role ?p)) (<= (input ?p noop) (role ?p)) (<= (input ?p (move ?x ?y1 ?x ?y2)) (xcoord ?x) (forward ?p ?y1 ?y2)) (<= (input ?p (move ?x1 ?y1 ?x2 ?y2)) (neighbor ?x1 ?x2) (forward ?p ?y1 ?y2)) (<= (init (cell ?x 1 white)) (xcoord ?x)) (<= (init (cell ?x 2 white)) (xcoord ?x)) (<= (init (cell ?x ?y black)) (xcoord ?x) (height ?y)) (<= (init (cell ?x ?y black)) (xcoord ?x) (height ?h) (succ ?y ?h)) (init (control white)) (<= (cellempty ?x ?y) (cell ?x ?y) (not (true (cell ?x ?y white))) (not (true (cell ?x ?y black)))) (<= (legal ?p (move ?x ?y1 ?x ?y2)) (true (control ?p)) (true (cell ?x ?y1 ?p)) (forward ?p ?y1 ?y2) (cellempty ?x ?y2)) (<= (legal ?p (move ?x1 ?y1 ?x2 ?y2)) (true (control ?p)) (true (cell ?x1 ?y1 ?p)) (forward ?p ?y1 ?y2) (neighbor ?x1 ?x2) (opponent ?p ?p2) (true (cell ?x2 ?y2 ?p2))) (<= (legal ?p noop) (role ?p) (not (true (control ?p)))) (<= (next (cell ?x2 ?y2 ?player)) (does ?player (move ?x1 ?y1 ?x2 ?y2))) (<= (next (cell ?x3 ?y3 ?state)) (true (cell ?x3 ?y3 ?state)) (does ?player (move ?x1 ?y1 ?x2 ?y2)) (distinctcell ?x1 ?y1 ?x3 ?y3) (distinctcell ?x2 ?y2 ?x3 ?y3)) (<= (next (control ?p)) (true (control ?p2)) (opponent ?p ?p2)) (<= (wins white) (height ?h) (true (cell ?x ?h white))) (<= (wins black) (true (cell ?x 1 black))) (<= (goal ?p 100) (wins ?p)) (<= (goal ?p 50) (role ?p) (not (wins white)) (not (wins black))) (<= (goal ?p 0) (opponent ?p ?p2) (wins ?p2)) (<= (any_legal_move ?p) (legal ?p ?m)) (<= terminal (wins ?someone)) (<= terminal (true (control ?p)) (not (any_legal_move ?p))) (<= (init (width ?w)) (width ?w)) (<= (init (height ?h)) (height ?h)) (<= (next (width ?w)) (width ?w)) (<= (next (height ?h)) (height ?h)) ) 10 5)
+     [java] role: black, board: 3x5, playclock: 5
+     [java] IN INIT
+     [java] 3
+     [java] 2019-02-15 20:52:54.674 Response: ready
+     [java] 2019-02-15 20:52:54.769 Command: (play testmatch_1 nil)
+     [java] 2019-02-15 20:52:54.770 Response: noop
+     [java] 2019-02-15 20:52:54.827 Command: (play testmatch_1 ((move 2 2 2 3) noop))
+     [java] white moved from 2,2 to 2,3
+     [java] 3
+     [java] 
+     [java]    1 2 3
+     [java]  5 B B B 
+     [java]  4 B B B 
+     [java]  3   W   
+     [java]  2 W   W 
+     [java]  1 W W W 
+     [java] 
+     [java] WW BB
+     [java] W WBB
+     [java] WW BB
+     [java] 3
+     [java] W WBB
+     [java] W WBB
+     [java] WW BB
+     [java] 3
+     [java] WW BB
+     [java]  WWBB
+     [java] WW BB
+     [java] 3
+     [java] WW WB
+     [java] W  BB
+     [java] WW BB
+     [java] 3
+     [java] WW BB
+     [java] W  BB
+     [java] WW WB
+     [java] 3
+     [java] WW BB
+     [java] W WBB
+     [java] W WBB
+     [java] WW BB
+     [java] W WBB
+     [java] WW BB
+     [java] 3
+     [java] W WBB
+     [java] W WBB
+     [java] WW BB
+     [java] 3
+     [java] W W B
+     [java] W BBB
+     [java] WW BB
+     [java] 3
+     [java] W BBB
+     [java] W W B
+     [java] WW BB
+     [java] 3
+     [java] W WBB
+     [java] W BBB
+     [java] WW  B
+     [java] 3
+     [java] W WBB
+     [java] W WBB
+     [java] WWB B
+     [java] 3
+     [java] WW BB
+     [java]  WWBB
+     [java] WW BB
+     [java] 3
+     [java] WW  B
+     [java]  WBBB
+     [java] WW BB
+     [java] 3
+     [java] WWB B
+     [java]  WWBB
+     [java] WW BB
+     [java] 3
+     [java] WW BB
+     [java]  WBBB
+     [java] WW  B
+     [java] 3
+     [java] WW BB
+     [java]  WWBB
+     [java] WWB B
+     [java] 3
+     [java] WW WB
+     [java] W  BB
+     [java] WW BB
+     [java] 3
+     [java] WW WB
+     [java] W B B
+     [java] WW BB
+     [java] 3
+     [java] WW BB
+     [java] W  B 
+     [java] WW BB
+     [java] 3
+     [java] WW WB
+     [java] W  BB
+     [java] WWB B
+     [java] 3
+     [java] WW BB
+     [java] W  BB
+     [java] WW WB
+     [java] 3
+     [java] WWB B
+     [java] W  BB
+     [java] WW WB
+     [java] 3
+     [java] WW BB
+     [java] W B B
+     [java] WW WB
+     [java] 3
+     [java] WW BB
+     [java] W  B 
+     [java] WW BB
+     [java] 3
+     [java] WW BB
+     [java] W WBB
+     [java] W WBB
+     [java] 3
+     [java] WW  B
+     [java] W BBB
+     [java] W WBB
+     [java] 3
+     [java] WWB B
+     [java] W WBB
+     [java] W WBB
+     [java] 3
+     [java] WW BB
+     [java] W W B
+     [java] W BBB
+     [java] 3
+     [java] WW BB
+     [java] W BBB
+     [java] W W B
+     [java] WW BB
+     [java] W WBB
+     [java] WW BB
+     [java] 3
+     [java] W WBB
+     [java] W WBB
+     [java] WW BB
+     [java] 3
+     [java] W W B
+     [java] W BBB
+     [java] WW BB
+     [java] 3
+     [java]  WW B
+     [java] W BBB
+     [java] WW BB
+     [java] 3
+     [java] W   B
+     [java] W BWB
+     [java] WW BB
+     [java] 3
+     [java] W  WB
+     [java] W BBB
+     [java] WW BB
+     [java] 3
+     [java] W W B
+     [java]  WBBB
+     [java] WW BB
+     [java] 3
+     [java] W W B
+     [java] W WBB
+     [java] W  BB
+     [java] 3
+     [java] W W B
+     [java] W BBB
+     [java] W WBB
+     [java] 3
+     [java] W BBB
+     [java] W W B
+     [java] WW BB
+     [java] 3
+     [java]  WBBB
+     [java] W W B
+     [java] WW BB
+     [java] 3
+     [java] W WBB
+     [java] W BBB
+     [java] WW  B
+     [java] 3
+     [java]  WWBB
+     [java] W BBB
+     [java] WW  B
+     [java] 3
+     [java] W WBB
+     [java] W WBB
+     [java] WWB B
+     [java] 3
+     [java]  WWBB
+     [java] W WBB
+     [java] WWB B
+     [java] 3
+     [java] WW BB
+     [java]  WWBB
+     [java] WW BB
+     [java] 3
+     [java] WW  B
+     [java]  WBBB
+     [java] WW BB
+     [java] 3
+     [java] W   B
+     [java]  WWBB
+     [java] WW BB
+     [java] 3
+     [java] W W B
+     [java]  WBBB
+     [java] WW BB
+     [java] 3
+     [java] WW  B
+     [java]  WWBB
+     [java] W  BB
+     [java] 3
+     [java] WW  B
+     [java]  WBBB
+     [java] W WBB
+     [java] 3
+     [java] WWB B
+     [java]  WWBB
+     [java] WW BB
+     [java] 3
+     [java] WWW B
+     [java]   WBB
+     [java] WW BB
+     [java] 3
+     [java] WWB B
+     [java]  W BB
+     [java] WW WB
+     [java] 3
+     [java] WWB B
+     [java]  WWBB
+     [java] W WBB
+     [java] 3
+     [java] WW BB
+     [java]  WBBB
+     [java] WW  B
+     [java] 3
+     [java] W  BB
+     [java]  WWBB
+     [java] WW  B
+     [java] 3
+     [java] W WBB
+     [java]  WBBB
+     [java] WW  B
+     [java] 3
+     [java] WW BB
+     [java]  WWBB
+     [java] WWB B
+     [java] 3
+     [java] W WBB
+     [java]  WWBB
+     [java] WWB B
+     [java] 3
+     [java] WW WB
+     [java] W  BB
+     [java] WW BB
+     [java] 3
+     [java] WW WB
+     [java] W B B
+     [java] WW BB
+     [java] 3
+     [java] W  WB
+     [java] W W B
+     [java] WW BB
+     [java] 3
+     [java] W WWB
+     [java] W B B
+     [java] WW BB
+     [java] 3
+     [java] WW  B
+     [java] W B W
+     [java] WW BB
+     [java] 3
+     [java] WW WB
+     [java]  WB B
+     [java] WW BB
+     [java] 3
+     [java] WW WB
+     [java] W W B
+     [java] W  BB
+     [java] 3
+     [java] WW WB
+     [java] W B B
+     [java] W WBB
+     [java] 3
+     [java] WW BB
+     [java] W  B 
+     [java] WW BB
+     [java] 3
+     [java] W WBB
+     [java] W  B 
+     [java] WW BB
+     [java] 3
+     [java] WW BB
+     [java]  W B 
+     [java] WW BB
+     [java] 3
+     [java] WW BB
+     [java] W  B 
+     [java] W WBB
+     [java] 3
+     [java] WW WB
+     [java] W  BB
+     [java] WWB B
+     [java] 3
+     [java] W WWB
+     [java] W  BB
+     [java] WWB B
+     [java] 3
+     [java] WW  B
+     [java] W  BW
+     [java] WWB B
+     [java] 3
+     [java] WW BB
+     [java] W  BB
+     [java] WW WB
+     [java] 3
+     [java] WWB B
+     [java] W  BB
+     [java] WW WB
+     [java] 3
+     [java] WWB B
+     [java]  W BB
+     [java] WW WB
+     [java] 3
+     [java] WWB B
+     [java] W  BB
+     [java] W WWB
+     [java] 3
+     [java] WWB B
+     [java] W  BW
+     [java] WW  B
+     [java] 3
+     [java] WW BB
+     [java] W B B
+     [java] WW WB
+     [java] 3
+     [java] W  BB
+     [java] W W B
+     [java] WW WB
+     [java] 3
+     [java] W WBB
+     [java] W B B
+     [java] WW WB
+     [java] 3
+     [java] WW BB
+     [java]  WB B
+     [java] WW WB
+     [java] 3
+     [java] WW BB
+     [java] W W B
+     [java] W  WB
+     [java] 3
+     [java] WW BB
+     [java] W B B
+     [java] W WWB
+     [java] 3
+     [java] WW BB
+     [java] W B W
+     [java] WW  B
+     [java] 3
+     [java] WW BB
+     [java] W  B 
+     [java] WW BB
+     [java] 3
+     [java] W WBB
+     [java] W  B 
+     [java] WW BB
+     [java] 3
+     [java] WW BB
+     [java]  W B 
+     [java] WW BB
+     [java] 3
+     [java] WW BB
+     [java] W  B 
+     [java] W WBB
+     [java] 3
+     [java] WW BB
+     [java] W WBB
+     [java] W WBB
+     [java] 3
+     [java] WW  B
+     [java] W BBB
+     [java] W WBB
+     [java] 3
+     [java] W   B
+     [java] W WBB
+     [java] W WBB
+     [java] 3
+     [java] W W B
+     [java] W BBB
+     [java] W WBB
+     [java] 3
+     [java] WW  B
+     [java]  WBBB
+     [java] W WBB
+     [java] 3
+     [java] WW  B
+     [java] W BBB
+     [java]  WWBB
+     [java] 3
+     [java] WW  B
+     [java] W BWB
+     [java] W  BB
+     [java] 3
+     [java] WWB B
+     [java] W WBB
+     [java] W WBB
+     [java] 3
+     [java] WWB B
+     [java]  WWBB
+     [java] W WBB
+     [java] 3
+     [java] WW BB
+     [java] W W B
+     [java] W BBB
+     [java] 3
+     [java] W WBB
+     [java] W W B
+     [java] W BBB
+     [java] 3
+     [java] WW BB
+     [java] W BBB
+     [java] W W B
+     [java] 3
+     [java] W  BB
+     [java] W WBB
+     [java] W W B
+     [java] 3
+     [java] W WBB
+     [java] W BBB
+     [java] W W B
+     [java] WW BB
+     [java] W WBB
+     [java] WW BB
+     [java] 3
+     [java] W WBB
+     [java] W WBB
+     [java] WW BB
+     [java] 3
+     [java] W W B
+     [java] W BBB
+     [java] WW BB
+     [java] 3
+     [java]  WW B
+     [java] W BBB
+     [java] WW BB
+     [java] 3
+     [java]  WWB 
+     [java] W BBB
+     [java] WW BB
+     [java] 3
+     [java]  BW B
+     [java] W  BB
+     [java] WW BB
+     [java] 3
+     [java]  WW B
+     [java] W  BB
+     [java] WB BB
+     [java] 3
+     [java]  WW B
+     [java] WB BB
+     [java] WW BB
+     [java] 3
+     [java]  WB B
+     [java] W B B
+     [java] WW BB
+     [java] 3
+     [java]  WW B
+     [java] W BBB
+     [java] WWB B
+     [java] 3
+     [java] W   B
+     [java] W BWB
+     [java] WW BB
+     [java] 3
+     [java] W    
+     [java] W BBB
+     [java] WW BB
+     [java] 3
+     [java] W  B 
+     [java] W BWB
+     [java] WW BB
+     [java] 3
+     [java] W  WB
+     [java] W BBB
+     [java] WW BB
+     [java] 3
+     [java] W  WB
+     [java] W  BB
+     [java] WB BB
+     [java] 3
+     [java] W  WB
+     [java] WB BB
+     [java] WW BB
+     [java] 3
+     [java] W W B
+     [java]  WBBB
+     [java] WW BB
+     [java] 3
+     [java] W WB 
+     [java]  WBBB
+     [java] WW BB
+     [java] 3
+     [java] W W B
+     [java] W WBB
+     [java] W  BB
+     [java] 3
+     [java] W WB 
+     [java] W WBB
+     [java] W  BB
+     [java] 3
+     [java] W W B
+     [java] W BBB
+     [java] W WBB
+     [java] 3
+     [java] W WB 
+     [java] W BBB
+     [java] W WBB
+     [java] 3
+     [java] W BBB
+     [java] W W B
+     [java] WW BB
+     [java] 3
+     [java]  WBBB
+     [java] W W B
+     [java] WW BB
+     [java] 3
+     [java]  WB B
+     [java] W B B
+     [java] WW BB
+     [java] 3
+     [java]  WBBB
+     [java] W WB 
+     [java] WW BB
+     [java] 3
+     [java]  WBBB
+     [java] W B B
+     [java] WW  B
+     [java] 3
+     [java]  WBBB
+     [java] W W B
+     [java] WWB B
+     [java] 3
+     [java] W WBB
+     [java] W BBB
+     [java] WW  B
+     [java] 3
+     [java]  WWBB
+     [java] W BBB
+     [java] WW  B
+     [java] 3
+     [java]  BWBB
+     [java] W  BB
+     [java] WW  B
+     [java] 3
+     [java]  WWBB
+     [java] W  BB
+     [java] WB  B
+     [java] 3
+     [java]  WWBB
+     [java] WB BB
+     [java] WW  B
+     [java] 3
+     [java]  WBBB
+     [java] W B B
+     [java] WW  B
+     [java] 3
+     [java]  WWBB
+     [java] W BBB
+     [java] WW B 
+     [java] 3
+     [java] W WBB
+     [java] W WBB
+     [java] WWB B
+     [java] 3
+     [java]  WWBB
+     [java] W WBB
+     [java] WWB B
+     [java] 3
+     [java]  WW B
+     [java] W BBB
+     [java] WWB B
+     [java] 3
+     [java]  WBBB
+     [java] W W B
+     [java] WWB B
+     [java] 3
+     [java]  WWBB
+     [java] W WBB
+     [java] WWBB 
+     [java] 3
+     [java] WW BB
+     [java]  WWBB
+     [java] WW BB
+     [java] 3
+     [java] WW  B
+     [java]  WBBB
+     [java] WW BB
+     [java] 3
+     [java] W   B
+     [java]  WWBB
+     [java] WW BB
+     [java] 3
+     [java] W  B 
+     [java]  WWBB
+     [java] WW BB
+     [java] 3
+     [java] W   B
+     [java]  WBBB
+     [java] WW  B
+     [java] 3
+     [java] W   B
+     [java]  WWBB
+     [java] WWB B
+     [java] 3
+     [java] W W B
+     [java]  WBBB
+     [java] WW BB
+     [java] 3
+     [java] W WB 
+     [java]  WBBB
+     [java] WW BB
+     [java] 3
+     [java] W W B
+     [java]  W BB
+     [java] WB BB
+     [java] 3
+     [java] W B B
+     [java]  WB B
+     [java] WW BB
+     [java] 3
+     [java] W W B
+     [java]  WBBB
+     [java] WWB B
+     [java] 3
+     [java] WW  B
+     [java]  WWBB
+     [java] W  BB
+     [java] 3
+     [java] WW B 
+     [java]  WWBB
+     [java] W  BB
+     [java] 3
+     [java] WW  B
+     [java]  WBBB
+     [java] W WBB
+     [java] 3
+     [java] WW B 
+     [java]  WBBB
+     [java] W WBB
+     [java] 3
+     [java] WWB B
+     [java]  WWBB
+     [java] WW BB
+     [java] 3
+     [java] WWW B
+     [java]   WBB
+     [java] WW BB
+     [java] 3
+     [java] WWWB 
+     [java]   WBB
+     [java] WW BB
+     [java] 3
+     [java] WWB B
+     [java]   W B
+     [java] WW BB
+     [java] 3
+     [java] WWW B
+     [java]   BBB
+     [java] WW  B
+     [java] 3
+     [java] WWW B
+     [java]   WBB
+     [java] WWB B
+     [java] 3
+     [java] WWB B
+     [java]  W BB
+     [java] WW WB
+     [java] 3
+     [java] WW  B
+     [java]  B BB
+     [java] WW WB
+     [java] 3
+     [java] WWBB 
+     [java]  W BB
+     [java] WW WB
+     [java] 3
+     [java] WWB B
+     [java]  WWBB
+     [java] W WBB
+     [java] 3
+     [java] WW  B
+     [java]  BWBB
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java]  WWBB
+     [java] W WBB
+     [java] 3
+     [java] WWB B
+     [java]  WW B
+     [java] W BBB
+     [java] 3
+     [java] WWB B
+     [java]  WBBB
+     [java] W W B
+     [java] 3
+     [java] WW BB
+     [java]  WBBB
+     [java] WW  B
+     [java] 3
+     [java] W  BB
+     [java]  WWBB
+     [java] WW  B
+     [java] 3
+     [java] W   B
+     [java]  WBBB
+     [java] WW  B
+     [java] 3
+     [java] W B B
+     [java]  WWBB
+     [java] WW  B
+     [java] 3
+     [java] W  BB
+     [java]  WWBB
+     [java] WW B 
+     [java] 3
+     [java] W WBB
+     [java]  WBBB
+     [java] WW  B
+     [java] 3
+     [java] W WBB
+     [java]  W BB
+     [java] WB  B
+     [java] 3
+     [java] W BBB
+     [java]  WB B
+     [java] WW  B
+     [java] 3
+     [java] W WBB
+     [java]  WBBB
+     [java] WW B 
+     [java] 3
+     [java] WW BB
+     [java]  WWBB
+     [java] WWB B
+     [java] 3
+     [java] W WBB
+     [java]  WWBB
+     [java] WWB B
+     [java] 3
+     [java] W W B
+     [java]  WBBB
+     [java] WWB B
+     [java] 3
+     [java] W BBB
+     [java]  WW B
+     [java] WWB B
+     [java] 3
+     [java] W WBB
+     [java]  BWBB
+     [java] WW  B
+     [java] 3
+     [java] W WBB
+     [java]  WWBB
+     [java] WWBB 
+     [java] 3
+     [java] WW WB
+     [java] W  BB
+     [java] WW BB
+     [java] 3
+     [java] WW WB
+     [java] W B B
+     [java] WW BB
+     [java] 3
+     [java] W  WB
+     [java] W W B
+     [java] WW BB
+     [java] 3
+     [java] W  BB
+     [java] W W  
+     [java] WW BB
+     [java] 3
+     [java] W  WB
+     [java] W WB 
+     [java] WW BB
+     [java] 3
+     [java] W  WB
+     [java] W B B
+     [java] WW  B
+     [java] 3
+     [java] W  WB
+     [java] W W B
+     [java] WWB B
+     [java] 3
+     [java] W WWB
+     [java] W B B
+     [java] WW BB
+     [java] 3
+     [java] W WWB
+     [java] W   B
+     [java] WB BB
+     [java] 3
+     [java] W WWB
+     [java] WB  B
+     [java] WW BB
+     [java] 3
+     [java] W WBB
+     [java] W B  
+     [java] WW BB
+     [java] 3
+     [java] W WWB
+     [java] W BB 
+     [java] WW BB
+     [java] 3
+     [java] W WWB
+     [java] W B B
+     [java] WWB B
+     [java] 3
+     [java] WW  B
+     [java] W B W
+     [java] WW BB
+     [java] 3
+     [java] WW B 
+     [java] W B WDID NOT FINISH AT DEPTH = 4OUR MOVE:  (move 1 2 1 3)
+     [java] 2019-02-15 20:52:54.853 Response: (move 1 2 1 3)
+     [java] 2019-02-15 20:52:54.910 Command: (play testmatch_1 (noop (move 1 4 1 3)))
+     [java] black moved from 1,4 to 1,3
+     [java] 3
+     [java] 
+     [java]    1 2 3
+     [java]  5 B B B 
+     [java]  4   B B 
+     [java]  3 B W   
+     [java]  2 W   W 
+     [java]  1 W W W 
+     [java] 
+     [java] 2019-02-15 20:52:54.911 Response: noop
+     [java] 2019-02-15 20:52:54.971 Command: (play testmatch_1 ((move 3 2 3 3) noop))
+     [java] white moved from 3,2 to 3,3
+     [java] 3
+     [java] 
+     [java]    1 2 3
+     [java]  5 B B B 
+     [java]  4   B B 
+     [java]  3 B W W 
+     [java]  2 W     
+     [java]  1 W W W 
+     [java] 
+     [java] WWB B
+     [java] W WBB
+     [java] W WBB
+     [java] 3
+     [java] WWB B
+     [java]  WWBB
+     [java] W WBB
+     [java] 3
+     [java] WWB B
+     [java] W  BB
+     [java] W WWB
+     [java] 3
+     [java] WWB B
+     [java] W WBB
+     [java]  WWBB
+     [java] 3
+     [java] WWB B
+     [java] W WWB
+     [java] W  BB
+     [java] WWB B
+     [java] W WBB
+     [java] W WBB
+     [java] 3
+     [java] WWB B
+     [java]  WWBB
+     [java] W WBB
+     [java] 3
+     [java] WW  B
+     [java]  BWBB
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java]  WWBB
+     [java] W WBB
+     [java] 3
+     [java] WWB B
+     [java]  WW B
+     [java] W BBB
+     [java] 3
+     [java] WWB B
+     [java]  WBBB
+     [java] W W B
+     [java] 3
+     [java] WWB B
+     [java] W  BB
+     [java] W WWB
+     [java] 3
+     [java] WWBB 
+     [java] W  BB
+     [java] W WWB
+     [java] 3
+     [java] WWB B
+     [java] W   B
+     [java] W BWB
+     [java] 3
+     [java] WWB B
+     [java] W B B
+     [java] W WWB
+     [java] 3
+     [java] WWB B
+     [java] W  B 
+     [java] W WBB
+     [java] 3
+     [java] WWB B
+     [java] W WBB
+     [java]  WWBB
+     [java] 3
+     [java] WWBB 
+     [java] W WBB
+     [java]  WWBB
+     [java] 3
+     [java] WWB B
+     [java] W W B
+     [java]  WBBB
+     [java] 3
+     [java] WWB B
+     [java] W BBB
+     [java]  WW B
+     [java] 3
+     [java] WWB B
+     [java] W WWB
+     [java] W  BB
+     [java] 3
+     [java] WWB  
+     [java] W WBB
+     [java] W  BB
+     [java] 3
+     [java] WWBB 
+     [java] W WWB
+     [java] W  BB
+     [java] 3
+     [java] WWB B
+     [java] W BWB
+     [java] W   B
+     [java] 3
+     [java] WWB B
+     [java] W WWB
+     [java] W B B
+     [java] 3
+     [java] WWB B
+     [java] W WBB
+     [java] W  B 
+     [java] WWB B
+     [java] W WBB
+     [java] W WBB
+     [java] 3
+     [java] WWB B
+     [java]  WWBB
+     [java] W WBB
+     [java] 3
+     [java] WW  B
+     [java]  BWBB
+     [java] W WBB
+     [java] 3
+     [java]  W  B
+     [java]  WWBB
+     [java] W WBB
+     [java] 3
+     [java] W W B
+     [java]  BWBB
+     [java] W WBB
+     [java] 3
+     [java] WW  B
+     [java]  B BB
+     [java] W WWB
+     [java] 3
+     [java] WW  B
+     [java]  WWBB
+     [java]   WBB
+     [java] 3
+     [java] WW  B
+     [java]  BWBB
+     [java]  WWBB
+     [java] 3
+     [java] WW  B
+     [java]  BWWB
+     [java] W  BB
+     [java] 3
+     [java] WWBB 
+     [java]  WWBB
+     [java] W WBB
+     [java] 3
+     [java] WWWB 
+     [java]   WBB
+     [java] W WBB
+     [java] 3
+     [java] WWBW 
+     [java]  W BB
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java]  W BB
+     [java] W WWB
+     [java] 3
+     [java] WWBB 
+     [java]  WWBB
+     [java]  WWBB
+     [java] 3
+     [java] WWBB 
+     [java]  WWWB
+     [java] W  BB
+     [java] 3
+     [java] WWB B
+     [java]  WW B
+     [java] W BBB
+     [java] 3
+     [java] WWW B
+     [java]   W B
+     [java] W BBB
+     [java] 3
+     [java] WWB B
+     [java]   W B
+     [java] W WBB
+     [java] 3
+     [java] WWB B
+     [java]  W  B
+     [java] W BWB
+     [java] 3
+     [java] WWB B
+     [java]  W WB
+     [java] W BBB
+     [java] 3
+     [java] WWB B
+     [java]  WW B
+     [java]  WBBB
+     [java] 3
+     [java] WWB B
+     [java]  WBBB
+     [java] W W B
+     [java] 3
+     [java] W B B
+     [java]  WWBB
+     [java] W W B
+     [java] 3
+     [java] WWW B
+     [java]   BBB
+     [java] W W B
+     [java] 3
+     [java] WWB B
+     [java]  WBBB
+     [java]  WW B
+     [java] 3
+     [java] WWB B
+     [java] W  BB
+     [java] W WWB
+     [java] 3
+     [java] WWBB 
+     [java] W  BB
+     [java] W WWB
+     [java] 3
+     [java] WWBB 
+     [java]  W BB
+     [java] W WWB
+     [java] 3
+     [java] WWBB 
+     [java] W  BB
+     [java]  WWWB
+     [java] 3
+     [java] WWBB 
+     [java] W  WB
+     [java] W  WB
+     [java] 3
+     [java] WWBB 
+     [java] W  BW
+     [java] W W B
+     [java] 3
+     [java] WWB B
+     [java] W   B
+     [java] W BWB
+     [java] 3
+     [java] WWB B
+     [java]  W  B
+     [java] W BWB
+     [java] 3
+     [java] WWB B
+     [java] W   B
+     [java]  WBWB
+     [java] 3
+     [java] WWB B
+     [java] W   W
+     [java] W B B
+     [java] 3
+     [java] WWB B
+     [java] W B B
+     [java] W WWB
+     [java] 3
+     [java] W B B
+     [java] W W B
+     [java] W WWB
+     [java] 3
+     [java] WWB B
+     [java]  WB B
+     [java] W WWB
+     [java] 3
+     [java] WWB B
+     [java] W B B
+     [java]  WWWB
+     [java] 3
+     [java] WWB B
+     [java] W B W
+     [java] W W B
+     [java] 3
+     [java] WWB B
+     [java] W  B 
+     [java] W WBB
+     [java] 3
+     [java] WWB B
+     [java]  W B 
+     [java] W WBB
+     [java] 3
+     [java] WWB B
+     [java] W WBB
+     [java]  WWBB
+     [java] 3
+     [java] WWBB 
+     [java] W WBB
+     [java]  WWBB
+     [java] 3
+     [java] WWBB 
+     [java]  WWBB
+     [java]  WWBB
+     [java] 3
+     [java] WWBW 
+     [java] W  BB
+     [java]  WWBB
+     [java] 3
+     [java] WWBB 
+     [java] W  BB
+     [java]  WWWB
+     [java] 3
+     [java] WWBB 
+     [java] W WWB
+     [java]  W BB
+     [java] 3
+     [java] WWB B
+     [java] W W B
+     [java]  WBBB
+     [java] 3
+     [java] WWB B
+     [java]  WW B
+     [java]  WBBB
+     [java] 3
+     [java] WWB B
+     [java] W BBB
+     [java]  WW B
+     [java] 3
+     [java] W B B
+     [java] W WBB
+     [java]  WW B
+     [java] 3
+     [java] WWB B
+     [java]  WBBB
+     [java]  WW B
+     [java] 3
+     [java] WWB B
+     [java] W WWB
+     [java] W  BB
+     [java] 3
+     [java] WWB  
+     [java] W WBB
+     [java] W  BB
+     [java] 3
+     [java] WWB  
+     [java]  WWBB
+     [java] W  BB
+     [java] 3
+     [java] WWB  
+     [java] W  BB
+     [java] W  WB
+     [java] 3
+     [java] WWB  
+     [java] W WBB
+     [java]  W BB
+     [java] 3
+     [java] WWBB 
+     [java] W WWB
+     [java] W  BB
+     [java] 3
+     [java] WWBB 
+     [java]  WWWB
+     [java] W  BB
+     [java] 3
+     [java] WWBW 
+     [java] W  WB
+     [java] W  BB
+     [java] 3
+     [java] WWBB 
+     [java] W  WB
+     [java] W  WB
+     [java] 3
+     [java] WWBB 
+     [java] W W B
+     [java] W  BW
+     [java] 3
+     [java] WWB B
+     [java] W BWB
+     [java] W   B
+     [java] 3
+     [java] W B B
+     [java] W WWB
+     [java] W   B
+     [java] 3
+     [java] WWB B
+     [java]  WBWB
+     [java] W   B
+     [java] 3
+     [java] WWB W
+     [java] W B B
+     [java] W   B
+     [java] 3
+     [java] WWB B
+     [java] W WWB
+     [java] W B B
+     [java] 3
+     [java] WWB B
+     [java]  WWWB
+     [java] W B B
+     [java] 3
+     [java] WWB W
+     [java] W W B
+     [java] W B B
+     [java] 3
+     [java] WWB B
+     [java] W WBB
+     [java] W  B 
+     [java] 3
+     [java] WWB B
+     [java]  WWBB
+     [java] W  B 
+     [java] WWB B
+     [java] W WBB
+     [java] W WBB
+     [java] 3
+     [java] WWB B
+     [java]  WWBB
+     [java] W WBB
+     [java] 3
+     [java] WW  B
+     [java]  BWBB
+     [java] W WBB
+     [java] 3
+     [java]  W  B
+     [java]  WWBB
+     [java] W WBB
+     [java] 3
+     [java]  W B 
+     [java]  WWBB
+     [java] W WBB
+     [java] 3
+     [java]  W  B
+     [java]  WW B
+     [java] W BBB
+     [java] 3
+     [java]  W  B
+     [java]  WBBB
+     [java] W W B
+     [java] 3
+     [java] W W B
+     [java]  BWBB
+     [java] W WBB
+     [java] 3
+     [java] W WB 
+     [java]  BWBB
+     [java] W WBB
+     [java] 3
+     [java] B W B
+     [java]   WBB
+     [java] W WBB
+     [java] 3
+     [java] W W B
+     [java]   WBB
+     [java] B WBB
+     [java] 3
+     [java] W W B
+     [java] B WBB
+     [java] W WBB
+     [java] 3
+     [java] W B B
+     [java]  BW B
+     [java] W WBB
+     [java] 3
+     [java] W W B
+     [java]  BW B
+     [java] W BBB
+     [java] 3
+     [java] W W B
+     [java]  BBBB
+     [java] W W B
+     [java] 3
+     [java] WW  B
+     [java]  B BB
+     [java] W WWB
+     [java] 3
+     [java] WW B 
+     [java]  B BB
+     [java] W WWB
+     [java] 3
+     [java] WW  B
+     [java]  WWBB
+     [java]   WBB
+     [java] 3
+     [java] WW B 
+     [java]  WWBB
+     [java]   WBB
+     [java] 3
+     [java] WW  B
+     [java]  BWBB
+     [java]  WWBB
+     [java] 3
+     [java] WW B 
+     [java]  BWBB
+     [java]  WWBB
+     [java] 3
+     [java] WW  B
+     [java]  BWWB
+     [java] W  BB
+     [java] 3
+     [java] WW   
+     [java]  BWBB
+     [java] W  BB
+     [java] 3
+     [java] WW B 
+     [java]  BWWB
+     [java] W  BB
+     [java] 3
+     [java] WWBB 
+     [java]  WWBB
+     [java] W WBB
+     [java] 3
+     [java] WWWB 
+     [java]   WBB
+     [java] W WBB
+     [java] 3
+     [java] WWW  
+     [java]   BBB
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java]   W B
+     [java] W WBB
+     [java] 3
+     [java] WWWB 
+     [java]   W B
+     [java] W BBB
+     [java] 3
+     [java] WWWB 
+     [java]   BBB
+     [java] W W B
+     [java] 3
+     [java] WWB B
+     [java]  WW B
+     [java] W BBB
+     [java] 3
+     [java] WWW B
+     [java]   W B
+     [java] W BBB
+     [java] 3
+     [java] WWWB 
+     [java]   W B
+     [java] W BBB
+     [java] 3
+     [java] WWW B
+     [java]   WB 
+     [java] W BBB
+     [java] 3
+     [java] WWW B
+     [java]   W B
+     [java] WB BB
+     [java] 3
+     [java] WWW B
+     [java]   B B
+     [java] W B B
+     [java] 3
+     [java] WWB B
+     [java]   W B
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java]   W B
+     [java] W WBB
+     [java] 3
+     [java] WWB B
+     [java]  W  B
+     [java] W BWB
+     [java] 3
+     [java] WW  B
+     [java]  B  B
+     [java] W BWB
+     [java] 3
+     [java] WWBB 
+     [java]  W  B
+     [java] W BWB
+     [java] 3
+     [java] WWB B
+     [java]  W WB
+     [java] W BBB
+     [java] 3
+     [java] WW  B
+     [java]  B WB
+     [java] W BBB
+     [java] 3
+     [java] WWB  
+     [java]  W BB
+     [java] W BBB
+     [java] 3
+     [java] WWBB 
+     [java]  W WB
+     [java] W BBB
+     [java] 3
+     [java] WWB B
+     [java]  WW B
+     [java]  WBBB
+     [java] 3
+     [java] WW  B
+     [java]  BW B
+     [java]  WBBB
+     [java] 3
+     [java] WWBB 
+     [java]  WW B
+     [java]  WBBB
+     [java] 3
+     [java] WWB B
+     [java]  WBBB
+     [java] W W B
+     [java] 3
+     [java] W B B
+     [java]  WWBB
+     [java] W W B
+     [java] 3
+     [java] W   B
+     [java]  BWBB
+     [java] W W B
+     [java] 3
+     [java] WB  B
+     [java]  WWBB
+     [java] W W B
+     [java] 3
+     [java] W BB 
+     [java]  WWBB
+     [java] W W B
+     [java] 3
+     [java] W B B
+     [java]  WW B
+     [java] W B B
+     [java] 3
+     [java] W B B
+     [java]  WWBB
+     [java] W WB 
+     [java] 3
+     [java] WWB B
+     [java] W  BB
+     [java] W WWB
+     [java] 3
+     [java] WWBB 
+     [java] W  BB
+     [java] W WWB
+     [java] 3
+     [java] WWBB 
+     [java]  W BB
+     [java] W WWB
+     [java] 3
+     [java] WW B 
+     [java]  B BB
+     [java] W WWB
+     [java] 3
+     [java] WWBB 
+     [java]  W  B
+     [java] W BWB
+     [java] 3
+     [java] WWBB 
+     [java]  WB B
+     [java] W WWB
+     [java] 3
+     [java] WWBB 
+     [java]  W B 
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java] W  BB
+     [java]  WWWB
+     [java] 3
+     [java] WWBB 
+     [java] W   B
+     [java]  WBWB
+     [java] 3
+     [java] WWBB 
+     [java] W B B
+     [java]  WWWB
+     [java] 3
+     [java] WWBB 
+     [java] W  WB
+     [java] W  WB
+     [java] 3
+     [java] WWBB 
+     [java] W  W 
+     [java] W  BB
+     [java] 3
+     [java] WWBB 
+     [java] W  BB
+     [java] W  W 
+     [java] 3
+     [java] WWBB 
+     [java] W  BW
+     [java] W W B
+     [java] 3
+     [java] WWBB 
+     [java] W   WDID NOT FINISH AT DEPTH = 4OUR MOVE:  (move 2 1 2 2)
+     [java] 2019-02-15 20:52:54.985 Response: (move 2 1 2 2)
+     [java] 2019-02-15 20:52:55.049 Command: (play testmatch_1 (noop (move 1 5 1 4)))
+     [java] black moved from 1,5 to 1,4
+     [java] 3
+     [java] 
+     [java]    1 2 3
+     [java]  5   B B 
+     [java]  4 B B B 
+     [java]  3 B W W 
+     [java]  2 W     
+     [java]  1 W W W 
+     [java] 
+     [java] 2019-02-15 20:52:55.050 Response: noop
+     [java] 2019-02-15 20:52:55.108 Command: (play testmatch_1 ((move 2 1 2 2) noop))
+     [java] white moved from 2,1 to 2,2
+     [java] 3
+     [java] 
+     [java]    1 2 3
+     [java]  5   B B 
+     [java]  4 B B B 
+     [java]  3 B W W 
+     [java]  2 W W   
+     [java]  1 W   W 
+     [java] 
+     [java] WWBB 
+     [java]  WWBB
+     [java] W WBB
+     [java] 3
+     [java] WWWB 
+     [java]   WBB
+     [java] W WBB
+     [java] 3
+     [java] WWBW 
+     [java]  W BB
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java]  W BB
+     [java] W WWB
+     [java] 3
+     [java] WWBB 
+     [java]  WWBB
+     [java]  WWBB
+     [java] 3
+     [java] WWBB 
+     [java]  WWWB
+     [java] W  BB
+     [java] WWBB 
+     [java]  WWBB
+     [java] W WBB
+     [java] 3
+     [java] WWWB 
+     [java]   WBB
+     [java] W WBB
+     [java] 3
+     [java] WWW  
+     [java]   BBB
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java]   W B
+     [java] W WBB
+     [java] 3
+     [java] WWWB 
+     [java]   W B
+     [java] W BBB
+     [java] 3
+     [java] WWWB 
+     [java]   BBB
+     [java] W W B
+     [java] 3
+     [java] WWBW 
+     [java]  W BB
+     [java] W WBB
+     [java] 3
+     [java] WW W 
+     [java]  B BB
+     [java] W WBB
+     [java] 3
+     [java] WWBW 
+     [java]  W  B
+     [java] W BBB
+     [java] 3
+     [java] WWBW 
+     [java]  WB B
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java]  W B 
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java]  W BB
+     [java] W WWB
+     [java] 3
+     [java] WW B 
+     [java]  B BB
+     [java] W WWB
+     [java] 3
+     [java] WWBB 
+     [java]  W  B
+     [java] W BWB
+     [java] 3
+     [java] WWBB 
+     [java]  WB B
+     [java] W WWB
+     [java] 3
+     [java] WWBB 
+     [java]  W B 
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java]  WWBB
+     [java]  WWBB
+     [java] 3
+     [java] WW B 
+     [java]  BWBB
+     [java]  WWBB
+     [java] 3
+     [java] WWB  
+     [java]  WBBB
+     [java]  WWBB
+     [java] 3
+     [java] WWBB 
+     [java]  WW B
+     [java]  WBBB
+     [java] 3
+     [java] WWBB 
+     [java]  WBBB
+     [java]  WW B
+     [java] 3
+     [java] WWBB 
+     [java]  WWWB
+     [java] W  BB
+     [java] 3
+     [java] WW B 
+     [java]  BWWB
+     [java] W  BB
+     [java] 3
+     [java] WWB  
+     [java]  WBWB
+     [java] W  BB
+     [java] 3
+     [java] WWBB 
+     [java]  WBWB
+     [java] W   B
+     [java] 3
+     [java] WWBB 
+     [java]  WWWB
+     [java] W B B
+     [java] 3
+     [java] WWBB 
+     [java]  WWBB
+     [java] W  B 
+     [java] WWBB 
+     [java]  WWBB
+     [java] W WBB
+     [java] 3
+     [java] WWWB 
+     [java]   WBB
+     [java] W WBB
+     [java] 3
+     [java] WWW  
+     [java]   BBB
+     [java] W WBB
+     [java] 3
+     [java] W W  
+     [java]   WBB
+     [java] W WBB
+     [java] 3
+     [java] WW   
+     [java]   BWB
+     [java] W WBB
+     [java] 3
+     [java] WW W 
+     [java]   BBB
+     [java] W WBB
+     [java] 3
+     [java] WWW  
+     [java]   BBB
+     [java]  WWBB
+     [java] 3
+     [java] WWW  
+     [java]   BWB
+     [java] W  BB
+     [java] 3
+     [java] WWBB 
+     [java]   W B
+     [java] W WBB
+     [java] 3
+     [java] WWBW 
+     [java]     B
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java]     B
+     [java] W WWB
+     [java] 3
+     [java] WWBB 
+     [java]    WB
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java]   W B
+     [java]  WWBB
+     [java] 3
+     [java] WWWB 
+     [java]   W B
+     [java] W BBB
+     [java] 3
+     [java] WWWW 
+     [java]     B
+     [java] W BBB
+     [java] 3
+     [java] WWWB 
+     [java]     B
+     [java] W BWB
+     [java] 3
+     [java] WWWB 
+     [java]    WB
+     [java] W BBB
+     [java] 3
+     [java] WWWB 
+     [java]   W B
+     [java]  WBBB
+     [java] 3
+     [java] WWWB 
+     [java]   BBB
+     [java] W W B
+     [java] 3
+     [java] W WB 
+     [java]   WBB
+     [java] W W B
+     [java] 3
+     [java] WW B 
+     [java]   BWB
+     [java] W W B
+     [java] 3
+     [java] WWWB 
+     [java]   BBB
+     [java]  WW B
+     [java] 3
+     [java] WWBW 
+     [java]  W BB
+     [java] W WBB
+     [java] 3
+     [java] WW W 
+     [java]  B BB
+     [java] W WBB
+     [java] 3
+     [java]  W W 
+     [java]  W BB
+     [java] W WBB
+     [java] 3
+     [java] W WW 
+     [java]  B BB
+     [java] W WBB
+     [java] 3
+     [java] WW   
+     [java]  B BW
+     [java] W WBB
+     [java] 3
+     [java] WW  W
+     [java]  B BB
+     [java] W WBB
+     [java] 3
+     [java] WW W 
+     [java]  W BB
+     [java]   WBB
+     [java] 3
+     [java] WW W 
+     [java]  B BB
+     [java]  WWBB
+     [java] 3
+     [java] WW W 
+     [java]  B WB
+     [java] W  BB
+     [java] 3
+     [java] WWBW 
+     [java]  W  B
+     [java] W BBB
+     [java] 3
+     [java] WWB  
+     [java]  W  W
+     [java] W BBB
+     [java] 3
+     [java] WWBW 
+     [java]  WB B
+     [java] W WBB
+     [java] 3
+     [java] W BW 
+     [java]  WW B
+     [java] W WBB
+     [java] 3
+     [java] WWB  
+     [java]  WB W
+     [java] W WBB
+     [java] 3
+     [java] WWB W
+     [java]  WB B
+     [java] W WBB
+     [java] 3
+     [java] WWWW 
+     [java]   B B
+     [java] W WBB
+     [java] 3
+     [java] WWBW 
+     [java]  WB B
+     [java]  WWBB
+     [java] 3
+     [java] WWBB 
+     [java]  W B 
+     [java] W WBB
+     [java] 3
+     [java] WWWB 
+     [java]    B 
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java]   WB 
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java]  W BB
+     [java] W WWB
+     [java] 3
+     [java] WW B 
+     [java]  B BB
+     [java] W WWB
+     [java] 3
+     [java]  W B 
+     [java]  W BB
+     [java] W WWB
+     [java] 3
+     [java] W WB 
+     [java]  B BB
+     [java] W WWB
+     [java] 3
+     [java] WW B 
+     [java]  W BB
+     [java]   WWB
+     [java] 3
+     [java] WW B 
+     [java]  B BB
+     [java]  WWWB
+     [java] 3
+     [java] WW B 
+     [java]  B WB
+     [java] W  WB
+     [java] 3
+     [java] WW B 
+     [java]  B BW
+     [java] W W B
+     [java] 3
+     [java] WWBB 
+     [java]  W  B
+     [java] W BWB
+     [java] 3
+     [java] WWWB 
+     [java]     B
+     [java] W BWB
+     [java] 3
+     [java] WWBB 
+     [java]     B
+     [java] W WWB
+     [java] 3
+     [java] WWBB 
+     [java]   W B
+     [java] W BWB
+     [java] 3
+     [java] WWBB 
+     [java]  W  B
+     [java]  WBWB
+     [java] 3
+     [java] WWBB 
+     [java]  W  W
+     [java] W B B
+     [java] 3
+     [java] WWBB 
+     [java]  WB B
+     [java] W WWB
+     [java] 3
+     [java] W BB 
+     [java]  WW B
+     [java] W WWB
+     [java] 3
+     [java] WWWB 
+     [java]   B B
+     [java] W WWB
+     [java] 3
+     [java] WWBB 
+     [java]  WB B
+     [java]  WWWB
+     [java] 3
+     [java] WWBB 
+     [java]  WB W
+     [java] W W B
+     [java] 3
+     [java] WWBB 
+     [java]  W B 
+     [java] W WBB
+     [java] 3
+     [java] WWWB 
+     [java]    B 
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java]   WB 
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java]  WWBB
+     [java]  WWBB
+     [java] 3
+     [java] WW B 
+     [java]  BWBB
+     [java]  WWBB
+     [java] 3
+     [java]  W B 
+     [java]  WWBB
+     [java]  WWBB
+     [java] 3
+     [java] W WB 
+     [java]  BWBB
+     [java]  WWBB
+     [java] 3
+     [java] WW W 
+     [java]  B BB
+     [java]  WWBB
+     [java] 3
+     [java] WW B 
+     [java]  B BB
+     [java]  WWWB
+     [java] 3
+     [java] WW B 
+     [java]  BWWB
+     [java]  W BB
+     [java] 3
+     [java] WWB  
+     [java]  WBBB
+     [java]  WWBB
+     [java] 3
+     [java] W B  
+     [java]  WWBB
+     [java]  WWBB
+     [java] 3
+     [java] WWW  
+     [java]   BBB
+     [java]  WWBB
+     [java] 3
+     [java] WWB  
+     [java]  WWBB
+     [java]   WBB
+     [java] 3
+     [java] WWB  
+     [java]  WBWB
+     [java]  W BB
+     [java] 3
+     [java] WWBB 
+     [java]  WW B
+     [java]  WBBB
+     [java] 3
+     [java] WWWB 
+     [java]   W B
+     [java]  WBBB
+     [java] 3
+     [java] WWBB 
+     [java]  WBBB
+     [java]  WW B
+     [java] 3
+     [java] W BB 
+     [java]  WWBB
+     [java]  WW B
+     [java] 3
+     [java] WWBB 
+     [java]  WWWB
+     [java] W  BB
+     [java] 3
+     [java] WW B 
+     [java]  BWWB
+     [java] W  BB
+     [java] 3
+     [java]  W B 
+     [java]  WWWB
+     [java] W  BB
+     [java] 3
+     [java] W WB 
+     [java]  BWWB
+     [java] W  BB
+     [java] 3
+     [java] WW W 
+     [java]  B WB
+     [java] W  BB
+     [java] 3
+     [java] WW B 
+     [java]  B WB
+     [java] W  WB
+     [java] 3
+     [java] WW B 
+     [java]  BW B
+     [java] W  BW
+     [java] 3
+     [java] WW B 
+     [java]  WWWB
+     [java]    BB
+     [java] 3
+     [java] WW B 
+     [java]  BWWB
+     [java]  W BB
+     [java] 3
+     [java] WWB  
+     [java]  WBWB
+     [java] W  BB
+     [java] 3
+     [java] W B  
+     [java]  WWWB
+     [java] W  BB
+     [java] 3
+     [java] WWW  
+     [java]   BWB
+     [java] W  BB
+     [java] 3
+     [java] WWB  
+     [java]  WB B
+     [java] W  BW
+     [java] 3
+     [java] WWBB 
+     [java]  WBWB
+     [java] W   B
+     [java] 3
+     [java] W BB 
+     [java]  WWWB
+     [java] W   B
+     [java] 3
+     [java] WWWB 
+     [java]   BWB
+     [java] W   B
+     [java] 3
+     [java] WWBB 
+     [java]  WB B
+     [java] W   W
+     [java] 3
+     [java] WWBB 
+     [java]  WWWB
+     [java] W B B
+     [java] 3
+     [java] WWWB 
+     [java]   WWB
+     [java] W B B
+     [java] 3
+     [java] WWBB 
+     [java]   WWB
+     [java] W W B
+     [java] 3
+     [java] WWBW 
+     [java]  W WB
+     [java] W B B
+     [java] 3
+     [java] WWBB 
+     [java]  WW B
+     [java] W B W
+     [java] 3
+     [java] WWBB 
+     [java]  WWWB
+     [java]  WB B
+     [java] 3
+     [java] WWBB 
+     [java]  WWBB
+     [java] W  B 
+     [java] 3
+     [java] WWWB 
+     [java]   WBB
+     [java] W  B 
+     [java] 3
+     [java] WWBW 
+     [java]  W BB
+     [java] W  B 
+     [java] 3
+     [java] WWBB 
+     [java]  W BB
+     [java] W  W 
+     [java] 3
+     [java] WWBB 
+     [java]  WWBB
+     [java]  W B 
+     [java] WWBB 
+     [java]  WWBB
+     [java] W WBB
+     [java] 3
+     [java] WWWB 
+     [java]   WBB
+     [java] W WBB
+     [java] 3
+     [java] WWW  
+     [java]   BBB
+     [java] W WBB
+     [java] 3
+     [java] W W  
+     [java]   WBB
+     [java] W WBB
+     [java] 3
+     [java] W B  
+     [java]   W B
+     [java] W WBB
+     [java] 3
+     [java] W W  
+     [java]   W B
+     [java] W BBB
+     [java] 3
+     [java] W W  
+     [java]   BBB
+     [java] W W B
+     [java] 3
+     [java] WW   
+     [java]   BWB
+     [java] W WBB
+     [java] 3
+     [java] WB   
+     [java]    WB
+     [java] W WBB
+     [java] 3
+     [java] WW W 
+     [java]   BBB
+     [java] W WBB
+     [java] 3
+     [java] WB W 
+     [java]    BB
+     [java] W WBB
+     [java] 3
+     [java] WWW  
+     [java]   BBB
+     [java]  WWBB
+     [java] 3
+     [java] WBW  
+     [java]    BB
+     [java]  WWBB
+     [java] 3
+     [java] WWW  
+     [java]    BB
+     [java]  BWBB
+     [java] 3
+     [java] WWW  
+     [java]  B BB
+     [java]  WWBB
+     [java] 3
+     [java] WWW  
+     [java]   BWB
+     [java] W  BB
+     [java] 3
+     [java] WBW  
+     [java]    WB
+     [java] W  BB
+     [java] 3
+     [java] WWBB 
+     [java]   W B
+     [java] W WBB
+     [java] 3
+     [java] WWBW 
+     [java]     B
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java]      
+     [java] W WBB
+     [java] 3
+     [java] WWBW 
+     [java]    B 
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java]     B
+     [java] W WWB
+     [java] 3
+     [java] WWBB 
+     [java]      
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java]    B 
+     [java] W WWB
+     [java] 3
+     [java] WWBB 
+     [java]    WB
+     [java] W WBB
+     [java] 3
+     [java] WWBB 
+     [java]    BB
+     [java] W WB 
+     [java] 3
+     [java] WWWB 
+     [java]   W B
+     [java] W BBB
+     [java] 3
+     [java] WWWW 
+     [java]     B
+     [java] W BBB
+     [java] 3
+     [java] WWWB 
+     [java]      
+     [java] W BBB
+     [java] 3
+     [java] WWWW 
+     [java]    B 
+     [java] W BBB
+     [java] 3
+     [java] WWWW 
+     [java]     B
+     [java] WB BB
+     [java] 3
+     [java] WWWB 
+     [java]     B
+     [java] W BWB
+     [java] 3
+     [java] WWWB 
+     [java]      
+     [java] W BBB
+     [java] 3
+     [java] WWWB 
+     [java]    B 
+     [java] W BWB
+     [java] 3
+     [java] WWWB 
+     [java]    WB
+     [java] W BBB
+     [java] 3
+     [java] WWWB 
+     [java]    WB
+     [java] WB BB
+     [java] 3
+     [java] WWWB 
+     [java]    BB
+     [java] W BB 
+     [java] 3
+     [java] WWWB 
+     [java]   W B
+     [java]  WBBB
+     [java] 3
+     [java] WWW  
+     [java]   B B
+     [java]  WBBB
+     [java] 3
+     [java] WWWB 
+     [java]   WB 
+     [java]  WBBB
+     [java] 3
+     [java] WWWB 
+     [java]   BBB
+     [java] W W B
+     [java] 3
+     [java] W WB 
+     [java]   WBB
+     [java] W W B
+     [java] 3
+     [java] W W  
+     [java]   BBB
+     [java] W W B
+     [java] 3
+     [java] W BB 
+     [java]   W B
+     [java] W W B
+     [java] 3
+     [java] W WB 
+     [java]   W B
+     [java] W B B
+     [java] 3
+     [java] W WB 
+     [java]   WBB
+     [java] W WB 
+     [java] 3
+     [java] WW B 
+     [java]   BWB
+     [java] W W B
+     [java] 3
+     [java] WWB  
+     [java]   BWB
+     [java] W W B
+     [java] 3
+     [java] WWWB 
+     [java]   BBB
+     [java]  WW B
+     [java] 3
+     [java] WBWB 
+     [java]    BB
+     [java]  WW B
+     [java] 3
+     [java] WWWB 
+     [java]    BB
+     [java]  BW B
+     [java] 3
+     [java] WWWB 
+     [java]  B BB
+     [java]  WW B
+     [java] 3
+     [java] WWBB 
+     [java]   B B
+     [java]  WW B
+     [java] 3
+     [java] WWWB 
+     [java]   B B
+     [java]  WB B
+     [java] 3
+     [java] WWWB 
+     [java]   BBB
+     [java]  WWB 
+     [java] 3
+     [java] WWBW 
+     [java]  W BB
+     [java] W WBB
+     [java] 3
+     [java] WW W 
+     [java]  B BB
+     [java] W WBB
+     [java] 3
+     [java]  W W 
+     [java]  W BB
+     [java] W WBB
+     [java] 3
+     [java]  W W 
+     [java]  W  B
+     [java] W BBB
+     [java] 3
+     [java]  W W 
+     [java]  WB B
+     [java] W WBB
+     [java] 3
+     [java]  W B 
+     [java]  W B 
+     [java] W WBB
+     [java] 3
+     [java] W WW 
+     [java]  B BB
+     [java] W WBB
+     [java] 3
+     [java] B WW 
+     [java]    BB
+     [java] W WBB
+     [java] 3
+     [java] W WW 
+     [java]    BB
+     [java] B WBB
+     [java] 3
+     [java] W WW 
+     [java] B  BB
+     [java] W WBB
+     [java] 3
+     [java] W BW 
+     [java]  B  B
+     [java] W WBB
+     [java] 3
+     [java] W WW 
+     [java]  B  B
+     [java] W BBB
+     [java] 3
+     [java] W WW 
+     [java]  BB B
+     [java] W WBB
+     [java] 3
+     [java] W WB 
+     [java]  B B 
+     [java] W WBB
+     [java] 3
+     [java] WW   
+     [java]  B BW
+     [java] W WBB
+     [java] 3
+     [java] BW   
+     [java]    BWDID NOT FINISH AT DEPTH = 4OUR MOVE:  (move 2 2 1 3)
+     [java] 2019-02-15 20:52:55.122 Response: (move 2 2 1 3)
+     [java] 2019-02-15 20:52:55.179 Command: (play testmatch_1 (noop (move 1 4 2 3)))
+     [java] black moved from 1,4 to 2,3
+     [java] 3
+     [java] 
+     [java]    1 2 3
+     [java]  5   B B 
+     [java]  4   B B 
+     [java]  3 B B W 
+     [java]  2 W W   
+     [java]  1 W   W 
+     [java] 
+     [java] 2019-02-15 20:52:55.179 Response: noop
+     [java] 2019-02-15 20:52:55.239 Command: (play testmatch_1 ((move 3 1 3 2) noop))
+     [java] white moved from 3,1 to 3,2
+     [java] 3
+     [java] 
+     [java]    1 2 3
+     [java]  5   B B 
+     [java]  4   B B 
+     [java]  3 B B W 
+     [java]  2 W W W 
+     [java]  1 W     
+     [java] 
+     [java] WWB  
+     [java]  WBBB
+     [java]  WWBB
+     [java] 3
+     [java] W B  
+     [java]  WWBB
+     [java]  WWBB
+     [java] 3
+     [java] WWW  
+     [java]   BBB
+     [java]  WWBB
+     [java] 3
+     [java] WWB  
+     [java]  WWBB
+     [java]   WBB
+     [java] 3
+     [java] WWB  
+     [java]  WBWB
+     [java]  W BB
+     [java] WWB  
+     [java]  WBBB
+     [java]  WWBB
+     [java] 3
+     [java] W B  
+     [java]  WWBB
+     [java]  WWBB
+     [java] 3
+     [java] W    
+     [java]  BWBB
+     [java]  WWBB
+     [java] 3
+     [java] WB   
+     [java]  WWBB
+     [java]  WWBB
+     [java] 3
+     [java] W B  
+     [java]  WW B
+     [java]  WBBB
+     [java] 3
+     [java] W B  
+     [java]  WBBB
+     [java]  WW B
+     [java] 3
+     [java] WWW  
+     [java]   BBB
+     [java]  WWBB
+     [java] 3
+     [java] WBW  
+     [java]    BB
+     [java]  WWBB
+     [java] 3
+     [java] WWW  
+     [java]    BB
+     [java]  BWBB
+     [java] 3
+     [java] WWW  
+     [java]  B BB
+     [java]  WWBB
+     [java] 3
+     [java] WWB  
+     [java]   B B
+     [java]  WWBB
+     [java] 3
+     [java] WWW  
+     [java]   B B
+     [java]  WBBB
+     [java] 3
+     [java] WWB  
+     [java]  WWBB
+     [java]   WBB
+     [java] 3
+     [java] WW   
+     [java]  BWBB
+     [java]   WBB
+     [java] 3
+     [java] WWB  
+     [java]  WW B
+     [java]   BBB
+     [java] 3
+     [java] WWB  
+     [java]  WBBB
+     [java]   W B
+     [java] 3
+     [java] WWB  
+     [java]  WBWB
+     [java]  W BB
+     [java] 3
+     [java] WW   
+     [java]  BBWB
+     [java]  W BB
+     [java] 3
+     [java] WBB  
+     [java]  W WB
+     [java]  W BB
+     [java] 3
+     [java] WWB  
+     [java]  W WB
+     [java]  B BB
+     [java] 3
+     [java] WWB  
+     [java]  WBWB
+     [java]  WB B
+     [java] 3
+     [java] WWB  
+     [java]  WBBB
+     [java]  W B 
+     [java] WWB  
+     [java]  WBBB
+     [java]  WWBB
+     [java] 3
+     [java] W B  
+     [java]  WWBB
+     [java]  WWBB
+     [java] 3
+     [java] W    
+     [java]  BWBB
+     [java]  WWBB
+     [java] 3
+     [java]      
+     [java]  WWBB
+     [java]  WWBB
+     [java] 3
+     [java]  W   
+     [java]  BWBB
+     [java]  WWBB
+     [java] 3
+     [java] W    
+     [java]  B BB
+     [java]  WWWB
+     [java] 3
+     [java] W    
+     [java]  BWWB
+     [java]  W BB
+     [java] 3
+     [java] WB   
+     [java]  WWBB
+     [java]  WWBB
+     [java] 3
+     [java] WB   
+     [java]  W BB
+     [java]  WWWB
+     [java] 3
+     [java] WB   
+     [java]  WWWB
+     [java]  W BB
+     [java] 3
+     [java] W B  
+     [java]  WW B
+     [java]  WBBB
+     [java] 3
+     [java]  WB  
+     [java]  WW B
+     [java]  WBBB
+     [java] 3
+     [java] W B  
+     [java]  WBBB
+     [java]  WW B
+     [java] 3
+     [java]  WB  
+     [java]  WBBB
+     [java]  WW B
+     [java] 3
+     [java] WWW  
+     [java]   BBB
+     [java]  WWBB
+     [java] 3
+     [java] WBW  
+     [java]    BB
+     [java]  WWBB
+     [java] 3
+     [java] WB   
+     [java]    WB
+     [java]  WWBB
+     [java] 3
+     [java] WB W 
+     [java]    BB
+     [java]  WWBB
+     [java] 3
+     [java] WBW  
+     [java]    WB
+     [java]  W BB
+     [java] 3
+     [java] WWW  
+     [java]    BB
+     [java]  BWBB
+     [java] 3
+     [java] WW   
+     [java]    WB
+     [java]  BWBB
+     [java] 3
+     [java] WW W 
+     [java]    BB
+     [java]  BWBB
+     [java] 3
+     [java] WWW  
+     [java]  B BB
+     [java]  WWBB
+     [java] 3
+     [java]  WW  
+     [java]  W BB
+     [java]  WWBB
+     [java] 3
+     [java] WW   
+     [java]  B WB
+     [java]  WWBB
+     [java] 3
+     [java] WW W 
+     [java]  B BB
+     [java]  WWBB
+     [java] 3
+     [java] WWB  
+     [java]   B B
+     [java]  WWBB
+     [java] 3
+     [java] W B  
+     [java]   W B
+     [java]  WWBB
+     [java] 3
+     [java] WWB  
+     [java]   W B
+     [java]   WBB
+     [java] 3
+     [java] WWW  
+     [java]   B B
+     [java]  WBBB
+     [java] 3
+     [java] W W  
+     [java]   W B
+     [java]  WBBB
+     [java] 3
+     [java] WWB  
+     [java]  WWBB
+     [java]   WBB
+     [java] 3
+     [java] WW   
+     [java]  BWBB
+     [java]   WBB
+     [java] 3
+     [java]  W   
+     [java]  WWBB
+     [java]   WBB
+     [java] 3
+     [java] W W  
+     [java]  BWBB
+     [java]   WBB
+     [java] 3
+     [java] WW   
+     [java]  B BB
+     [java]   WWB
+     [java] 3
+     [java] WW   
+     [java]  BWWB
+     [java]    BB
+     [java] 3
+     [java] WWB  
+     [java]  WW B
+     [java]   BBB
+     [java] 3
+     [java] WWW  
+     [java]   W B
+     [java]   BBB
+     [java] 3
+     [java] WWB  
+     [java]   W B
+     [java]   WBB
+     [java] 3
+     [java] WWB  
+     [java]  W  B
+     [java]   BWB
+     [java] 3
+     [java] WWB  
+     [java]  W WB
+     [java]   BBB
+     [java] 3
+     [java] WWB  
+     [java]  WBBB
+     [java]   W B
+     [java] 3
+     [java] W B  
+     [java]  WWBB
+     [java]   W B
+     [java] 3
+     [java] WWB  
+     [java]  WBWB
+     [java]  W BB
+     [java] 3
+     [java] WW   
+     [java]  BBWB
+     [java]  W BB
+     [java] 3
+     [java]  W   
+     [java]  WBWB
+     [java]  W BB
+     [java] 3
+     [java] W    
+     [java]  BWWB
+     [java]  W BB
+     [java] 3
+     [java] W W  
+     [java]  BBWB
+     [java]  W BB
+     [java] 3
+     [java] WW   
+     [java]  BB B
+     [java]  W BW
+     [java] 3
+     [java] WW   
+     [java]  BWWB
+     [java]    BB
+     [java] 3
+     [java] WW   
+     [java]  BBWB
+     [java]   WBB
+     [java] 3
+     [java] WBB  
+     [java]  W WB
+     [java]  W BB
+     [java] 3
+     [java] WBW  
+     [java]    WB
+     [java]  W BB
+     [java] 3
+     [java] WBB  
+     [java]   WWB
+     [java]  W BB
+     [java] 3
+     [java] WBB  
+     [java]  W  B
+     [java]  W BW
+     [java] 3
+     [java] WWB  
+     [java]  W WB
+     [java]  B BB
+     [java] 3
+     [java] WWW  
+     [java]    WB
+     [java]  B BB
+     [java] 3
+     [java] WWB  
+     [java]   WWB
+     [java]  B BB
+     [java] 3
+     [java] WWB  
+     [java]  W  B
+     [java]  B BW
+     [java] 3
+     [java] WWB  
+     [java]  WBWB
+     [java]  WB B
+     [java] 3
+     [java] W B  
+     [java]  WWWB
+     [java]  WB B
+     [java] 3
+     [java] WWW  
+     [java]   BWB
+     [java]  WB B
+     [java] 3
+     [java] WWB  
+     [java]   BWB
+     [java]  WW B
+     [java] 3
+     [java] WWB  
+     [java]  WB B
+     [java]  WB W
+     [java] 3
+     [java] WWB  
+     [java]  WWWB
+     [java]   B B
+     [java] 3
+     [java] WWB  
+     [java]  WBBB
+     [java]  W B 
+     [java] 3
+     [java] W B  
+     [java]  WWBB
+     [java]  W B 
+     [java] 3
+     [java] WWW  
+     [java]   BBB
+     [java]  W B 
+     [java] 3
+     [java] WWB  
+     [java]  WWBB
+     [java]    B 
+     [java] 3
+     [java] WWB  
+     [java]  WBBB
+     [java]   WB 
+     [java] WWB  
+     [java]  WBBB
+     [java]  WWBB
+     [java] 3
+     [java] W B  
+     [java]  WWBB
+     [java]  WWBB
+     [java] 3
+     [java] W    
+     [java]  BWBB
+     [java]  WWBB
+     [java] 3
+     [java]      
+     [java]  WWBB
+     [java]  WWBB
+     [java] 3
+     [java]      
+     [java]  WW B
+     [java]  WBBB
+     [java] 3
+     [java]      
+     [java]  WBBB
+     [java]  WW B
+     [java] 3
+     [java]  W   
+     [java]  BWBB
+     [java]  WWBB
+     [java] 3
+     [java]  W   
+     [java] B WBB
+     [java]  WWBB
+     [java] 3
+     [java]  W   
+     [java]  BW B
+     [java]  WBBB
+     [java] 3
+     [java]  W   
+     [java]  BBBB
+     [java]  WW B
+     [java] 3
+     [java] W    
+     [java]  B BB
+     [java]  WWWB
+     [java] 3
+     [java] B    
+     [java]    BB
+     [java]  WWWB
+     [java] 3
+     [java] W    
+     [java]  BWWB
+     [java]  W BB
+     [java] 3
+     [java] B    
+     [java]   WWB
+     [java]  W BB
+     [java] 3
+     [java] WB   
+     [java]  WWBB
+     [java]  WWBB
+     [java] 3
+     [java] WB   
+     [java]  W BB
+     [java]  WWWB
+     [java] 3
+     [java] WB   
+     [java]  W  B
+     [java]  WBWB
+     [java] 3
+     [java] WB   
+     [java]  WB B
+     [java]  WWWB
+     [java] 3
+     [java] WB   
+     [java]  W B 
+     [java]  WWBB
+     [java] 3
+     [java] WB   
+     [java]  WWWB
+     [java]  W BB
+     [java] 3
+     [java] WB   
+     [java]  WBWB
+     [java]  W  B
+     [java] 3
+     [java] WB   
+     [java]  WWWB
+     [java]  WB B
+     [java] 3
+     [java] W B  
+     [java]  WW B
+     [java]  WBBB
+     [java] 3
+     [java]  WB  
+     [java]  WW B
+     [java]  WBBB
+     [java] 3
+     [java]  W   
+     [java]  BW B
+     [java]  WBBB
+     [java] 3
+     [java]  WB  
+     [java]  WWB 
+     [java]  WBBB
+     [java] 3
+     [java]  WB  
+     [java]  BW B
+     [java]  W BB
+     [java] 3
+     [java]  WB  
+     [java]  WB B
+     [java]  WB B
+     [java] 3
+     [java] W B  
+     [java]  WBBB
+     [java]  WW B
+     [java] 3
+     [java]  WB  
+     [java]  WBBB
+     [java]  WW B
+     [java] 3
+     [java]  W   
+     [java]  BBBB
+     [java]  WW B
+     [java] 3
+     [java]  BB  
+     [java]  W BB
+     [java]  WW B
+     [java] 3
+     [java]  WB  
+     [java]  W BB
+     [java]  BW B
+     [java] 3
+     [java]  WB  
+     [java]  WB B
+     [java]  WB B
+     [java] 3
+     [java]  WB  
+     [java]  WBBB
+     [java]  WWB 
+     [java] 3
+     [java] WWW  
+     [java]   BBB
+     [java]  WWBB
+     [java] 3
+     [java] WBW  
+     [java]    BB
+     [java]  WWBB
+     [java] 3
+     [java] WB   
+     [java]    WB
+     [java]  WWBB
+     [java] 3
+     [java] WB   
+     [java]    BB
+     [java]  WWB 
+     [java] 3
+     [java] WB W 
+     [java]    BB
+     [java]  WWBB
+     [java] 3
+     [java] WB W 
+     [java]     B
+     [java]  WBBB
+     [java] 3
+     [java] WBW  
+     [java]    WB
+     [java]  W BB
+     [java] 3
+     [java] WBW  
+     [java]    WB
+     [java]  WB B
+     [java] 3
+     [java] WWW  
+     [java]    BB
+     [java]  BWBB
+     [java] 3
+     [java] WW   
+     [java]    WB
+     [java]  BWBB
+     [java] 3
+     [java] WW   
+     [java]    WB
+     [java] B WBB
+     [java] 3
+     [java] WW   
+     [java]    BB
+     [java]  BWB 
+     [java] 3
+     [java] WW W 
+     [java]    BB
+     [java]  BWBB
+     [java] 3
+     [java] WW W 
+     [java]     B
+     [java]  BBBB
+     [java] 3
+     [java] WWW  
+     [java]    WB
+     [java]  B BB
+     [java] 3
+     [java] WWW  
+     [java]    WB
+     [java] B  BB
+     [java] 3
+     [java] WWW  
+     [java]  B BB
+     [java]  WWBB
+     [java] 3
+     [java]  WW  
+     [java]  W BB
+     [java]  WWBB
+     [java] 3
+     [java]  WB  
+     [java]  W  B
+     [java]  WWBB
+     [java] 3
+     [java]  WW  
+     [java]  W  B
+     [java]  WBBB
+     [java] 3
+     [java]  WW  
+     [java]  WB B
+     [java]  WWBB
+     [java] 3
+     [java] WW   
+     [java]  B WB
+     [java]  WWBB
+     [java] 3
+     [java] BW   
+     [java]    WB
+     [java]  WWBB
+     [java] 3
+     [java] WW   
+     [java] B  WB
+     [java]  WWBB
+     [java] 3
+     [java] WW   
+     [java]  B BB
+     [java]  WWB 
+     [java] 3
+     [java] WWB  
+     [java]   B B
+     [java]  WWBB
+     [java] 3
+     [java] W B  
+     [java]   W B
+     [java]  WWBB
+     [java] 3
+     [java] WB   
+     [java]   W B
+     [java]  WWBB
+     [java] 3
+     [java] W B  
+     [java]   WB 
+     [java]  WWBB
+     [java] 3
+     [java] W B  
+     [java]   B B
+     [java]  WW B
+     [java] 3
+     [java] WWB  
+     [java]   W B
+     [java]   WBB
+     [java] 3
+     [java] WWB  
+     [java]   WB 
+     [java]   WBB
+     [java] 3
+     [java] WWW  
+     [java]   B B
+     [java]  WBBB
+     [java] 3
+     [java] W W  
+     [java]   W B
+     [java]  WBBB
+     [java] 3
+     [java] W W  
+     [java]   WB 
+     [java]  WBBB
+     [java] 3
+     [java] W W  
+     [java]   B B
+     [java]  WB B
+     [java] 3
+     [java] WWB  
+     [java]  WWBB
+     [java]   WBB
+     [java] 3
+     [java] WW   
+     [java]  BWBB
+     [java]   WBB
+     [java] 3
+     [java]  W   
+     [java]  WWBB
+     [java]   WBB
+     [java] 3
+     [java]  W   
+     [java]  WW B
+     [java]   BBB
+     [java] 3
+     [java]  W   
+     [java]  WBBB
+     [java]   W B
+     [java] 3
+     [java] W W  
+     [java]  BWBB
+     [java]   WBB
+     [java] 3
+     [java] B W  
+     [java]   WBB
+     [java]   WBB
+     [java] 3
+     [java] W W  
+     [java] B WBB
+     [java]   WBB
+     [java] 3
+     [java] W B  
+     [java]  BW B
+     [java]   WBB
+     [java] 3
+     [java] W W  
+     [java]  BW B
+     [java]   BBB
+     [java] 3
+     [java] W W  
+     [java]  BBBB
+     [java]   W B
+     [java] 3
+     [java] WW   
+     [java]  B BB
+     [java]   WWB
+     [java] 3
+     [java] BW   
+     [java]    BB
+     [java]   WWB
+     [java] 3
+     [java] WW   
+     [java]  BWWB
+     [java]    BB
+     [java] 3
+     [java] BW   
+     [java]   WWB
+     [java]    BB
+     [java] 3
+     [java] WWB  
+     [java]  WW B
+     [java]   BBB
+     [java] 3
+     [java] WWW  
+     [java]   W B
+     [java]   BBB
+     [java] 3
+     [java] WWW  
+     [java]   WB 
+     [java]   BBB
+     [java] 3
+     [java] WWW  
+     [java]   W B
+     [java]  B BB
+     [java] 3
+     [java] WWW  
+     [java]   B B
+     [java]   B B
+     [java] 3
+     [java] WWB  
+     [java]   W B
+     [java]   WBB
+     [java] 3
+     [java] WWB  
+     [java]   WB 
+     [java]   WBB
+     [java] 3
+     [java] WWB  
+     [java]  W  B
+     [java]   BWB
+     [java] 3
+     [java] WW   
+     [java]  B  B
+     [java]   BWB
+     [java] 3
+     [java] WWB  
+     [java]  W   
+     [java]   BBB
+     [java] 3
+     [java] WWB  
+     [java]  W B 
+     [java]   BWB
+     [java] 3
+     [java] WWB  
+     [java]  W WB
+     [java]   BBB
+     [java] 3
+     [java] WW   
+     [java]  B WB
+     [java]   BBB
+     [java] 3
+     [java] WWB  
+     [java]  B WB
+     [java]    BB
+     [java] 3
+     [java] WWB  
+     [java]  W WB
+     [java]  B BB
+     [java] 3
+     [java] WWB  
+     [java]  WBBB
+     [java]   W B
+     [java] 3
+     [java] W B  
+     [java]  WWBB
+     [java]   W B
+     [java] 3
+     [java] W    
+     [java]  BWBB
+     [java]   W B
+     [java] 3
+     [java] WB   
+     [java]  WWBB
+     [java]   W B
+     [java] 3
+     [java] W B  
+     [java]  WW B
+     [java]   B B
+     [java] 3
+     [java] W B  
+     [java]  WWBB
+     [java]   WB 
+     [java] 3
+     [java] WWB  
+     [java]  WBWB
+     [java]  W BB
+     [java] 3
+     [java] WW   
+     [java]  BBWB
+     [java]  W BB
+     [java] 3
+     [java]  W   
+     [java]  WBWB
+     [java]  W BB
+     [java] 3
+     [java]  B   
+     [java]  W WB
+     [java]  W BB
+     [java] 3
+     [java]  W   
+     [java]  W WB
+     [java]  B BB
+     [java] 3
+     [java]  W   
+     [java]  WBWB
+     [java]  WB B
+     [java] 3
+     [java]  W   
+     [java]  WBBB
+     [java]  W B 
+     [java] 3
+     [java] W    
+     [java]  BWWB
+     [java]  W BB
+     [java] 3
+     [java] B    
+     [java]   WWB
+     [java]  W BB
+     [java] 3
+     [java] W    
+     [java] B WWB
+     [java]  W BB
+     [java] 3
+     [java] W    
+     [java]  BBWB
+     [java]  W  B
+     [java] 3
+     [java] W    
+     [java]  BWWB
+     [java]  WB B
+     [java] 3
+     [java] W    
+     [java]  BWBB
+     [java]  W B 
+     [java] 3
+     [java] W W  
+     [java]  BBWB
+     [java]  W BB
+     [java] 3
+     [java] B W  
+     [java]   BWB
+     [java]  W BB
+     [java] 3
+     [java] W W  
+     [java] B BWB
+     [java]  W BB
+     [java] 3
+     [java] W W  
+     [java]  B WB
+     [java]  B BB
+     [java] 3
+     [java] W W  
+     [java]  BBWB
+     [java]  WB B
+     [java] 3
+     [java] WW   
+     [java]  BB B
+     [java]  W BW
+     [java] 3
+     [java] BW   
+     [java]   B B
+     [java]  W BWDID NOT FINISH AT DEPTH = 4OUR MOVE:  (move 3 3 2 4)
+     [java] 2019-02-15 20:52:55.250 Response: (move 3 3 2 4)
+     [java] 2019-02-15 20:52:55.308 Command: (play testmatch_1 (noop (move 2 3 3 2)))
+     [java] black moved from 2,3 to 3,2
+     [java] 3
+     [java] 
+     [java]    1 2 3
+     [java]  5   B B 
+     [java]  4   B B 
+     [java]  3 B   W 
+     [java]  2 W W B 
+     [java]  1 W     
+     [java] 
+     [java] 2019-02-15 20:52:55.308 Response: noop
+     [java] 2019-02-15 20:52:55.365 Command: (play testmatch_1 ((move 2 2 2 3) noop))
+     [java] white moved from 2,2 to 2,3
+     [java] 3
+     [java] 
+     [java]    1 2 3
+     [java]  5   B B 
+     [java]  4   B B 
+     [java]  3 B W W 
+     [java]  2 W   B 
+     [java]  1 W     
+     [java] 
+     [java] WWB  
+     [java]   WBB
+     [java]  BWBB
+     [java] 3
+     [java] WWB  
+     [java]    BB
+     [java]  BWWB
+     [java] 3
+     [java] WWB  
+     [java]   WWB
+     [java]  B BB
+     [java] WWB  
+     [java]   WBB
+     [java]  BWBB
+     [java] 3
+     [java] WWB  
+     [java]    BB
+     [java]  BWWB
+     [java] 3
+     [java] WWB  
+     [java]     B
+     [java]  BBWB
+     [java] 3
+     [java] WWB  
+     [java]   B B
+     [java]  BWWB
+     [java] 3
+     [java] WWB  
+     [java]    B 
+     [java]  BWBB
+     [java] 3
+     [java] WWB  
+     [java]    BB
+     [java] B WWB
+     [java] 3
+     [java] WWB  
+     [java]   WWB
+     [java]  B BB
+     [java] 3
+     [java] WWB  
+     [java]   WWB
+     [java] B  BB
+     [java] 3
+     [java] WWB  
+     [java]   BWB
+     [java]  B  B
+     [java] 3
+     [java] WWB  
+     [java]   WWB
+     [java]  BB B
+     [java] 3
+     [java] WWB  
+     [java]   WBB
+     [java]  B B 
+     [java] WWB  
+     [java]   WBB
+     [java]  BWBB
+     [java] 3
+     [java] WWB  
+     [java]    BB
+     [java]  BWWB
+     [java] 3
+     [java] WWB  
+     [java]     B
+     [java]  BBWB
+     [java] 3
+     [java] WWB  
+     [java]     W
+     [java]  BB B
+     [java] 3
+     [java] WWB  
+     [java]   B B
+     [java]  BWWB
+     [java] 3
+     [java] W B  
+     [java]   W B
+     [java]  BWWB
+     [java] 3
+     [java] WWB  
+     [java]   B W
+     [java]  BW B
+     [java] 3
+     [java] WWB  
+     [java]    B 
+     [java]  BWBB
+     [java] 3
+     [java] WWB  
+     [java]    W 
+     [java]  B BB
+     [java] 3
+     [java] WWB  
+     [java]    BB
+     [java] B WWB
+     [java] 3
+     [java] WWB  
+     [java]    WB
+     [java] BDID NOT FINISH AT DEPTH = 3OUR MOVE:  (move 2 3 3 4)
+     [java] 2019-02-15 20:52:55.368 Response: (move 2 3 3 4)
+     [java] 2019-02-15 20:52:55.373 Command: (stop testmatch_1 (noop (move 3 2 3 1)))
+     [java] game over
+     [java] 2019-02-15 20:52:55.373 Response: done

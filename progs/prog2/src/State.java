@@ -17,7 +17,6 @@ public class State {
         this.isTerminal = false;
         this.winner = 'd';
         this.whiteTurn = whiteTurn;
-        System.out.println(grid.length);
         this.whitePawns = grid.length * 2;
         this.blackPawns = grid.length * 2;
         this.grid = new char[grid.length][grid[0].length];
@@ -32,10 +31,8 @@ public class State {
         char friendly = whiteTurn ? 'W' : 'B';
         char opponent = whiteTurn ? 'B' : 'W';
 
-        // TODO: implement for black
         for (int x = 0; x < grid.length; x++) {
             for (int y = 0; y < grid[0].length; y++) {
-                System.out.print(grid[x][y]);
                 if (grid[x][y] == friendly) {
                     if (x != 0) {
                         if (grid[x - 1][y + forward] == opponent) {
@@ -52,7 +49,6 @@ public class State {
                     }
                 }
             }
-            System.out.println();
         }
         // if moves is empty then its a draw
         if (moves.isEmpty()) {
