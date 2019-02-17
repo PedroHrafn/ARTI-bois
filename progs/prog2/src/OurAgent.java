@@ -98,12 +98,13 @@ public class OurAgent implements Agent {
 				h++;
 			}
 		} catch (Exception exception) {
+			System.out.println("Exception: " + exception.getMessage());
 			System.out.print("DID NOT FINISH AT DEPTH = " + h);
 		}
 		return move;
 	}
 
-	private int ABSearch(State lastState, State currState, int alpha, int beta, int h, boolean max) throws Exception {
+	private int ABSearch(State lastState, State currState, int alpha, int beta, int h, boolean max) throws Exception{
 		// System.out.println("DEPTH: " + h);
 		// System.out.println(max);
 		// Check if time has run out, 1000 to change playclock to ms
@@ -130,11 +131,9 @@ public class OurAgent implements Agent {
 			// TODo: AND UNDOMOVE HERE
 			if(max) {
 				if (v > bestValue) {
-					System.out.println("Max ; Found a new best new: " + v + " old : " + bestValue);
 					bestValue = v;
 				}
 				if (v >= beta) {
-					System.out.println("sweet prune at depth: " + h);
 					return v;
 				}
 				if(v > alpha) {
@@ -142,11 +141,9 @@ public class OurAgent implements Agent {
 				}
 			} else {
 				if(v < bestValue) {
-					System.out.println("Min ; Found a new best new: " + v + " old : " + bestValue);
 					bestValue = v;
 				}
 				if(v <= alpha) {
-					System.out.println("sweet prune at depth: " + h);
 					return v;
 				}
 				if(v < beta) {
@@ -195,10 +192,21 @@ public class OurAgent implements Agent {
 			y--;
 		}
 
-		// if we are black then return opposite
+		// Is a black pawn on the two rows closest to border?
+		int blackNearBorder = blackDist <= 2 ? 10 : 0;
+
+		// Is a white pawn on the two rows closest to border?
+		int whiteNearBorder = whiteDist <= state.grid.length - 3? 10 : 0;
+		
+		int whiteVal = (blackDist - whiteDist) + 3*(evalState.whitePawns - evalState.blackPawns)  - blackNearBorder; 
+		int blackVal = (whiteDist - blackDist) + 3*(evalState.blackPawns - evalState.whitePawns) - whiteNearBorder;
+
+		// only based on distance of each frontier
 		// return role.equals("white") ? (blackDist - whiteDist) : whiteDist - blackDist;
-		return role.equals("white") ? (blackDist - whiteDist) + (evalState.whitePawns - evalState.blackPawns) : 
-			(whiteDist - blackDist) + (evalState.blackPawns - evalState.whitePawns);
+		// based on number of pawns on board as well as frontier
+		// return role.equals("white") ? (blackDist - whiteDist) + (evalState.whitePawns - evalState.blackPawns) : 
+		// 	(whiteDist - blackDist) + (evalState.blackPawns - evalState.whitePawns);
+		return role.equals("white") ? whiteVal: blackVal;
 	}
 
 	private int[] ABSearchRoot(int h) throws Exception {

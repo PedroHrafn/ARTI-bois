@@ -35,10 +35,11 @@ public class State {
         }
         // for (int[] move : moves) {
         //     System.out.println();
-        int[] move = moves.get(0);
-        for (int i = 0; i < 4; i++) {
-            System.out.print(move[i] + ", ");
-        }
+       // int[] move = moves.get(0);
+        // System.out.println("FIRST MOVE");
+        // for (int i = 0; i < 4; i++) {
+        //     System.out.print((move[i] + 1) + ", ");
+        // }
         // System.out.println();
         // }
         return moves;
@@ -51,21 +52,66 @@ public class State {
         char friendly ='W';
         char opponent = 'B';
 
-        for (int y = grid[0].length - 1; y >= 0; y--){
-            for (int x = 0; x < grid.length; x++) {
+        // Check if there is anyone on the border to winning
+        int border = 0;
+        for (int x = 0; x < grid.length - 1; x++) {
+            if(grid[x][border] == friendly) {
+                if(x > 0) {
+                    if(grid[x - 1 ][border + forward] == opponent) {
+                        moves.add(new int[] {x, border, x - 1, border + forward});
+                        return moves;
+                    }
+                } else if(x < grid.length ) {
+                    if(grid[x - 1 ][border + forward] == opponent) {
+                        moves.add(new int[] {x, border, x + 1, border + forward});
+                        return moves;
+                    }
+                }
+            }
+        }
+    
+        for (int y = grid[0].length - 2; y >= 0; y--){
+            for (int x = 0; x < grid.length - 1; x++) {
+                char tileFront = grid[x][y + forward];
                 if (grid[x][y] == friendly) {
-                    if (x != 0) {
-                        if (grid[x - 1][y + forward] == opponent) {
+                    if (x > 0) {
+                        char tileLeft = grid[x - 1][y + forward];
+                        // Can we kill an opponent not next to our border?
+                        if (tileLeft== opponent && y != 0) {
                             moves.add(new int[] { x, y, x - 1, y + forward });
+                        } else if(tileFront != opponent ) { // Is there an opponent in front of me, that I am stopping
+                            // Can we win by killing? 
+                            if(tileLeft== opponent && y + forward == grid.length - 1){
+                                moves.add(0, new int[] { x, y, x - 1, y + forward });
+                                return moves;
+                            }else if(tileLeft == opponent) { // If there is an opponent next to the border kill him immediately
+                                moves.add(0, new int[] { x, y, x - 1, y + forward });
+                                return moves;
+                            }
                         }
                     }
-                    if (x != grid.length - 1) {
-                        if (grid[x + 1][y + forward] == opponent) {
+                    if (x < grid.length) {
+                        char tileRight = grid[x + 1][y + forward];
+                        // Can we kill an opponent not next to our border?
+                        if (tileRight == opponent && y != 0) {
                             moves.add(new int[] { x, y, x + 1, y + forward });
+                        } else if(tileFront != opponent && y != 0) { // Is there an opponent in front of me, that I am stopping
+                            if(tileRight == opponent && y + forward == grid.length - 1){
+                                moves.add(0, new int[] { x, y, x + 1, y + forward });
+                                return moves;
+                            }else if(tileRight == opponent) { // If there is an opponent next to the border kill him immediately
+                                moves.add(0, new int[] { x, y, x + 1, y + forward });
+                                return moves;
+                            }
                         }
                     }
-                    if (grid[x][y + forward] == ' ') {
+                    // Can we go forward?
+                    if (tileFront == ' ') {
                         moves.add(new int[] { x, y, x, y + forward });
+                        // If we are one move from winning, we go for it
+                        if(y == grid.length - 2) {
+                            return moves;
+                        }
                     }
                 }
             }
@@ -82,19 +128,46 @@ public class State {
 
         for (int y = 0; y < grid[0].length; y++) {
             for (int x = 0; x < grid.length; x++) {
+                char tileFront = grid[x][y + forward];
                 if (grid[x][y] == friendly) {
-                    if (x != 0) {
-                        if (grid[x - 1][y + forward] == opponent) {
+                    if (x > 0) {
+                        char tileLeft = grid[x - 1][y + forward];
+                        // Can we kill an opponent not next to our border?
+                        if (tileLeft== opponent && y != grid[0].length - 1) {
                             moves.add(new int[] { x, y, x - 1, y + forward });
+                        } else if(tileFront != opponent ) { // Is there an opponent in front of me, that I am stopping
+                            // Can we win by killing? 
+                            if(tileLeft== opponent && y + forward == 0){
+                                moves.add(0, new int[] { x, y, x - 1, y + forward });
+                                return moves;
+                            }else if(tileLeft == opponent) { // If there is an opponent next to the border kill him immediately
+                                moves.add(0, new int[] { x, y, x - 1, y + forward });
+                                return moves;
+                            }
                         }
                     }
-                    if (x != grid.length - 1) {
-                        if (grid[x + 1][y + forward] == opponent) {
+                    if (x < grid.length) {
+                        char tileRight = grid[x + 1][y + forward];
+                        // Can we kill an opponent not next to our border?
+                        if (tileRight == opponent && y != grid[0].length) {
                             moves.add(new int[] { x, y, x + 1, y + forward });
+                        } else if(tileFront != opponent && y != 0) { // Is there an opponent in front of me, that I am stopping
+                            if(tileRight == opponent && y + forward == 0){
+                                moves.add(0, new int[] { x, y, x + 1, y + forward });
+                                return moves;
+                            }else if(tileRight == opponent) { // If there is an opponent next to the border kill him immediately
+                                moves.add(0, new int[] { x, y, x + 1, y + forward });
+                                return moves;
+                            }
                         }
                     }
-                    if (grid[x][y + forward] == ' ') {
+                    // Can we go forward?
+                    if (tileFront == ' ') {
                         moves.add(new int[] { x, y, x, y + forward });
+                        // If we are one move from winning, we go for it
+                        if(y == 1) {
+                            return moves;
+                        }
                     }
                 }
             }
