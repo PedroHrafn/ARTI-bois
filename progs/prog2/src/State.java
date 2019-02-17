@@ -1,9 +1,7 @@
 import java.util.Collection;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.ArrayList;
-
-
-import java.awt.Point;
 
 public class State {
     public char[][] grid;
@@ -25,14 +23,36 @@ public class State {
         }
     }
 
-    public List<int[]> availableMoves() {
-        List<int[]> moves = new ArrayList<int[]>();
-        int forward = whiteTurn ? 1 : -1;
-        char friendly = whiteTurn ? 'W' : 'B';
-        char opponent = whiteTurn ? 'B' : 'W';
+    public List<int[]> availableMoves(boolean weWhite) {
+        // Priority Queue that orders the moves after how far the pawns go
+        List<int[]> moves = weWhite ? findWhiteMove() : findBlackMove();
 
-        for (int x = 0; x < grid.length; x++) {
-            for (int y = 0; y < grid[0].length; y++) {
+
+       
+        // if moves is empty then its a draw
+        if (moves.isEmpty()) {
+            this.isTerminal = true;
+        }
+        // for (int[] move : moves) {
+        //     System.out.println();
+        int[] move = moves.get(0);
+        for (int i = 0; i < 4; i++) {
+            System.out.print(move[i] + ", ");
+        }
+        // System.out.println();
+        // }
+        return moves;
+    }
+
+    private List<int[]> findWhiteMove() {
+        List<int[]> moves = new ArrayList<int[]>();
+
+        int forward = 1;
+        char friendly ='W';
+        char opponent = 'B';
+
+        for (int y = grid[0].length - 1; y >= 0; y--){
+            for (int x = 0; x < grid.length; x++) {
                 if (grid[x][y] == friendly) {
                     if (x != 0) {
                         if (grid[x - 1][y + forward] == opponent) {
@@ -50,17 +70,35 @@ public class State {
                 }
             }
         }
-        // if moves is empty then its a draw
-        if (moves.isEmpty()) {
-            this.isTerminal = true;
+        return moves;
+    }
+
+    private List<int[]> findBlackMove() {
+        List<int[]> moves = new ArrayList<int[]>();
+
+        int forward = -1;
+        char friendly = 'B';
+        char opponent = 'W';
+
+        for (int y = 0; y < grid[0].length; y++) {
+            for (int x = 0; x < grid.length; x++) {
+                if (grid[x][y] == friendly) {
+                    if (x != 0) {
+                        if (grid[x - 1][y + forward] == opponent) {
+                            moves.add(new int[] { x, y, x - 1, y + forward });
+                        }
+                    }
+                    if (x != grid.length - 1) {
+                        if (grid[x + 1][y + forward] == opponent) {
+                            moves.add(new int[] { x, y, x + 1, y + forward });
+                        }
+                    }
+                    if (grid[x][y + forward] == ' ') {
+                        moves.add(new int[] { x, y, x, y + forward });
+                    }
+                }
+            }
         }
-        // for (int[] move : moves) {
-        //     System.out.println();
-        //     for (int i = 0; i < 4; i++) {
-        //         System.out.print(move[i] + ", ");
-        //     }
-        //     System.out.println();
-        // }
         return moves;
     }
 

@@ -2,6 +2,7 @@ import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.awt.Point;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class OurAgent implements Agent {
 	private Random random = new Random();
@@ -102,14 +103,16 @@ public class OurAgent implements Agent {
 		return move;
 	}
 
-	int ABSearch(State lastState, State currState, int alpha, int beta, int h, boolean max) throws Exception {
+	private int ABSearch(State lastState, State currState, int alpha, int beta, int h, boolean max) throws Exception {
+		// System.out.println("DEPTH: " + h);
+		// System.out.println(max);
 		// Check if time has run out, 1000 to change playclock to ms
 		if( System.currentTimeMillis() - this.currTime > this.playclock * 1000) {
 			throw new Exception("Time ran out");
 		}
 
 		// TODO: ORDER MOVES SO THAT THE PRUNING WILL PRUNE MORE
-		List<int[]> moves = currState.availableMoves();
+		List<int[]> moves = currState.availableMoves(this.role.equals("white"));
 		if (currState.isTerminal) {
 			isWinner(currState);
 		}
@@ -121,15 +124,17 @@ public class OurAgent implements Agent {
 		// successor state value
 		int v;
 		int bestValue = max ? Integer.MIN_VALUE : Integer.MAX_VALUE;
-		for (int[] move : moves) {
+		for(int[] move : moves) {
 			// TODo: INSTEAD OF DOING NEXTSTATE, TO SAVE MEMORY DO DOMOVE
 			v = ABSearch(currState, currState.nextState(move), alpha, beta, h - 1, !max);
 			// TODo: AND UNDOMOVE HERE
 			if(max) {
 				if (v > bestValue) {
+					System.out.println("Max ; Found a new best new: " + v + " old : " + bestValue);
 					bestValue = v;
 				}
 				if (v >= beta) {
+					System.out.println("sweet prune at depth: " + h);
 					return v;
 				}
 				if(v > alpha) {
@@ -137,9 +142,11 @@ public class OurAgent implements Agent {
 				}
 			} else {
 				if(v < bestValue) {
+					System.out.println("Min ; Found a new best new: " + v + " old : " + bestValue);
 					bestValue = v;
 				}
 				if(v <= alpha) {
+					System.out.println("sweet prune at depth: " + h);
 					return v;
 				}
 				if(v < beta) {
@@ -159,7 +166,7 @@ public class OurAgent implements Agent {
 		return 0;
 	}
 
-	int evaluateState(State lastState, State evalState) {
+	private int evaluateState(State lastState, State evalState) {
 		int blackDist = 0;
 		int whiteDist = 0;
 		int y = 0;
@@ -194,12 +201,12 @@ public class OurAgent implements Agent {
 			(whiteDist - blackDist) + (evalState.blackPawns - evalState.whitePawns);
 	}
 
-	int[] ABSearchRoot(int h) throws Exception {
+	private int[] ABSearchRoot(int h) throws Exception {
 		int alpha = Integer.MIN_VALUE + 1;
 		int beta = Integer.MAX_VALUE;
 		int maxVal = -101;
 		int[] bestMove = new int[4];
-		for (int[] move : state.availableMoves()) {
+		for (int[] move : state.availableMoves(this.role.equals("white"))) {
 			int value = ABSearch(state, state.nextState(move), alpha, beta, h - 1, false);
 			if (value > maxVal) {
 				maxVal = value;
