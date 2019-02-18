@@ -74,7 +74,6 @@ public class OurAgent implements Agent {
 			// Here we just construct a random move (that will most likely not even be
 			// possible),
 			// this needs to be replaced with the actual best move.
-			// List<int[]> moves = state.availableMoves();
 			String moveString = "(move " + (move[0] + 1) + " " + (move[1] + 1) + " " + (move[2] + 1) + " "
 					+ (move[3] + 1) + ")";
 			System.out.println("OUR MOVE:  " + moveString);
@@ -191,7 +190,6 @@ public class OurAgent implements Agent {
 		int beta = Integer.MAX_VALUE;
 		int maxVal = -101;
 		int[] bestMove = new int[4];
-		// System.out.println(h);
 		for (int[] move : state.availableMoves()) {
 			int value = ABSearch(state, state.nextState(move), alpha, beta, h, false);
 			if (value > maxVal) {
