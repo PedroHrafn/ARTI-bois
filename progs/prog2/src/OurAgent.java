@@ -115,7 +115,7 @@ public class OurAgent implements Agent {
 		// TODO: ORDER MOVES SO THAT THE PRUNING WILL PRUNE MORE
 		List<int[]> moves = currState.availableMoves(this.role.equals("white"));
 		if (currState.isTerminal) {
-			isWinner(currState);
+			return isWinner(currState);
 		}
 		if (h == 0) {
 			return evaluateState(lastState, currState);
