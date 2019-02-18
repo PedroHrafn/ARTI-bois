@@ -92,10 +92,9 @@ public class OurAgent implements Agent {
 		// TODO: JOI VEIT
 		this.currTime = System.currentTimeMillis();
 		try {
-			while (move[3] != height - 1)  {
+			while (move[3] != height - 1) {
 				move = ABSearchRoot(h);
-				if(move[3] == height)
-				{
+				if (move[3] == height) {
 					System.out.println("Win move");
 				}
 				h++;
@@ -109,16 +108,17 @@ public class OurAgent implements Agent {
 
 	int ABSearch(State lastState, State currState, int alpha, int beta, int h, boolean max) throws Exception {
 		// Check if time has run out
-		if(System.currentTimeMillis() - this.currTime > this.playclock * 1000) {
+		if (System.currentTimeMillis() - this.currTime > this.playclock * 1000 - 100) {
 			throw new Exception("Time ran out");
 		}
 
 		// TODO: ORDER MOVES SO THAT THE PRUNING WILL PRUNE MORE
 		List<int[]> moves = currState.availableMoves();
 		if (currState.isTerminal) {
-			if (currState.winner == 'W') {
+			boolean isWhite = role.equals("white");
+			if ((currState.winner == 'W' && isWhite) || (currState.winner == 'B' && !isWhite)) {
 				return 100;
-			} else if (currState.winner == 'B') {
+			} else if ((currState.winner == 'B' && isWhite) || (currState.winner == 'W' && !isWhite)) {
 				return -100;
 			}
 			return 0;
@@ -126,7 +126,6 @@ public class OurAgent implements Agent {
 		if (h == 0) {
 			return evaluateState(lastState, currState);
 		}
-
 
 		// successor state value
 		int v;
@@ -142,24 +141,24 @@ public class OurAgent implements Agent {
 			// System.out.println("THE VALUE: " + v);
 			// System.out.println("========================================");
 			// TODo: AND UNDOMOVE HERE
-			if(max) {
+			if (max) {
 				if (v > bestValue) {
 					bestValue = v;
 				}
 				if (v >= beta) {
 					return v;
 				}
-				if(v > alpha) {
+				if (v > alpha) {
 					alpha = v;
 				}
 			} else {
-				if(v < bestValue) {
+				if (v < bestValue) {
 					bestValue = v;
 				}
-				if(v <= alpha) {
+				if (v <= alpha) {
 					return v;
 				}
-				if(v < beta) {
+				if (v < beta) {
 					beta = v;
 				}
 			}
@@ -182,7 +181,7 @@ public class OurAgent implements Agent {
 			}
 			y++;
 		}
-		
+
 		found = false;
 		y = state.grid[0].length - 2;
 		while (y > 0 && !found) {
@@ -200,12 +199,14 @@ public class OurAgent implements Agent {
 		// System.out.println("WhiteDist: " + whiteDist);
 		// System.out.println("BlackDist: " + blackDist);
 
-		// System.out.println(role.equals("white") ? (blackDist - whiteDist) : whiteDist - blackDist);
-		
+		// System.out.println(role.equals("white") ? (blackDist - whiteDist) : whiteDist
+		// - blackDist);
+
 		// if we are black then return opposite
-		return role.equals("white") ? (blackDist - whiteDist) : whiteDist - blackDist;
-		// return role.equals("white") ? (blackDist - whiteDist) + (evalState.whitePawns - evalState.blackPawns) : 
-		// 	(whiteDist - blackDist) + (evalState.blackPawns - evalState.whitePawns);
+		// return role.equals("white") ? (blackDist - whiteDist) : whiteDist -
+		// blackDist;
+		return role.equals("white") ? (blackDist - whiteDist) + (evalState.whitePawns - evalState.blackPawns)
+				: (whiteDist - blackDist) + (evalState.blackPawns - evalState.whitePawns);
 	}
 
 	int[] ABSearchRoot(int h) throws Exception {
@@ -213,11 +214,13 @@ public class OurAgent implements Agent {
 		int beta = Integer.MAX_VALUE;
 		int maxVal = -101;
 		int[] bestMove = new int[4];
+		// System.out.println(h);
 		for (int[] move : state.availableMoves()) {
-			int value = ABSearch(state, state.nextState(move), alpha, beta, h - 1, false);
+			int value = ABSearch(state, state.nextState(move), alpha, beta, h, false);
 			if (value > maxVal) {
 				maxVal = value;
 				bestMove = move;
+				alpha = value;
 			}
 		}
 		return bestMove;
