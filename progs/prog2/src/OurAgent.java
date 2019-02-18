@@ -50,13 +50,6 @@ public class OurAgent implements Agent {
 	// otherwise it contains the coordinates x1,y1,x2,y2 of the move that the last
 	// player did
 	public String nextAction(int[] lastMove) {
-		if (lastMove == null) {
-			System.out.println("WAS NULL");
-			System.out.println(myTurn);
-		} else {
-			System.out.println("WAS NOT NULL");
-			System.out.println(myTurn);
-		}
 		if (lastMove != null) {
 			int x1 = lastMove[0], y1 = lastMove[1], x2 = lastMove[2], y2 = lastMove[3];
 			String roleOfLastPlayer;
@@ -77,7 +70,6 @@ public class OurAgent implements Agent {
 		myTurn = !myTurn;
 		if (myTurn) {
 			// TODO: 2. run alpha-beta search to determine the best move
-			System.out.println("HALLO " + state.whiteTurn);
 			int[] move = getBestMove();
 			// Here we just construct a random move (that will most likely not even be
 			// possible),
@@ -107,7 +99,6 @@ public class OurAgent implements Agent {
 			}
 		} catch (Exception exception) {
 			System.out.println("Exception: " + exception.getMessage());
-			System.out.println("DID NOT FINISH AT DEPTH = " + h);
 		}
 		return ret.move;
 	}
@@ -137,16 +128,7 @@ public class OurAgent implements Agent {
 		int v;
 		int bestValue = max ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 		for (int[] move : moves) {
-			// TODo: INSTEAD OF DOING NEXTSTATE, TO SAVE MEMORY DO DOMOVE
-			// value = ABSearch(currState.nextState(move), -beta, -alpha, h - 1, !max);
 			v = ABSearch(currState, currState.nextState(move), alpha, beta, h - 1, !max);
-			// System.out.println("========================================");
-			// System.out.println("DEPTH: " + h);
-			// System.out.println("THE ALPHA: " + alpha);
-			// System.out.println("THE BETA: " + beta);
-			// System.out.println("THE VALUE: " + v);
-			// System.out.println("========================================");
-			// TODo: AND UNDOMOVE HERE
 			if (max) {
 				if (v > bestValue) {
 					bestValue = v;
@@ -200,17 +182,6 @@ public class OurAgent implements Agent {
 			}
 			y--;
 		}
-
-		// printGrid(evalState.grid);
-		// System.out.println("WhiteDist: " + whiteDist);
-		// System.out.println("BlackDist: " + blackDist);
-
-		// System.out.println(role.equals("white") ? (blackDist - whiteDist) : whiteDist
-		// - blackDist);
-
-		// if we are black then return opposite
-		// return role.equals("white") ? (blackDist - whiteDist) : whiteDist -
-		// blackDist;
 		return role.equals("white") ? (blackDist - whiteDist) + (evalState.whitePawns - evalState.blackPawns)
 				: (whiteDist - blackDist) + (evalState.blackPawns - evalState.whitePawns);
 	}
