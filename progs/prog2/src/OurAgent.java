@@ -2,7 +2,6 @@ import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.awt.Point;
 import java.util.List;
-import java.util.PriorityQueue;
 
 public class OurAgent implements Agent {
 	private Random random = new Random();
@@ -90,32 +89,39 @@ public class OurAgent implements Agent {
 	private int[] getBestMove() {
 		int[] move = new int[4];
 		int h = 1;
-
+		// TODO: JOI VEIT
 		this.currTime = System.currentTimeMillis();
 		try {
-			while (move[3] != 0 || move[3] != height -1) {
+			while (move[3] != height - 1)  {
 				move = ABSearchRoot(h);
+				if(move[3] == height)
+				{
+					System.out.println("Win move");
+				}
 				h++;
 			}
 		} catch (Exception exception) {
 			System.out.println("Exception: " + exception.getMessage());
-			System.out.print("DID NOT FINISH AT DEPTH = " + h);
+			System.out.println("DID NOT FINISH AT DEPTH = " + h);
 		}
 		return move;
 	}
 
-	private int ABSearch(State lastState, State currState, int alpha, int beta, int h, boolean max) throws Exception{
-		// System.out.println("DEPTH: " + h);
-		// System.out.println(max);
-		// Check if time has run out, 1000 to change playclock to ms
-		if( System.currentTimeMillis() - this.currTime > this.playclock * 1000) {
+	int ABSearch(State lastState, State currState, int alpha, int beta, int h, boolean max) throws Exception {
+		// Check if time has run out
+		if(System.currentTimeMillis() - this.currTime > this.playclock * 1000) {
 			throw new Exception("Time ran out");
 		}
 
 		// TODO: ORDER MOVES SO THAT THE PRUNING WILL PRUNE MORE
-		List<int[]> moves = currState.availableMoves(this.role.equals("white"));
+		List<int[]> moves = currState.availableMoves();
 		if (currState.isTerminal) {
-			return isWinner(currState);
+			if (currState.winner == 'W') {
+				return 100;
+			} else if (currState.winner == 'B') {
+				return -100;
+			}
+			return 0;
 		}
 		if (h == 0) {
 			return evaluateState(lastState, currState);
@@ -125,9 +131,16 @@ public class OurAgent implements Agent {
 		// successor state value
 		int v;
 		int bestValue = max ? Integer.MIN_VALUE : Integer.MAX_VALUE;
-		for(int[] move : moves) {
+		for (int[] move : moves) {
 			// TODo: INSTEAD OF DOING NEXTSTATE, TO SAVE MEMORY DO DOMOVE
+			// value = ABSearch(currState.nextState(move), -beta, -alpha, h - 1, !max);
 			v = ABSearch(currState, currState.nextState(move), alpha, beta, h - 1, !max);
+			// System.out.println("========================================");
+			// System.out.println("DEPTH: " + h);
+			// System.out.println("THE ALPHA: " + alpha);
+			// System.out.println("THE BETA: " + beta);
+			// System.out.println("THE VALUE: " + v);
+			// System.out.println("========================================");
 			// TODo: AND UNDOMOVE HERE
 			if(max) {
 				if (v > bestValue) {
@@ -154,16 +167,7 @@ public class OurAgent implements Agent {
 		return bestValue;
 	}
 
-	private int isWinner(State state) {
-		if (state.winner == 'W') {
-			return this.role.equals("white") ? 100 : -100;
-		} else if (state.winner == 'B') {
-			return this.role.equals("white") ? -100: 100;
-		} 
-		return 0;
-	}
-
-	private int evaluateState(State lastState, State evalState) {
+	int evaluateState(State lastState, State evalState) {
 		int blackDist = 0;
 		int whiteDist = 0;
 		int y = 0;
@@ -192,37 +196,30 @@ public class OurAgent implements Agent {
 			y--;
 		}
 
-		// Is a black pawn on the two rows closest to border?
-		int blackNearBorder = blackDist <= 2 ? 10 : 0;
+		// printGrid(evalState.grid);
+		// System.out.println("WhiteDist: " + whiteDist);
+		// System.out.println("BlackDist: " + blackDist);
 
-		// Is a white pawn on the two rows closest to border?
-		int whiteNearBorder = whiteDist <= state.grid.length - 3? 10 : 0;
+		// System.out.println(role.equals("white") ? (blackDist - whiteDist) : whiteDist - blackDist);
 		
-		int whiteVal = (blackDist - whiteDist) + 3*(evalState.whitePawns - evalState.blackPawns)  - blackNearBorder; 
-		int blackVal = (whiteDist - blackDist) + 3*(evalState.blackPawns - evalState.whitePawns) - whiteNearBorder;
-
-		// only based on distance of each frontier
-		// return role.equals("white") ? (blackDist - whiteDist) : whiteDist - blackDist;
-		// based on number of pawns on board as well as frontier
+		// if we are black then return opposite
+		return role.equals("white") ? (blackDist - whiteDist) : whiteDist - blackDist;
 		// return role.equals("white") ? (blackDist - whiteDist) + (evalState.whitePawns - evalState.blackPawns) : 
 		// 	(whiteDist - blackDist) + (evalState.blackPawns - evalState.whitePawns);
-		return role.equals("white") ? whiteVal: blackVal;
 	}
 
-	private int[] ABSearchRoot(int h) throws Exception {
+	int[] ABSearchRoot(int h) throws Exception {
 		int alpha = Integer.MIN_VALUE + 1;
 		int beta = Integer.MAX_VALUE;
 		int maxVal = -101;
 		int[] bestMove = new int[4];
-		for (int[] move : state.availableMoves(this.role.equals("white"))) {
+		for (int[] move : state.availableMoves()) {
 			int value = ABSearch(state, state.nextState(move), alpha, beta, h - 1, false);
 			if (value > maxVal) {
 				maxVal = value;
 				bestMove = move;
 			}
 		}
-		// System.out.println("Max val: " + maxVal);
-		// System.out.println("Pawn val: " + (state.whitePawns - state.blackPawns));
 		return bestMove;
 	}
 

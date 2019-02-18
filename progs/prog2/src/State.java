@@ -1,7 +1,9 @@
 import java.util.Collection;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.ArrayList;
+
+
+import java.awt.Point;
 
 public class State {
     public char[][] grid;
@@ -23,140 +25,51 @@ public class State {
         }
     }
 
-    public List<int[]> availableMoves(boolean weWhite) {
-        // Priority Queue that orders the moves after how far the pawns go
-        List<int[]> moves = weWhite ? findWhiteMove() : findBlackMove();
-
-
-       
+    public List<int[]> availableMoves() {
+        List<int[]> moves = new ArrayList<int[]>();
+        int forward = 1;
+        char friendly = 'W';
+        char opponent = 'B';
+        if (!whiteTurn) {
+            friendly = 'B';
+            opponent = 'W';
+            forward = -1;
+        }
+        for (int x = 0; x < grid.length; x++) {
+            for (int y = 0; y < grid[0].length; y++) {
+                if (grid[x][y] == friendly) {
+                    if (grid[x][y + forward] == ' ') {
+                        moves.add(new int[] { x, y, x, y + forward });
+                    }
+                    if (x != 0) {
+                        if (grid[x - 1][y + forward] == opponent) {
+                            moves.add(new int[] { x, y, x - 1, y + forward });
+                        }
+                    }
+                    if (x != grid.length - 1) {
+                        if (grid[x + 1][y + forward] == opponent) {
+                            moves.add(new int[] { x, y, x + 1, y + forward });
+                        }
+                    }
+                }
+            }
+        }
         // if moves is empty then its a draw
         if (moves.isEmpty()) {
             this.isTerminal = true;
         }
         // for (int[] move : moves) {
         //     System.out.println();
-       // int[] move = moves.get(0);
-        // System.out.println("FIRST MOVE");
-        // for (int i = 0; i < 4; i++) {
-        //     System.out.print((move[i] + 1) + ", ");
+        //     for (int i = 0; i < 4; i++) {
+        //         System.out.print(move[i] + ", ");
+        //     }
+        //     System.out.println();
         // }
-        // System.out.println();
-        // }
-        return moves;
-    }
-
-    private List<int[]> findWhiteMove() {
-        List<int[]> moves = new ArrayList<int[]>();
-
-        int forward = 1;
-        char friendly ='W';
-        char opponent = 'B';
-
-        // for (int y = grid[0].length - 2; y >= 0; y--){
-        for (int y = 0; y < grid[0].length; y++) {
-            for (int x = 0; x < grid.length - 1; x++) {
-                char tileFront = grid[x][y + forward];
-                if (grid[x][y] == friendly) {
-                    if (x > 0) {
-                        char tileLeft = grid[x - 1][y + forward];
-                        // Can we kill an opponent not next to our border?
-                        if (tileLeft== opponent && y != 0) {
-                            moves.add(new int[] { x, y, x - 1, y + forward });
-                        } else if(tileFront != opponent ) { // Is there an opponent in front of me, that I am stopping
-                            // Can we win by killing? 
-                            if(tileLeft== opponent && y + forward == grid.length - 1){
-                                moves.add(0, new int[] { x, y, x - 1, y + forward });
-                            }else if(tileLeft == opponent) { // If there is an opponent next to the border kill him immediately
-                                moves.add(0, new int[] { x, y, x - 1, y + forward });
-                            }
-                        }
-                    }
-                    if (x < grid.length) {
-                        char tileRight = grid[x + 1][y + forward];
-                        // Can we kill an opponent not next to our border?
-                        if (tileRight == opponent && y != 0) {
-                            moves.add(new int[] { x, y, x + 1, y + forward });
-                        } else if(tileFront != opponent && y != 0) { // Is there an opponent in front of me, that I am stopping
-                            if(tileRight == opponent && y + forward == grid.length - 1){
-                                moves.add(0, new int[] { x, y, x + 1, y + forward });
-                            }else if(tileRight == opponent) { // If there is an opponent next to the border kill him immediately
-                                moves.add(0, new int[] { x, y, x + 1, y + forward });
-                            }
-                        }
-                    }
-                    // Can we go forward?
-                    if (tileFront == ' ') {
-                        moves.add(new int[] { x, y, x, y + forward });
-                        // If we are one move from winning, we go for it
-                        if(y == grid.length - 2) {
-                            return moves;
-                        }
-                    }
-                }
-            }
-        }
-        return moves;
-    }
-
-    private List<int[]> findBlackMove() {
-        List<int[]> moves = new ArrayList<int[]>();
-
-        int forward = -1;
-        char friendly = 'B';
-        char opponent = 'W';
-
-        for (int y = 0; y < grid[0].length; y++) {
-            for (int x = 0; x < grid.length; x++) {
-                char tileFront = grid[x][y + forward];
-                if (grid[x][y] == friendly) {
-                    if (x > 0) {
-                        char tileLeft = grid[x - 1][y + forward];
-                        // Can we kill an opponent not next to our border?
-                        if (tileLeft== opponent && y != grid[0].length - 1) {
-                            moves.add(new int[] { x, y, x - 1, y + forward });
-                        } else if(tileFront != opponent ) { // Is there an opponent in front of me, that I am stopping
-                            // Can we win by killing? 
-                            if(tileLeft== opponent && y + forward == 0){
-                                moves.add(0, new int[] { x, y, x - 1, y + forward });
-                                return moves;
-                            }else if(tileLeft == opponent) { // If there is an opponent next to the border kill him immediately
-                                moves.add(0, new int[] { x, y, x - 1, y + forward });
-                                return moves;
-                            }
-                        }
-                    }
-                    if (x < grid.length) {
-                        char tileRight = grid[x + 1][y + forward];
-                        // Can we kill an opponent not next to our border?
-                        if (tileRight == opponent && y != grid[0].length) {
-                            moves.add(new int[] { x, y, x + 1, y + forward });
-                        } else if(tileFront != opponent && y != 0) { // Is there an opponent in front of me, that I am stopping
-                            if(tileRight == opponent && y + forward == 0){
-                                moves.add(0, new int[] { x, y, x + 1, y + forward });
-                                return moves;
-                            }else if(tileRight == opponent) { // If there is an opponent next to the border kill him immediately
-                                moves.add(0, new int[] { x, y, x + 1, y + forward });
-                                return moves;
-                            }
-                        }
-                    }
-                    // Can we go forward?
-                    if (tileFront == ' ') {
-                        moves.add(new int[] { x, y, x, y + forward });
-                        // If we are one move from winning, we go for it
-                        if(y == 1) {
-                            return moves;
-                        }
-                    }
-                }
-            }
-        }
         return moves;
     }
 
     public State nextState(int[] move) {
         State newState = new State(this.grid, !this.whiteTurn);
-        char victim = newState.grid[move[2]][move[3]];
         newState.grid[move[2]][move[3]] = grid[move[0]][move[1]];
         newState.grid[move[0]][move[1]] = ' ';
         // if move[3] == 0 then black wins, if its Y max then white wins
@@ -167,13 +80,13 @@ public class State {
             newState.isTerminal = true;
             newState.winner = 'W';
         }
-        else if (victim == 'W')
+        else if (grid[move[2]][move[3]] == 'W')
         {
-            newState.whitePawns --;
+            whitePawns --;
         }
-        else if (victim == 'B')
-        { 
-            newState.blackPawns --;
+        else if (grid[move[2]][move[3]] == 'B')
+        {
+            blackPawns --;
         }
         return newState;
     }
