@@ -43,13 +43,20 @@ public class OurAgent implements Agent {
 
 			}
 		}
-		state = new State(grid, !myTurn);
+		state = new State(grid, true);
 	}
 
 	// lastMove is null the first time nextAction gets called (in the initial state)
 	// otherwise it contains the coordinates x1,y1,x2,y2 of the move that the last
 	// player did
 	public String nextAction(int[] lastMove) {
+		if (lastMove == null) {
+			System.out.println("WAS NULL");
+			System.out.println(myTurn);
+		} else {
+			System.out.println("WAS NOT NULL");
+			System.out.println(myTurn);
+		}
 		if (lastMove != null) {
 			int x1 = lastMove[0], y1 = lastMove[1], x2 = lastMove[2], y2 = lastMove[3];
 			String roleOfLastPlayer;
@@ -65,13 +72,12 @@ public class OurAgent implements Agent {
 
 			state = state.nextState(lastMove);
 			printGrid(state.grid);
-
 		}
-
 		// update turn (above that line it myTurn is still for the previous state)
 		myTurn = !myTurn;
 		if (myTurn) {
 			// TODO: 2. run alpha-beta search to determine the best move
+			System.out.println("HALLO " + state.whiteTurn);
 			int[] move = getBestMove();
 			// Here we just construct a random move (that will most likely not even be
 			// possible),
@@ -88,22 +94,22 @@ public class OurAgent implements Agent {
 
 	private int[] getBestMove() {
 		int[] move = new int[4];
+		MoveObject ret = new MoveObject(-100, move);
 		int h = 1;
 		// TODO: JOI VEIT
 		this.currTime = System.currentTimeMillis();
 		try {
-			while (move[3] != height - 1) {
-				move = ABSearchRoot(h);
-				if (move[3] == height) {
-					System.out.println("Win move");
-				}
+			while (ret.value != 100) {
+				MoveObject tmp = ABSearchRoot(h);
+				ret.value = tmp.value;
+				ret.move = tmp.move;
 				h++;
 			}
 		} catch (Exception exception) {
 			System.out.println("Exception: " + exception.getMessage());
 			System.out.println("DID NOT FINISH AT DEPTH = " + h);
 		}
-		return move;
+		return ret.move;
 	}
 
 	int ABSearch(State lastState, State currState, int alpha, int beta, int h, boolean max) throws Exception {
@@ -209,7 +215,7 @@ public class OurAgent implements Agent {
 				: (whiteDist - blackDist) + (evalState.blackPawns - evalState.whitePawns);
 	}
 
-	int[] ABSearchRoot(int h) throws Exception {
+	MoveObject ABSearchRoot(int h) throws Exception {
 		int alpha = Integer.MIN_VALUE + 1;
 		int beta = Integer.MAX_VALUE;
 		int maxVal = -101;
@@ -223,7 +229,8 @@ public class OurAgent implements Agent {
 				alpha = value;
 			}
 		}
-		return bestMove;
+		MoveObject ret = new MoveObject(maxVal, bestMove);
+		return ret;
 	}
 
 	// is called when the game is over or the match is aborted
@@ -247,6 +254,20 @@ public class OurAgent implements Agent {
 			System.out.println();
 		}
 		System.out.println();
+	}
+
+	public class MoveObject {
+		public int value;
+		public int[] move;
+
+		public MoveObject(int value, int[] move) {
+			this.value = value;
+			this.move = move;
+		}
+
+		public MoveObject() {
+
+		}
 	}
 
 }

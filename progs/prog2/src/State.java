@@ -2,7 +2,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 
-
 import java.awt.Point;
 
 public class State {
@@ -59,11 +58,11 @@ public class State {
             this.isTerminal = true;
         }
         // for (int[] move : moves) {
-        //     System.out.println();
-        //     for (int i = 0; i < 4; i++) {
-        //         System.out.print(move[i] + ", ");
-        //     }
-        //     System.out.println();
+        // System.out.println();
+        // for (int i = 0; i < 4; i++) {
+        // System.out.print(move[i] + ", ");
+        // }
+        // System.out.println();
         // }
         return moves;
     }
@@ -79,14 +78,10 @@ public class State {
         } else if (move[3] == grid[0].length - 1) {
             newState.isTerminal = true;
             newState.winner = 'W';
-        }
-        else if (grid[move[2]][move[3]] == 'W')
-        {
-            whitePawns --;
-        }
-        else if (grid[move[2]][move[3]] == 'B')
-        {
-            blackPawns --;
+        } else if (grid[move[2]][move[3]] == 'W') {
+            whitePawns--;
+        } else if (grid[move[2]][move[3]] == 'B') {
+            blackPawns--;
         }
         return newState;
     }
