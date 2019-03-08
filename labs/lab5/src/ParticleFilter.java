@@ -78,8 +78,9 @@ public class ParticleFilter {
 	// this is the main particle filter function that is called after each step
 	public void step(double[] sensorvalues,int action, double value){
         // TODO: fill out
-        System.out.println("step");
         applyAction(action, value);
+		applyObservation(sensorvalues);
+		this.particles = resample(this.particles, 1.0);
     }
 
 	// apply the transition model to all particles
@@ -93,21 +94,26 @@ public class ParticleFilter {
 	// change the particle p according to the transition model
 	private void sampleFromTransitionModel(Particle p, int action, double value) {
         if (action==ACTION_MOVE){
-            System.out.println("move");
+            //System.out.println("move");
 			// value is the distance of the movement
 			// Note that there is some uncertainty in the movement.
 			// The error in the distance travelled is distributed according to
 			// a gaussian distribution with standard deviation movnoise*value.
-			// TODO: fill out
+            // TODO: fill out
+            double newX = p.getX() + value * Math.cos(p.getA());
+        	double newY = p.getY() + value * Math.sin(p.getA()); 
+        	p.setX(newX);
+        	p.setY(newY);
 
         } else if (action==ACTION_ROTATE){
-            System.out.println("rotate");
+            //System.out.println("rotate");
 			// value is the angle of the rotation (by how much the robot rotates clockwise)
 			// Note that there is some uncertainty in the rotation.
 			// The error in the angle is distributed according to
 			// a gaussian distribution with standard deviation rotnoise*value.
-			// TODO: fill out
-
+            // TODO: fill out
+            p.setA(value);
+            
         }
 		
 	}
@@ -118,13 +124,26 @@ public class ParticleFilter {
 		// TODO: weight each particle according to observation probability
 	    	// Hint: use map.observationProbability(..)
 
-		// TODO: normalize weights, so they sum up to 1
+        // TODO: normalize weights, so they sum up to 1
+        
+        double total = 0;
+		for (int i = 0; i < this.particles.length; i++) {
+			double probability = getObservationProbability(sensorvalues, this.particles[i]);
+			this.particles[i].setW(probability);
+			total += probability;
+		}
+		// TODO: normalize weights to 1
+		if (total != 0.0) {
+			for (int i = 0; i < this.particles.length; i++) {
+				this.particles[i].setW(this.particles[i].getW() / total);
+			}
+		}
 		
     }
 
 	// returns P(e|x)
     private double getObservationProbability(double[] sensorvalues, Particle p){
-        System.out.println("observprob");
+
         return map.getObservationProbability(p.getX(),p.getY(),p.getA(),sensors,sensorvalues,sensnoise,maxr);
     }
 
