@@ -78,12 +78,13 @@ public class ParticleFilter {
 	// this is the main particle filter function that is called after each step
 	public void step(double[] sensorvalues,int action, double value){
         // TODO: fill out
-        System.out.printf("step");
+        System.out.println("step");
+        applyAction(action, value);
     }
 
 	// apply the transition model to all particles
     private void applyAction(int action, double value){
-        System.out.println("move");
+        System.out.println("apply");
 		for (int i=0;i<particles.length;i++){
 			sampleFromTransitionModel(particles[i], action, value);
 		}
@@ -123,11 +124,13 @@ public class ParticleFilter {
 
 	// returns P(e|x)
     private double getObservationProbability(double[] sensorvalues, Particle p){
+        System.out.println("observprob");
         return map.getObservationProbability(p.getX(),p.getY(),p.getA(),sensors,sensorvalues,sensnoise,maxr);
     }
 
 	// resample the list of particles
     private Particle[] resample(Particle[] s, double confusion){
+        System.out.println("resample");
         int n=s.length;
         Particle[] out=new Particle[n];
         double[] c=new double[n];
@@ -170,12 +173,14 @@ public class ParticleFilter {
 	// ignore every thing below this point
 
     public void applyCompassData(double angle){
+        System.out.println("applycomp");
         for (int i=0;i<particles.length;i++){
             particles[i].setA(angle);
         }
     }
 
     public Particle[] getParticles(){
+        System.out.println("getpart");
         return particles;
     }
 
