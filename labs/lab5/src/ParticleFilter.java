@@ -58,17 +58,32 @@ public class ParticleFilter {
         this.maxr=maxr;
         rnd=new Random();
         this.particles=new Particle[particlecount];
-		// TODO: initialize particles (uniform random distribution over the map)
+        // TODO: initialize particles (uniform random distribution over the map)
+        for (int i = 0; i < particlecount; i++) {
+            //TODO ekki setja particles þar sem veggur er
+            boolean notWall = false;
+            int xcord = 0;
+            int ycord = 0;
+            while(!notWall)
+            {
+                xcord = rnd.nextInt(map.getWidth());
+                ycord = rnd.nextInt(map.getHeight());
+                notWall = map.getData(xcord, ycord);
+            }
+            this.particles[i] = new Particle(xcord, ycord, 0, 1.0/ particlecount);
+        }
 
     }
 	
 	// this is the main particle filter function that is called after each step
 	public void step(double[] sensorvalues,int action, double value){
-		// TODO: fill out
+        // TODO: fill out
+        System.out.printf("step");
     }
 
 	// apply the transition model to all particles
     private void applyAction(int action, double value){
+        System.out.println("move");
 		for (int i=0;i<particles.length;i++){
 			sampleFromTransitionModel(particles[i], action, value);
 		}
@@ -77,6 +92,7 @@ public class ParticleFilter {
 	// change the particle p according to the transition model
 	private void sampleFromTransitionModel(Particle p, int action, double value) {
         if (action==ACTION_MOVE){
+            System.out.println("move");
 			// value is the distance of the movement
 			// Note that there is some uncertainty in the movement.
 			// The error in the distance travelled is distributed according to
@@ -84,6 +100,7 @@ public class ParticleFilter {
 			// TODO: fill out
 
         } else if (action==ACTION_ROTATE){
+            System.out.println("rotate");
 			// value is the angle of the rotation (by how much the robot rotates clockwise)
 			// Note that there is some uncertainty in the rotation.
 			// The error in the angle is distributed according to
@@ -96,6 +113,7 @@ public class ParticleFilter {
 
 	// apply the sensor model to all particles
     private void applyObservation(double[] sensorvalues){
+        System.out.println("observe");
 		// TODO: weight each particle according to observation probability
 	    	// Hint: use map.observationProbability(..)
 
