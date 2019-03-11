@@ -54,7 +54,6 @@ public class ParticleFilter {
             int maxr) {
         this.map = map;
         this.sensors = sensors;
-        // System.out.println("rotnoise: " + rotnoise + ", movnoise: " + movnoise);
         this.movnoise = movnoise / 10.0;
         this.rotnoise = rotnoise / 90.0;
         this.sensnoise = sensnoise;
@@ -79,7 +78,7 @@ public class ParticleFilter {
 
     // this is the main particle filter function that is called after each step
     public void step(double[] sensorvalues, int action, double value) {
-        // TODO: fill out
+
         applyAction(action, value);
         applyObservation(sensorvalues);
         this.particles = resample(this.particles, 0.1);
@@ -101,13 +100,8 @@ public class ParticleFilter {
             // Note that there is some uncertainty in the movement.
             // The error in the distance travelled is distributed according to
             // a gaussian distribution with standard deviation movnoise*value.
-            // TODO: fill out
             double newX = p.getX() + (value + value * movnoise * rnd.nextGaussian()) * Math.sin(p.getA());
             double newY = p.getY() - (value + value * movnoise * rnd.nextGaussian()) * Math.cos(p.getA());
-            // System.out.println("from x: " + p.getX() + ", to: " + newX + ", angle: " +
-            // p.getA());
-            // System.out.println("from y: " + p.getY() + ", to: " + newY + ", angle: " +
-            // p.getA());
             p.setX(newX);
             p.setY(newY);
 
@@ -117,7 +111,6 @@ public class ParticleFilter {
             // Note that there is some uncertainty in the rotation.
             // The error in the angle is distributed according to
             // a gaussian distribution with standard deviation rotnoise*value.
-            // TODO: fill out
             p.setA(p.getA() + value + rnd.nextGaussian() * rotnoise * value);
 
         }
