@@ -80,8 +80,8 @@ public class ParticleFilter {
     // this is the main particle filter function that is called after each step
     public void step(double[] sensorvalues, int action, double value) {
         // TODO: fill out
-        applyObservation(sensorvalues);
         applyAction(action, value);
+        applyObservation(sensorvalues);
         this.particles = resample(this.particles, 0.1);
     }
 
