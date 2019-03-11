@@ -54,6 +54,7 @@ public class ParticleFilter {
             int maxr) {
         this.map = map;
         this.sensors = sensors;
+        // System.out.println("rotnoise: " + rotnoise + ", movnoise: " + movnoise);
         this.movnoise = movnoise / 10.0;
         this.rotnoise = rotnoise / 90.0;
         this.sensnoise = sensnoise;
@@ -101,12 +102,8 @@ public class ParticleFilter {
             // The error in the distance travelled is distributed according to
             // a gaussian distribution with standard deviation movnoise*value.
             // TODO: fill out
-            double noise = movnoise * value;
-            if (rnd.nextDouble() < 0.5)
-                noise = -noise;
-            value = value + noise * rnd.nextGaussian();
-            double newX = p.getX() + value * Math.sin(p.getA());
-            double newY = p.getY() + value * Math.cos(p.getA());
+            double newX = p.getX() + (value + value * movnoise * rnd.nextGaussian()) * Math.sin(p.getA());
+            double newY = p.getY() - (value + value * movnoise * rnd.nextGaussian()) * Math.cos(p.getA());
             // System.out.println("from x: " + p.getX() + ", to: " + newX + ", angle: " +
             // p.getA());
             // System.out.println("from y: " + p.getY() + ", to: " + newY + ", angle: " +
@@ -121,10 +118,7 @@ public class ParticleFilter {
             // The error in the angle is distributed according to
             // a gaussian distribution with standard deviation rotnoise*value.
             // TODO: fill out
-            double noise = rotnoise * value;
-            if (rnd.nextDouble() < 0.5)
-                noise = -noise;
-            p.setA(p.getA() - value + rnd.nextGaussian() * noise);
+            p.setA(p.getA() + value + rnd.nextGaussian() * rotnoise * value);
 
         }
 
