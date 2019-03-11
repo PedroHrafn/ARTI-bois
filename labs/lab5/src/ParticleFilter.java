@@ -61,9 +61,9 @@ public class ParticleFilter {
         this.maxr = maxr;
         rnd = new Random();
         this.particles = new Particle[particlecount];
-        // TODO: initialize particles (uniform random distribution over the map)
+        // Initialize particles (uniform random distribution over the map)
         for (int i = 0; i < particlecount; i++) {
-            // TODO ekki setja particles þar sem veggur er
+            // Place a particle if there is no wall
             boolean notWall = false;
             int xcord = 0;
             int ycord = 0;
@@ -127,18 +127,14 @@ public class ParticleFilter {
     // apply the sensor model to all particles
     private void applyObservation(double[] sensorvalues) {
         System.out.println("observe");
-        // TODO: weight each particle according to observation probability
-        // Hint: use map.observationProbability(..)
-
-        // TODO: normalize weights, so they sum up to 1
-
+        // Weight each particle according to observation probability
         double total = 0;
         for (int i = 0; i < this.particles.length; i++) {
             double probability = getObservationProbability(sensorvalues, this.particles[i]);
             this.particles[i].setW(probability);
             total += probability;
         }
-        // TODO: normalize weights to 1
+        // Normalize weights, so they sum up to 1
         if (total != 0.0) {
             for (int i = 0; i < this.particles.length; i++) {
                 this.particles[i].setW(this.particles[i].getW() / total);
@@ -149,7 +145,6 @@ public class ParticleFilter {
 
     // returns P(e|x)
     private double getObservationProbability(double[] sensorvalues, Particle p) {
-
         return map.getObservationProbability(p.getX(), p.getY(), p.getA(), sensors, sensorvalues, sensnoise, maxr);
     }
 
