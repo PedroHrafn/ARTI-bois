@@ -1,5 +1,6 @@
 /servervenv
 *.pyc
+__pycache__/server.cpython-37.pyc
 
 # Created by https://www.gitignore.io/api/flask
 # Edit at https://www.gitignore.io/?templates=flask
