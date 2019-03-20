@@ -1,6 +1,7 @@
 .DS_Store
 dist/
 **/*.pyc
+final/backend/__pycache__/server.cpython-37.pyc
 
 # Created by https://www.gitignore.io/api/java,code-java
 # Edit at https://www.gitignore.io/?templates=java,code-java
