@@ -2,14 +2,7 @@
 class Game(object):
 
     def __init__(self, size=3):
-        self.size = size
-        self.big_won = {"board": [], "tiles": []}
-        self._initBoard()
-        self.x_turn = True
-        self.game_over = False
-
-        # What cell next player does, if [] then any.
-        self.next_big = []  # [col, row]
+        self.reset(size)
 
     def _initBoard(self):
         self.board = []
@@ -20,7 +13,7 @@ class Game(object):
             for _ in range(self.size):
                 big_row.append(self._makeSmallBoard())
             self.board.append(big_row)
-        
+
         self.big_won["board"] = self._makeSmallBoard()
 
     def _makeSmallBoard(self):
@@ -42,7 +35,7 @@ class Game(object):
         try:
             big = int(big)
             small = int(small)
-            upper_boundary = self.size**2 
+            upper_boundary = self.size**2
             lower_boundary = 0
 
             big_row = big // self.size
@@ -54,53 +47,63 @@ class Game(object):
                 raise Exception("Out of bounds on big board")
             if small > upper_boundary or small < lower_boundary:
                 raise Exception("Out of bounds on small board")
-            if self._next_big(big % self.size, big // self.size):
+            if small not in self.big_won["tiles"] and self._next_big(big % self.size, big // self.size):
                 raise Exception("Wrong cell on Big Board")
             if big in self.big_won["tiles"]:
                 raise Exception("Cell already won")
-            return  big_row, big_col, small_row, small_col
+
+            return big_row, big_col, small_row, small_col
         except Exception as e:
             print(f"Illegal move: {e}")
             return []
 
     def make_move(self, big, small):
         """
-        Takes in an index, returns the altered board. If the index given is not
-        an integer it returns the unaltered board.
+        Takes in an index for both big and small board, returns a success, winner
         """
 
         if self.game_over:
-            return self.board
+            return False, self.big_won["winner"]
 
         # Get indexes and if valid input
-        ok = self._legal_move( big, small)
+        ok = self._legal_move(big, small)
 
         if not ok:
-            return []
+            return False, self.big_won["winner"]
 
         big_row, big_col, small_row, small_col = ok
 
         # Alter Board
         symbol = 'X' if self.x_turn else 'O'
         self.board[big_row][big_col][small_row][small_col] = symbol
-        self.next_big = [small_col, small_row]
+        if small in self.big_won["tiles"]:
+            self.next_big = []
+        else:
+            self.next_big = [small_col, small_row]
 
-        # Collect won matches TODO: Check if this works
+       # Collect won matches TODO: Check if this works
         if self.check_winner(self.board[big_row][big_col]):
             if self.x_turn:
-                self.big_won["board"][big_col][big_row] = "X"
+                self.big_won["board"][big_row][big_col] = "X"
             else:
-                self.big_won["board"][big_col][big_row] = "O"
+                self.big_won["board"][big_row][big_col] = "O"
 
             self.big_won["tiles"].append(big)
-            print(self.big_won["board"])
 
+        # Game over if winner or draw!
         if self.check_winner(self.big_won["board"]):
             self.game_over = True
-            return self.game_over
+            self.big_won["winner"] = "X" if self.x_turn else "O"
+            return True, self.big_won["winner"]
+
+        if self.move_counter == (self.size**2)**2:
+            self.game_over = True
+            self.big_won["winner"] = "D"
+            return True, self.big_won["winner"]
 
         self.x_turn = not self.x_turn
-        return True 
+        self.move_counter += 1
+        return True, self.big_won["winner"]
 
     def check_winner(self, grid):
         win = False
@@ -108,6 +111,17 @@ class Game(object):
         win |= self._vertical_win(grid)
         win |= self._diagonal_win(grid)
         return win
+
+    def reset(self, size=3):
+        self.size = size
+        self.big_won = {"board": [], "tiles": [], "winner": ""}
+        self._initBoard()
+        self.x_turn = True
+        self.game_over = False
+        self.move_counter = 0
+
+        # What cell next player does, if [] then any.
+        self.next_big = []  # [col, row]
 
     def _horizontal_win(self, grid):
         x_winner = "X"*self.size
@@ -146,10 +160,10 @@ class Game(object):
         x_counter = 0
         o_counter = 0
         # Check left diagonal by reversing range
-        for i in range(self.size)[::-1]:
-            if grid[i][i] == "X":
+        for i in range(self.size):
+            if grid[i][self.size - 1 - i] == "X":
                 x_counter += 1
-            if grid[i][i] == "O":
+            if grid[i][self.size - 1 - i] == "O":
                 o_counter += 1
             if x_counter == self.size or o_counter == self.size:
                 return True
@@ -159,24 +173,33 @@ class Game(object):
 if __name__ == "__main__":
     # debugging, X wins top left Cell
     game = Game()
-    print("Move 1: 0,0")
-    print(game.make_move(0, 0))
-    print("Move 2: 1,3")
-    print(game.make_move(0, 3))
-    print("Move 3: 3,3")
-    print(game.make_move(3, 3))
-    print("Move 4: 3,0")
-    print(game.make_move(3, 0))
-    print("Move 5: 0,1")
-    print(game.make_move(0, 1))
-    print("Move 6: 1,0")
-    print(game.make_move(1, 0))
-    print("Move 6: 0,2")
-    print(game.make_move(0, 2))
-    print("Move 6: 2,0")
-    print(game.make_move(2, 0))
-    print("Move 6: 0,2")
-    print(game.make_move(0, 4))
+
+    # test diagonal win
+    print("Checking diagonal")
+    board = [["X", "", ""], ["", "X", ""], ["", "", "X"]]
+    print(game._diagonal_win(board))
+    print("Checking inverse diagonal")
+    board = [["", "", "X"], ["", "X", ""], ["X", "", ""]]
+    print(game._diagonal_win(board))
+    # print("Move 1: 0,0")
+    # print(game.make_move(0, 0))
+    # game.reset()
+    # print("Move 2: 0,3")
+    # print(game.make_move(0, 3))
+    # print("Move 3: 3,3")
+    # print(game.make_move(3, 3))
+    # print("Move 4: 3,0")
+    # print(game.make_move(3, 0))
+    # print("Move 5: 0,1")
+    # print(game.make_move(0, 1))
+    # print("Move 6: 1,0")
+    # print(game.make_move(1, 0))
+    # print("Move 6: 0,2")
+    # print(game.make_move(0, 2))
+    # print("Move 6: 2,0")
+    # print(game.make_move(2, 0))
+    # print("Move 6: 0,2")
+    # print(game.make_move(0, 4))
 
     for row in game.board:
         print(row)
@@ -186,4 +209,3 @@ if __name__ == "__main__":
     # game.make_move(0, 1)
     # game.make_move(0, 1)
     # game.make_move(0, 1)
-
