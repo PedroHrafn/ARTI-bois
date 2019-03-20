@@ -38,8 +38,9 @@ class BigBoard extends Component {
   }
 
   move(big, small) {
+    console.log(big, small);
     // TODO: test this
-    fetch("http://localhost:5000/move", {
+    fetch("http://localhost:5000/board/move", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -63,16 +64,35 @@ class BigBoard extends Component {
         }
       });
   }
+
+  reset() {
+    fetch("http://localhost:5000/board/reset", {
+      method: "GET",
+      headers: {
+        Accept: "application/json"
+      }
+    })
+      .then(json => json.json())
+      .then(resp => {
+        this.setState({
+          ...resp
+        });
+      })
+      .catch(err => console.error(err));
+  }
+
   render() {
     const { fetched, board, winnerBoard } = this.state;
     let bigBoard = board.map((row, ri) => {
+      // console.log(ri);
       return (
         <div key={ri} className={styles["big-row"]}>
           {/* For each row in big board */}
           {row.map((smallBoard, i) => {
             // 3 for the size of the board
             let indexOfCell = 3 * ri + i;
-            if (!winnerBoard[i][indexOfCell]) {
+            if (!winnerBoard[ri][i]) {
+              // console.log(i);
               return (
                 <SmallBoard
                   key={i}
@@ -82,7 +102,11 @@ class BigBoard extends Component {
                 />
               );
             }
-            return <div> {winnerBoard[indexOfCell]} </div>;
+            return (
+              <div key={i} className={styles["big-win"]}>
+                {winnerBoard[ri][i]}
+              </div>
+            );
           })}
         </div>
       );
@@ -91,7 +115,14 @@ class BigBoard extends Component {
     if (!fetched) {
       return <CircularProgress />;
     }
-    return <div className={styles["container"]}> {bigBoard} </div>;
+    return (
+      <div className={styles["container"]}>
+        {bigBoard}
+        <div className={styles["reset-bar"]}>
+          <button onClick={() => this.reset()}>Reset Game</button>
+        </div>
+      </div>
+    );
   }
 }
 

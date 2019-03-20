@@ -1,16 +1,17 @@
 // React Components
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 // Our components
 import BigBoard from "./components/BigBoard/BigBoard";
 
 // CSS
-import './App.css';
+import styles from "./App.module.css";
 
 class App extends Component {
   render() {
     return (
-      <div className="container">
+      <div className={styles["container"]}>
+        <h2>Ultimate Tic Tac Toe</h2>
         <BigBoard />
       </div>
     );

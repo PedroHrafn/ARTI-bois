@@ -18,10 +18,10 @@ class SmallBoard extends Component {
                 className={styles["tile"]}
                 onClick={() => makeMove(bigIndex, indexOfTile)}
               >
-                {tile}{" "}
+                {tile}
               </div>
             );
-          })}{" "}
+          })}
         </div>
       );
     });
