@@ -70,14 +70,13 @@ class Game(object):
         """
 
         if self.game_over:
-            print("game over")
-            return False
+            return self.board
 
         # Get indexes and if valid input
         ok = self._legal_move( big, small)
 
         if not ok:
-            return ok
+            return []
 
         big_row, big_col, small_row, small_col = ok
 
