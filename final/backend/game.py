@@ -1,12 +1,11 @@
 from state import State
 
+
 class Game(object):
     size = 3
 
     def __init__(self):
-        big_won = {"board": [], "tiles": [], "winner": ""}
-        big_won["board"] = self._makeSmallBoard()
-        self.state = State(self._initBoard(), big_won, True, False, [])        
+        self.state = State(self._initBoard(), True, '', [], size)
 
     def _next_big(self, big_col, big_row):
         return self.state.next_big != [] and self.state.next_big != [big_col, big_row]
@@ -41,26 +40,18 @@ class Game(object):
             return []
 
     def _initBoard(self):
-        board = []
-        # For each row in big board
-        for _ in range(self.size):
-            big_row = []
-            # For each cell in row in big Board
-            for _ in range(self.size):
-                big_row.append(self._makeSmallBoard())
-            board.append(big_row)
-
+        board = [[self._makeSmallBoard() for _ in range(self.size)]
+                 for _ in range(self.size)]
         return board
 
     def _makeSmallBoard(self):
-        row = ["" for _ in range(self.size)]
-        small_board = []
-        # For each row in small board
-        for _ in range(self.size):
-            # slice for deep copy
-            small_board.append(row[:])
+        small_board = {}
+        small_board["board"] = [
+            ["" for _ in range(self.size)] for i in range(self.size)]
+        small_board["status"] = ''
+        small_board["count"] = 0
         return small_board
-        
+
     def _horizontal_win(self, grid):
         x_winner = "X"*self.size
         o_winner = "O"*self.size
@@ -117,51 +108,39 @@ class Game(object):
         win |= self._diagonal_win(grid)
         return win
 
-
-
     def make_move(self, big, small):
         """
         Takes in an index for both big and small board, returns a success, winner
         """
         state = self.state
-        if state.game_over:
-            return False, state.big_won["winner"]
+        if state.won:
+            return False, state.won
 
         # Get indexes and if valid input
-        ok = self._legal_move(big, small)
+        available_moves = state.availableMoves()
+        big_row = big // self.size
+        big_col = big % self.size
+        small_row = small // self.size
+        small_col = small % self.size
 
-        if not ok:
-            return False, state.big_won["winner"]
+        # could not work!! --- - - -
+        if not [big_row, big_col, small_row, small_col] in available_moves:
+            return False, state.won
 
-        big_row, big_col, small_row, small_col = ok
-
-        # Alter Board
-        symbol = 'X' if state.x_turn else 'O'
-        state.board[big_row][big_col][small_row][small_col] = symbol
-        if small in state.big_won["tiles"]:
-            state.next_big = []
-        else:
-            state.next_big = [small_col, small_row]
-
+        state.makeMove(big_row, big_col, small_row, small_col)
+        return True, state.won
        # Collect won matches TODO: Check if this works
-        if self.check_winner(state.board[big_row][big_col]):
-            if state.x_turn:
-                state.big_won["board"][big_row][big_col] = "X"
-            else:
-                state.big_won["board"][big_row][big_col] = "O"
-
-            state.big_won["tiles"].append(big)
 
         # Game over if winner or draw!
-        if self.check_winner(state.big_won["board"]):
+        """ if self.check_winner(state.big_won["board"]):
             state.game_over = True
             state.big_won["winner"] = "X" if state.x_turn else "O"
             return True, state.big_won["winner"]
 
-        #TODO: put D in big won when small board ends in draw
+        # TODO: put D in big won when small board ends in draw
 
         state.x_turn = not state.x_turn
-        return True, state.big_won["winner"]
+        return True, state.big_won["winner"] """
 
 
 if __name__ == "__main__":

@@ -1,36 +1,90 @@
 class State(object):
-    def __init__(self, board, big_won, x_turn, game_over, next_big):
+    def __init__(self, board, x_turn, won, next_big, size):
         # State variables
-        self.board = board
+        self.big_board = board
         self.x_turn = x_turn
-        self.game_over = game_over
         self.big_won = big_won
+        self.won = ''
+        self.size = size
 
         # What cell next player does, if [] then any.
-        self.next_big = next_big  # [col, row]
+        self.next_big = next_big  # [row, col]
 
-    def availableMoves(self, size):
+    def availableMoves(self):
         moves = []
         if self.next_big:
-            for col in range(size):
-                for row in range(size):
-                    if self.board[self.next_big[1]][self.next_big[0]][row][col] == '':
-                        moves.append([col, row])
+            for row in range(self.size):
+                for col in range(self.size):
+                    if self.big_board[self.next_big[0]][self.next_big[1]][row][col] == '':
+                        moves.append(
+                            [self.next_big[0], self.next_big[1], row, col])
         else:
-            for big_col in range(size):
-                for big_row in range(size):
-                    for col in range(size):
-                        for row in range(size):
-                            # If cell has not been won
-                            if self.big_won["board"][big_row][big_col] == '':
-                                if self.board[big_row][big_col][row][col] == '':
-                                    moves.append([col, row])
+            for brow, big_board_row in enumerate(self.big_board):
+                for bcol, small_board in enumerate(big_board_row):
+                    if not small_board["status"]:
+                        for row in range(self.size):
+                            for col in range(self.size):
+                                if not small_board["board"][row][col]:
+                                    moves.append([brow, bcol, row, col])
         return moves
 
-    def makeMove(self):
-        #TODO: implement
-        pass
+    def makeMove(self, big_row, big_col, small_row, small_col):
+        small_board = self.big_board[big_row][big_col]
+        small_board["count"] += 1
+        small_board["board"][small_row][small_col] = 'X' if self.x_turn else 'O'
+
+        if self.checkWinner(small_board["board"], small_row, small_col):
+            small_board["status"] = 'X' if self.x_turn else 'O'
+            big_board_status = self.big_to_small()
+
+            for print_row in big_board_status:
+                print(print_row)
+
+            if self.checkWinner(big_board_status, big_row, big_col):
+                self.won = 'X' if self.x_turn else 'O'
+                return
+        elif small_board["count"] == 9:
+            small_board["status"] = 'D'
+            # check if it is a draw
+
+        if self.big_board[small_row][small_col]["status"]:
+            self.next_big = []
+        else:
+            self.next_big = [small_row, small_col]
+        self.x_turn = not self.x_turn
 
     def undoMove(self):
         #TODO: implement
         pass
+
+    def checkWinner(self, board, row, col):
+        # check if it is row win
+        for i in range(self.size):
+            if board[row][i] != board[row][col]:
+                break
+        else:
+            return True
+        # check if it is col win
+        for i in range(self.size):
+            if board[i][col] != board[row][col]:
+                break
+        else:
+            return True
+        # check for \ diagonal win
+        if row == col:
+            for i in range(self.size):
+                if board[i][i] != board[row][col]:
+                    break
+            else:
+                return True
+        # check for / diagonal win
+        if self.size - row - 1 == col:
+            for i in range(self.size):
+                if board[self.size - i - 1][i] != board[row][col]:
+                    break
+            else:
+                return True
+        return False
+
+    def big_to_small(self):
+        return [[self.big_board[row][col]["status"] for row in self.size] for col in self.size]
