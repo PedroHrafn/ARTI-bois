@@ -18,6 +18,7 @@ class BigBoard extends Component {
       winnersBoard: [],
       fetched: false,
       nextBig: [],
+      xDoing: true,
     };
   }
 
@@ -59,7 +60,7 @@ class BigBoard extends Component {
       })
       .then(resp => {
         if (!resp.notOk) {
-          this.setState({ ...resp });
+          this.setState({ ...resp, xDoing: !this.state.xDoing });
         }
       });
   }
@@ -74,14 +75,14 @@ class BigBoard extends Component {
       .then(json => json.json())
       .then(resp => {
         this.setState({
-          ...resp
+          ...resp, xDoing: true
         });
       })
       .catch(err => console.error(err));
   }
 
   render() {
-    const { fetched, board, winnerBoard, nextBig } = this.state;
+    const { fetched, board, winnerBoard, nextBig, xDoing } = this.state;
     let bigBoard = board.map((row, ri) => {
       // console.log(ri);
       return (
@@ -91,17 +92,17 @@ class BigBoard extends Component {
             // 3 for the size of the board
             let indexOfCell = 3 * ri + i;
             var nextField = false;
-            if(nextBig[0] === i && nextBig[1] === ri) {nextField = true}
+            if (nextBig[0] === i && nextBig[1] === ri) { nextField = true }
             if (!winnerBoard[ri][i]) {
               // console.log(i);
               return (
-                <div key={i} style={ nextField || nextBig.length === 0? {border: '2px solid red'}: null  }>
-                <SmallBoard
-                  board={smallBoard}
-                  bigIndex={indexOfCell}
-                  makeMove={this.move.bind(this)}
-                  nextField={nextField}
-                />
+                <div key={i} style={nextField || nextBig.length === 0 ? { border: '2px solid red' } : null}>
+                  <SmallBoard
+                    board={smallBoard}
+                    bigIndex={indexOfCell}
+                    makeMove={this.move.bind(this)}
+                    nextField={nextField}
+                  />
                 </div>
               );
             }
@@ -120,6 +121,9 @@ class BigBoard extends Component {
     }
     return (
       <div className={styles["container"]}>
+        <h2>
+          {xDoing ? "X has turn" : "O has turn"}
+        </h2>
         {bigBoard}
         <div className={styles["reset-bar"]}>
           <button onClick={() => this.reset()}>Reset Game</button>
