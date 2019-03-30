@@ -13,7 +13,9 @@ curr_game = Game()
 def get_board():
     return jsonify({
         "board": curr_game.state.board,
-        "winnerBoard": curr_game.state.big_won["board"]})
+        "winnerBoard": curr_game.state.big_won["board"],
+        "nextBig": curr_game.state.next_big,
+        })
 
 
 @app.route("/board/move", methods=['POST'])

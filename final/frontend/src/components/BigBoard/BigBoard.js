@@ -39,7 +39,6 @@ class BigBoard extends Component {
   }
 
   move(big, small) {
-    console.log(big, small);
     // TODO: test this
     fetch("http://localhost:5000/board/move", {
       method: "POST",
@@ -60,7 +59,6 @@ class BigBoard extends Component {
       })
       .then(resp => {
         if (!resp.notOk) {
-          console.log(resp);
           this.setState({ ...resp });
         }
       });
