@@ -35,9 +35,10 @@ def make_move():
 
 @app.route("/board/reset", methods=['GET'])
 def reset_board():
-    curr_game.state.reset()
+    curr_game.reset()
     return jsonify({
         "board": curr_game.state.board,
         "winnerBoard": curr_game.state.big_won["board"],
+        "nextBig": curr_game.state.next_big,
         "winner": ""
     })
