@@ -6,7 +6,7 @@ class Game(object):
     def __init__(self):
         big_won = {"board": [], "tiles": [], "winner": ""}
         big_won["board"] = self._makeSmallBoard()
-        self.state = State(self._initBoard(), self.size, big_won, True, False, [])        
+        self.state = State(self._initBoard(), big_won, True, False, [])        
 
     def _next_big(self, big_col, big_row):
         return self.state.next_big != [] and self.state.next_big != [big_col, big_row]

@@ -1,5 +1,5 @@
 class State(object):
-    def __init__(self, board, size, big_won, x_turn, game_over, next_big):
+    def __init__(self, board, big_won, x_turn, game_over, next_big):
         # State variables
         self.board = board
         self.x_turn = x_turn
@@ -9,16 +9,22 @@ class State(object):
         # What cell next player does, if [] then any.
         self.next_big = next_big  # [col, row]
 
-    def availableMoves(self):
+    def availableMoves(self, size):
         moves = []
         if self.next_big:
-            for col in range(3):
-                for row in range(3):
-                    if self.board[self.next_big[0]][self.next_big[1]][col][row] == '':
+            for col in range(size):
+                for row in range(size):
+                    if self.board[self.next_big[1]][self.next_big[0]][row][col] == '':
                         moves.append([col, row])
         else:
-
-            pass
+            for big_col in range(size):
+                for big_row in range(size):
+                    for col in range(size):
+                        for row in range(size):
+                            # If cell has not been won
+                            if self.big_won["board"][big_row][big_col] == '':
+                                if self.board[big_row][big_col][row][col] == '':
+                                    moves.append([col, row])
         return moves
 
     def makeMove(self):

@@ -16,6 +16,7 @@ class Agent(object):
         #TODO: implement
         pass
     
-    def nextAction(self):
+    def nextAction(self, state):
         #TODO: implement
         pass
+        return (0, 0)

@@ -4,9 +4,12 @@ import json
 app = Flask(__name__)
 CORS(app)
 
+# Our classes
 from game import Game
+from agent import Agent
 
 curr_game = Game()
+agent = Agent()
 
 
 @app.route("/board", methods=['GET'])
@@ -24,6 +27,19 @@ def make_move():
 
     big = int(json_data["big"])
     small = int(json_data["small"])
+    success, winner = curr_game.make_move(big, small)
+    if not success:
+        return "Invalid input", 400
+    return jsonify({
+        "board": curr_game.state.board,
+        "winnerBoard": curr_game.state.big_won["board"],
+        "nextBig": curr_game.state.next_big,
+        "winner": winner
+    })
+
+@app.route("/agent/move", methods=['GET'])
+def agent_move():
+    big, small = agent.nextAction(curr_game.state)
     success, winner = curr_game.make_move(big, small)
     if not success:
         return "Invalid input", 400
