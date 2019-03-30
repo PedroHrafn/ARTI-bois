@@ -7,17 +7,24 @@ class State(object):
         self.big_won = big_won
 
         # What cell next player does, if [] then any.
-        self.next_big = next_big# [col, row]
-            
-        
+        self.next_big = next_big  # [col, row]
+
     def availableMoves(self):
-        #TODO: implement
-        pass
-    
+        moves = []
+        if self.next_big:
+            for col in range(3):
+                for row in range(3):
+                    if self.board[self.next_big[0]][self.next_big[1]][col][row] == '':
+                        moves.append([col, row])
+        else:
+
+            pass
+        return moves
+
     def makeMove(self):
         #TODO: implement
         pass
-        
+
     def undoMove(self):
         #TODO: implement
         pass
