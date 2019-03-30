@@ -1,4 +1,5 @@
 .DS_Store
+.vscode
 dist/
 **/*.pyc
 final/backend/__pycache__/server.cpython-37.pyc
