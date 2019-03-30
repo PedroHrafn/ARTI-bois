@@ -16,7 +16,8 @@ class BigBoard extends Component {
     this.state = {
       board: [],
       winnersBoard: [],
-      fetched: false
+      fetched: false,
+      nextBig: [],
     };
   }
 
@@ -82,7 +83,7 @@ class BigBoard extends Component {
   }
 
   render() {
-    const { fetched, board, winnerBoard } = this.state;
+    const { fetched, board, winnerBoard, nextBig } = this.state;
     let bigBoard = board.map((row, ri) => {
       // console.log(ri);
       return (
@@ -91,15 +92,19 @@ class BigBoard extends Component {
           {row.map((smallBoard, i) => {
             // 3 for the size of the board
             let indexOfCell = 3 * ri + i;
+            var nextField = false;
+            if(nextBig[0] === i && nextBig[1] === ri) {nextField = true}
             if (!winnerBoard[ri][i]) {
               // console.log(i);
               return (
+                <div key={i} style={ nextField ? {border: '2px solid red'}: null  }>
                 <SmallBoard
-                  key={i}
+                  
                   board={smallBoard}
                   bigIndex={indexOfCell}
                   makeMove={this.move.bind(this)}
                 />
+                </div>
               );
             }
             return (
