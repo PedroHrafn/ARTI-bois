@@ -4,7 +4,9 @@ class Game(object):
     size = 3
 
     def __init__(self):
-        self.state = State()        
+        big_won = {"board": [], "tiles": [], "winner": ""}
+        big_won["board"] = self._makeSmallBoard()
+        self.state = State(self._initBoard(), self.size, big_won, True, False, [])        
 
     def _next_big(self, big_col, big_row):
         return self.state.next_big != [] and self.state.next_big != [big_col, big_row]
@@ -38,14 +40,27 @@ class Game(object):
             print(f"Illegal move: {e}")
             return []
 
-    def check_winner(self, grid):
-        win = False
-        win |= self._horizontal_win(grid)
-        win |= self._vertical_win(grid)
-        win |= self._diagonal_win(grid)
-        return win
+    def _initBoard(self):
+        board = []
+        # For each row in big board
+        for _ in range(self.size):
+            big_row = []
+            # For each cell in row in big Board
+            for _ in range(self.size):
+                big_row.append(self._makeSmallBoard())
+            board.append(big_row)
 
-    
+        return board
+
+    def _makeSmallBoard(self):
+        row = ["" for _ in range(self.size)]
+        small_board = []
+        # For each row in small board
+        for _ in range(self.size):
+            # slice for deep copy
+            small_board.append(row[:])
+        return small_board
+        
     def _horizontal_win(self, grid):
         x_winner = "X"*self.size
         o_winner = "O"*self.size
@@ -92,6 +107,18 @@ class Game(object):
                 return True
         return False
 
+    def reset(self, size=3):
+        self.__init__()
+
+    def check_winner(self, grid):
+        win = False
+        win |= self._horizontal_win(grid)
+        win |= self._vertical_win(grid)
+        win |= self._diagonal_win(grid)
+        return win
+
+
+
     def make_move(self, big, small):
         """
         Takes in an index for both big and small board, returns a success, winner
@@ -131,14 +158,11 @@ class Game(object):
             state.big_won["winner"] = "X" if state.x_turn else "O"
             return True, state.big_won["winner"]
 
-        if state.move_counter == (state.size**2)**2:
-            state.game_over = True
-            state.big_won["winner"] = "D"
-            return True, state.big_won["winner"]
+        #TODO: put D in big won when small board ends in draw
 
         state.x_turn = not state.x_turn
-        state.move_counter += 1
         return True, state.big_won["winner"]
+
 
 if __name__ == "__main__":
     # debugging, X wins top left Cell
@@ -171,7 +195,7 @@ if __name__ == "__main__":
     # print("Move 6: 0,2")
     # print(game.make_move(0, 4))
 
-    for row in game.board:
+    for row in game.state.board:
         print(row)
     # game.make_move(0, 1)
     # game.make_move(0, 1)
