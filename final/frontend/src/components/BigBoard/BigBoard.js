@@ -97,12 +97,12 @@ class BigBoard extends Component {
             if (!winnerBoard[ri][i]) {
               // console.log(i);
               return (
-                <div key={i} style={ nextField ? {border: '2px solid red'}: null  }>
+                <div key={i} style={ nextField || nextBig.length === 0? {border: '2px solid red'}: null  }>
                 <SmallBoard
-                  
                   board={smallBoard}
                   bigIndex={indexOfCell}
                   makeMove={this.move.bind(this)}
+                  nextField={nextField}
                 />
                 </div>
               );
