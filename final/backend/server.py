@@ -12,9 +12,8 @@ curr_game = Game()
 @app.route("/board", methods=['GET'])
 def get_board():
     return jsonify({
-        "board": curr_game.board,
-        "winnerBoard": curr_game.big_won["board"],
-        "win": curr_game.game_over})
+        "board": curr_game.state.board,
+        "winnerBoard": curr_game.state.big_won["board"]})
 
 
 @app.route("/board/move", methods=['POST'])
@@ -27,17 +26,18 @@ def make_move():
     if not success:
         return "Invalid input", 400
     return jsonify({
-        "board": curr_game.board,
-        "winnerBoard": curr_game.big_won["board"],
+        "board": curr_game.state.board,
+        "winnerBoard": curr_game.state.big_won["board"],
+        "nextBig": curr_game.state.next_big,
         "winner": winner
     })
 
 
 @app.route("/board/reset", methods=['GET'])
 def reset_board():
-    curr_game.reset()
+    curr_game.state.reset()
     return jsonify({
-        "board": curr_game.board,
-        "winnerBoard": curr_game.big_won["board"],
+        "board": curr_game.state.board,
+        "winnerBoard": curr_game.state.big_won["board"],
         "winner": ""
     })
