@@ -49,9 +49,13 @@ class State(object):
             self.next_big = [small_row, small_col]
         self.x_turn = not self.x_turn
 
-    def undoMove(self):
-        #TODO: implement
-        pass
+    def undoMove(self, big_row, big_col, small_row, small_col, prev_next_big, won):
+        small_board = self.big_board[big_row][big_col]
+        small_board["count"] -= 1
+        small_board["board"][small_row][small_col] = ''
+        self.next_big = prev_next_big
+        self.x_turn = not self.x_turn
+        self.won = won
 
     def checkWinner(self, board, row, col):
         # check if it is row win
