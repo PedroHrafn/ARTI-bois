@@ -1,19 +1,20 @@
 // React Components
 import React, { Component } from "react";
 
+import { Container, Row, Col } from 'react-bootstrap';
+
 // Our components
 import BigBoard from "./components/BigBoard/BigBoard";
 
 // CSS
-import styles from "./App.module.css";
 
 class App extends Component {
   render() {
     return (
-      <div className={styles["container"]}>
-        <h2>Ultimate Tic Tac Toe</h2>
+      <Container fluid={true} style={{maxWidth: '800px'}}>
+        <Row><Col><h2 style={{textAlign: 'center'}}>Ultimate Tic Tac Toe</h2></Col></Row>
         <BigBoard />
-      </div>
+      </Container>
     );
   }
 }

@@ -3,12 +3,12 @@ import React, { Component } from "react";
 
 // Third Party Components
 import { CircularProgress } from "@material-ui/core";
+import { Row, Col, Button, Modal } from 'react-bootstrap';
 
 // Our components
 import SmallBoard from "../SmallBoard/SmallBoard";
 
 // CSS
-import styles from "./BigBoard.module.css";
 
 class BigBoard extends Component {
   constructor(props) {
@@ -19,6 +19,7 @@ class BigBoard extends Component {
       fetched: false,
       nextBig: [],
       xDoing: true,
+      showModal: false,
     };
   }
 
@@ -87,6 +88,7 @@ class BigBoard extends Component {
   }
 
   reset() {
+    this.setState({showModal: false})
     fetch("http://localhost:5000/board/reset", {
       method: "GET",
       headers: {
@@ -107,7 +109,7 @@ class BigBoard extends Component {
     let bigBoard = board.map((row, ri) => {
       // console.log(ri);
       return (
-        <div key={ri} className={styles["big-row"]}>
+        <Row key={ri}>
           {/* For each row in big board */}
           {row.map((smallBoard, i) => {
             // 3 for the size of the board
@@ -118,23 +120,23 @@ class BigBoard extends Component {
             if (!winnerBoard[ri][i]) {
               // console.log(i);
               return (
-                <div key={i} style={nextField || nextBig.length === 0 ? { border: '2px solid red' } : null}>
+                <Col key={i} style={nextField || nextBig.length === 0 ? { border: '2px solid red', padding: 0, margin: '8px' } : { padding: 0, margin: '10px' }}>
                   <SmallBoard
                     board={smallBoard}
                     bigIndex={indexOfCell}
                     makeMove={this.move.bind(this)}
                     nextField={nextField}
                   />
-                </div>
+                </Col>
               );
             }
             return (
-              <div key={i} className={styles["big-win"]}>
+              <Col>
                 {winnerBoard[ri][i]}
-              </div>
+              </Col>
             );
           })}
-        </div>
+        </Row>
       );
     });
 
@@ -142,14 +144,37 @@ class BigBoard extends Component {
       return <CircularProgress />;
     }
     return (
-      <div className={styles["container"]}>
-        <h2>
-          {xDoing ? "X has turn" : "O has turn"}
-        </h2>
+      <div>
+        <Modal
+          show={this.state.showModal}
+          onHide={() => this.reset()}
+          dialogClassName="modal-122w"
+          aria-labelledby="example-custom-modal-styling-title"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="example-custom-modal-styling-title">Game Over</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <h4>LEIK LOKIÐ</h4>
+            <p>Hver vann?</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={() => this.reset()}>Play Again</Button>
+          </Modal.Footer>
+        </Modal>
+        <Row>
+          <Col>
+            <h2 style={{ textAlign: 'center' }}>
+              {xDoing ? "X has turn" : "O has turn"}
+            </h2>
+          </Col>
+        </Row>
+
         {bigBoard}
-        <div className={styles["reset-bar"]}>
-          <button onClick={() => this.reset()}>Reset Game</button>
-        </div>
+
+        <Row className="justify-content-center">
+          <Col xs="auto"><Button onClick={() => this.reset()}>Reset Game</Button></Col>
+        </Row>
       </div>
     );
   }
