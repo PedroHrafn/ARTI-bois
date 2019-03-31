@@ -65,13 +65,13 @@ class Agent(object):
             # Get next state, state changes when calling makeMove
             prev_next_big = state.next_big
             state.makeMove(move)
-            v = abSearch(state., move, state.next_big, alpha, beta, h - 1, not maximize)
+            v = self.abSearch(state, move, state.next_big, alpha, beta, h - 1, not maximize)
             if maximize:
-                if v > bestValue:
+                if v > best_value:
                     best_value = v
                 if v >= beta:
                     return v
-                if > alpha:
+                if v > alpha:
                     alpha = v
             else:
                 if v < best_value:
