@@ -3,7 +3,6 @@ class State(object):
         # State variables
         self.big_board = board
         self.x_turn = x_turn
-        self.big_won = big_won
         self.won = ''
         self.size = size
 
@@ -15,7 +14,7 @@ class State(object):
         if self.next_big:
             for row in range(self.size):
                 for col in range(self.size):
-                    if self.big_board[self.next_big[0]][self.next_big[1]][row][col] == '':
+                    if self.big_board[self.next_big[0]][self.next_big[1]]["board"][row][col] == '':
                         moves.append(
                             [self.next_big[0], self.next_big[1], row, col])
         else:
@@ -36,9 +35,6 @@ class State(object):
         if self.checkWinner(small_board["board"], small_row, small_col):
             small_board["status"] = 'X' if self.x_turn else 'O'
             big_board_status = self.big_to_small()
-
-            for print_row in big_board_status:
-                print(print_row)
 
             if self.checkWinner(big_board_status, big_row, big_col):
                 self.won = 'X' if self.x_turn else 'O'
@@ -87,4 +83,7 @@ class State(object):
         return False
 
     def big_to_small(self):
-        return [[self.big_board[row][col]["status"] for row in self.size] for col in self.size]
+        return [[self.big_board[row][col]["status"] for col in range(self.size)] for row in range(self.size)]
+
+    def extract_board(self):
+        return [[self.big_board[row][col]["board"] for col in range(self.size)] for row in range(self.size)]

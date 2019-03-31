@@ -5,7 +5,7 @@ class Game(object):
     size = 3
 
     def __init__(self):
-        self.state = State(self._initBoard(), True, '', [], size)
+        self.state = State(self._initBoard(), True, '', [], self.size)
 
     def _next_big(self, big_col, big_row):
         return self.state.next_big != [] and self.state.next_big != [big_col, big_row]
@@ -52,61 +52,8 @@ class Game(object):
         small_board["count"] = 0
         return small_board
 
-    def _horizontal_win(self, grid):
-        x_winner = "X"*self.size
-        o_winner = "O"*self.size
-        for row in grid:
-            s_row = ''.join(row)
-            if s_row == x_winner or o_winner == s_row:
-                return True
-        return False
-
-    def _vertical_win(self, grid):
-        for i in range(self.size):
-            x_counter = 0
-            o_counter = 0
-            for j in range(self.size):
-                if grid[j][i] == "X":
-                    x_counter += 1
-                if grid[j][i] == "O":
-                    o_counter += 1
-            if x_counter == self.size or o_counter == self.size:
-                return True
-        return False
-
-    def _diagonal_win(self, grid):
-        x_counter = 0
-        o_counter = 0
-        # Check right diagonal
-        for i in range(self.size):
-            if grid[i][i] == "X":
-                x_counter += 1
-            if grid[i][i] == "O":
-                o_counter += 1
-            if x_counter == self.size or o_counter == self.size:
-                return True
-
-        x_counter = 0
-        o_counter = 0
-        # Check left diagonal by reversing range
-        for i in range(self.size):
-            if grid[i][self.size - 1 - i] == "X":
-                x_counter += 1
-            if grid[i][self.size - 1 - i] == "O":
-                o_counter += 1
-            if x_counter == self.size or o_counter == self.size:
-                return True
-        return False
-
     def reset(self, size=3):
         self.__init__()
-
-    def check_winner(self, grid):
-        win = False
-        win |= self._horizontal_win(grid)
-        win |= self._vertical_win(grid)
-        win |= self._diagonal_win(grid)
-        return win
 
     def make_move(self, big, small):
         """
@@ -129,7 +76,6 @@ class Game(object):
 
         state.makeMove(big_row, big_col, small_row, small_col)
         return True, state.won
-       # Collect won matches TODO: Check if this works
 
         # Game over if winner or draw!
         """ if self.check_winner(state.big_won["board"]):
@@ -141,44 +87,3 @@ class Game(object):
 
         state.x_turn = not state.x_turn
         return True, state.big_won["winner"] """
-
-
-if __name__ == "__main__":
-    # debugging, X wins top left Cell
-    game = Game()
-
-    # test diagonal win
-    print("Checking diagonal")
-    board = [["X", "", ""], ["", "X", ""], ["", "", "X"]]
-    print(game._diagonal_win(board))
-    print("Checking inverse diagonal")
-    board = [["", "", "X"], ["", "X", ""], ["X", "", ""]]
-    print(game._diagonal_win(board))
-    # print("Move 1: 0,0")
-    # print(game.make_move(0, 0))
-    # game.reset()
-    # print("Move 2: 0,3")
-    # print(game.make_move(0, 3))
-    # print("Move 3: 3,3")
-    # print(game.make_move(3, 3))
-    # print("Move 4: 3,0")
-    # print(game.make_move(3, 0))
-    # print("Move 5: 0,1")
-    # print(game.make_move(0, 1))
-    # print("Move 6: 1,0")
-    # print(game.make_move(1, 0))
-    # print("Move 6: 0,2")
-    # print(game.make_move(0, 2))
-    # print("Move 6: 2,0")
-    # print(game.make_move(2, 0))
-    # print("Move 6: 0,2")
-    # print(game.make_move(0, 4))
-
-    for row in game.state.board:
-        print(row)
-    # game.make_move(0, 1)
-    # game.make_move(0, 1)
-    # game.make_move(0, 1)
-    # game.make_move(0, 1)
-    # game.make_move(0, 1)
-    # game.make_move(0, 1)

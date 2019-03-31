@@ -15,8 +15,8 @@ agent = Agent()
 @app.route("/board", methods=['GET'])
 def get_board():
     return jsonify({
-        "board": curr_game.state.board,
-        "winnerBoard": curr_game.state.big_won["board"],
+        "board": curr_game.state.extract_board(),
+        "winnerBoard": curr_game.state.big_to_small(),
         "nextBig": curr_game.state.next_big,
         })
 
@@ -31,8 +31,8 @@ def make_move():
     if not success:
         return "Invalid input", 400
     return jsonify({
-        "board": curr_game.state.board,
-        "winnerBoard": curr_game.state.big_won["board"],
+        "board": curr_game.state.extract_board(),
+        "winnerBoard": curr_game.state.big_to_small(),
         "nextBig": curr_game.state.next_big,
         "winner": winner
     })
@@ -44,8 +44,8 @@ def agent_move():
     if not success:
         return "Invalid input", 400
     return jsonify({
-        "board": curr_game.state.board,
-        "winnerBoard": curr_game.state.big_won["board"],
+        "board": curr_game.state.extract_board(),
+        "winnerBoard": curr_game.state.big_to_small(),
         "nextBig": curr_game.state.next_big,
         "winner": winner
     })
@@ -55,8 +55,8 @@ def agent_move():
 def reset_board():
     curr_game.reset()
     return jsonify({
-        "board": curr_game.state.board,
-        "winnerBoard": curr_game.state.big_won["board"],
+        "board": curr_game.state.extract_board(),
+        "winnerBoard": curr_game.state.big_to_small(),
         "nextBig": curr_game.state.next_big,
         "winner": ""
     })
