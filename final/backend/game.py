@@ -10,35 +10,6 @@ class Game(object):
     def _next_big(self, big_col, big_row):
         return self.state.next_big != [] and self.state.next_big != [big_col, big_row]
 
-    def _legal_move(self, big, small):
-        """
-        Tests if move is legal, return Boolean, big_row, big_col, small_row, small_col
-        """
-        try:
-            big = int(big)
-            small = int(small)
-            upper_boundary = self.size**2
-            lower_boundary = 0
-
-            big_row = big // self.size
-            big_col = big % self.size
-            small_row = small // self.size
-            small_col = small % self.size
-
-            if big > upper_boundary or big < lower_boundary:
-                raise Exception("Out of bounds on big board")
-            if small > upper_boundary or small < lower_boundary:
-                raise Exception("Out of bounds on small board")
-            if small not in self.state.big_won["tiles"] and self._next_big(big % self.size, big // self.size):
-                raise Exception("Wrong cell on Big Board")
-            if big in self.state.big_won["tiles"]:
-                raise Exception("Cell already won")
-
-            return big_row, big_col, small_row, small_col
-        except Exception as e:
-            print(f"Illegal move: {e}")
-            return []
-
     def _initBoard(self):
         board = [[self._makeSmallBoard() for _ in range(self.size)]
                  for _ in range(self.size)]
@@ -60,7 +31,6 @@ class Game(object):
         Takes in an index for both big and small board, returns a success, winner
         """
         state = self.state
-        print(state)
         if state.won:
             return False, state.won
 

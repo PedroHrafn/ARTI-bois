@@ -89,8 +89,6 @@ class Agent(object):
                     return v
                 if v < beta:
                     beta = v
-            
-
 
         return best_value
 
