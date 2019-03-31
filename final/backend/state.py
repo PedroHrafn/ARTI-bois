@@ -5,6 +5,7 @@ class State(object):
         self.x_turn = x_turn
         self.won = ''
         self.size = size
+        self.value = 0
 
         # What cell next player does, if [] then any.
         self.next_big = next_big  # [row, col]

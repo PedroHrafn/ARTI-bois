@@ -1,4 +1,8 @@
+import time
+
 class Agent(object):
+    VALUE = 0
+    MOVE = 1
 
     def __init__(self):
         #TODO: initialize agent
@@ -17,6 +21,15 @@ class Agent(object):
         pass
     
     def nextAction(self, state):
-        #TODO: implement
-        pass
-        return (0, 0)
+        start = time.time()
+        h = 1
+        try:
+            while ret[VALUE]!= 100:
+                ret = self.abSearchRoot(h)
+                h += 1
+        except:
+            print(f"Stopped at height: {h}")
+            
+        returnret[MOVE] 
+    
+    def abSearchRoot(self, h):
