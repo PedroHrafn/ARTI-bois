@@ -92,3 +92,7 @@ class State(object):
 
     def extract_board(self):
         return [[self.big_board[row][col]["board"] for col in range(self.size)] for row in range(self.size)]
+    
+    def flatten_move(self, move):
+        big_row, big_col, small_row, small_col = move
+        return big_row*self.size + big_col, small_row*self.size + small_col

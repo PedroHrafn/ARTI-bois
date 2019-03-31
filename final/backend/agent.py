@@ -2,7 +2,7 @@ import time
 
 LOSS = -100
 WIN = 100
-DRAW = 25
+DRAW = 0
 
 class Agent(object):
     def __init__(self, playclock, state):
@@ -19,13 +19,13 @@ class Agent(object):
         move = []
         value = float("-inf")
         try:
-            while value != 100:
-                value, move = self.abSearchRoot(h, self.state)
+            while value != WIN:
+                value, move = self.abSearchRoot(h)
                 h += 1
         except:
             print(f"Stopped at height: {h}")
 
-        return move
+        return self.state.flatten_move(move)
     
     def abSearchRoot(self, h):
         alpha = float("-inf")
@@ -58,7 +58,7 @@ class Agent(object):
         # Check if max depth is reached
         if h == 0:
             # took in laststate and 
-            return self.evaluateState(self.state)
+            return self.evaluateState()
 
         # Apply alpha beta pruning
         best_value = float("-inf") if maximize else float("inf")
@@ -84,7 +84,6 @@ class Agent(object):
 
         return best_value
 
-    def evaluateState(self, state):
-        #TODO: find heuristic
-        return 25
+    def evaluateState(self):
+        return 
     

@@ -8,10 +8,10 @@ CORS(app)
 from game import Game
 from agent import Agent
 
-PLAYCLOCK = 5
+PLAYCLOCK = 10
 
 curr_game = Game()
-agent = Agent(PLAYCLOCK)
+agent = Agent(PLAYCLOCK, curr_game.state)
 
 
 @app.route("/board", methods=['GET'])
@@ -41,7 +41,7 @@ def make_move():
 
 @app.route("/agent/move", methods=['GET'])
 def agent_move():
-    big, small = agent.nextAction(curr_game.state)
+    big, small = agent.nextAction()
     success, winner = curr_game.make_move(big, small)
     if not success:
         return "Invalid input", 400
