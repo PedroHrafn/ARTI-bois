@@ -8,8 +8,10 @@ CORS(app)
 from game import Game
 from agent import Agent
 
+PLAYCLOCK = 5
+
 curr_game = Game()
-agent = Agent()
+agent = Agent(PLAYCLOCK)
 
 
 @app.route("/board", methods=['GET'])
