@@ -54,6 +54,7 @@ class State(object):
         small_board = self.big_board[big_row][big_col]
         small_board["count"] -= 1
         small_board["board"][small_row][small_col] = ''
+        small_board["status"] = ''
         self.next_big = prev_next_big
         self.x_turn = not self.x_turn
         self.won = won

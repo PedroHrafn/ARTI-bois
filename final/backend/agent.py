@@ -40,7 +40,6 @@ class Agent(object):
 
         for move in moves:
             value = self.abSearch(move, self.last_move, alpha, beta, h, True)
-            print(value)
             if value > max_value:
                 max_value = value
                 alpha = value
@@ -70,10 +69,12 @@ class Agent(object):
         best_value = float("-inf") if maximize else float("inf")
         for move in self.state.availableMoves():
             # Get next state, state changes when calling makeMove
+            won = self.state.won
             prev_next_big = self.state.next_big
             self.state.makeMove(move[0], move[1], move[2], move[3])
             v = self.abSearch(move, self.state.next_big,
                               alpha, beta, h - 1, not maximize)
+            self.state.undoMove(move[0], move[1], move[2], move[3], prev_next_big, won)
             if maximize:
                 if v > best_value:
                     best_value = v
@@ -88,6 +89,8 @@ class Agent(object):
                     return v
                 if v < beta:
                     beta = v
+            
+
 
         return best_value
 
