@@ -40,7 +40,6 @@ class BigBoard extends Component {
   }
 
   move(big, small) {
-    // TODO: test this
     fetch("http://localhost:5000/board/move", {
       method: "POST",
       headers: {
@@ -50,6 +49,28 @@ class BigBoard extends Component {
         small: small,
         big: big
       })
+    })
+      .then(res => {
+        if (res.status === 200) {
+          return res.json();
+        } else {
+          return { notOk: true, data: {} };
+        }
+      })
+      .then(resp => {
+        if (!resp.notOk) {
+          this.setState({ ...resp, xDoing: !this.state.xDoing });
+          this.agentMove()
+        }
+      });
+  }
+
+  agentMove() {
+    fetch("http://localhost:5000/agent/move", {
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      },
     })
       .then(res => {
         if (res.status === 200) {
@@ -92,7 +113,8 @@ class BigBoard extends Component {
             // 3 for the size of the board
             let indexOfCell = 3 * ri + i;
             var nextField = false;
-            if (nextBig[0] === i && nextBig[1] === ri) { nextField = true }
+            console.log(nextBig);
+            if (nextBig[1] === i && nextBig[0] === ri) { nextField = true }
             if (!winnerBoard[ri][i]) {
               // console.log(i);
               return (
