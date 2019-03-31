@@ -8,7 +8,7 @@ CORS(app)
 from game import Game
 from agent import Agent
 
-PLAYCLOCK = 10
+PLAYCLOCK = 5
 
 curr_game = Game()
 agent = Agent(PLAYCLOCK, curr_game.state)

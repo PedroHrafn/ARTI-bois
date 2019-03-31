@@ -24,19 +24,23 @@ class Agent(object):
                 value, move = self.abSearchRoot(h)
                 print(f"Testing height: {h}")
                 h += 1
-        except:
+        except Exception as e:
+            print(f"Exception: {e}")
             print(f"Stopped at height: {h}")
 
+        print(self.state.flatten_move(move))
         return self.state.flatten_move(move)
     
     def abSearchRoot(self, h):
         alpha = float("-inf")
         beta = float("inf")
         max_value = float("-inf")
-        best_move = []
+        moves = self.state.availableMoves()
+        best_move = moves[0]
 
-        for move in self.state.availableMoves():
+        for move in moves:
             value = self.abSearch(move, self.last_move, alpha, beta, h, True)
+            print(value)
             if value > max_value:
                 max_value = value
                 alpha = value
@@ -67,7 +71,7 @@ class Agent(object):
         for move in self.state.availableMoves():
             # Get next state, state changes when calling makeMove
             prev_next_big = self.state.next_big
-            self.state.makeMove(move)
+            self.state.makeMove(move[0], move[1], move[2], move[3])
             v = self.abSearch(move, self.state.next_big,
                               alpha, beta, h - 1, not maximize)
             if maximize:

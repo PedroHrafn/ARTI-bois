@@ -60,6 +60,7 @@ class Game(object):
         Takes in an index for both big and small board, returns a success, winner
         """
         state = self.state
+        print(state.won)
         if state.won:
             return False, state.won
 
@@ -72,6 +73,7 @@ class Game(object):
 
         # could not work!! --- - - -
         if not [big_row, big_col, small_row, small_col] in available_moves:
+            print("Failed")
             return False, state.won
 
         state.makeMove(big_row, big_col, small_row, small_col)
