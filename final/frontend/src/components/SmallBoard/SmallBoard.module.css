@@ -6,12 +6,22 @@
     width: 100%;
     height: 8vw;
     max-height: 81.78px;
-    font-size: 6vw;
+    font-size: 5vw;
 }
 
-.tile:hover {
+.nextTile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    width: 100%;
+    height: 8vw;
+    max-height: 81.78px;
+    font-size: 5vw; 
+}
+
+.nextTile:hover {
     background-color:rgb(93, 93, 206);
-    
 }
 
 .row {
