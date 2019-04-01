@@ -12,13 +12,14 @@ class Agent(object):
         self.won = []
         self.playclock = playclock
         self.state = state.copy_state()
+        self.max_score = 0
 
     def nextAction(self, state):
         self.state = state.copy_state()
         self.start = time.time()
         h = 4 # TODO: find better starting value for depth
-        import random
-        return self.state.flatten_move(random.choice(self.state.availableMoves()))
+        # import random
+        # return self.state.flatten_move(random.choice(self.state.availableMoves()))
         move = []
         value = float("-inf")
         try:
@@ -29,7 +30,7 @@ class Agent(object):
         except Exception as e:
             print(f"Exception: {e}")
         print(move)
-        print(f"AGENT MOVE: {self.state.flatten_move(move)}")
+        print(f"AGENT MOVE: {self.state.flatten_move(move)}, VALUE: {value}")
         return self.state.flatten_move(move)
     
     def abSearchRoot(self, h):
@@ -85,6 +86,7 @@ class Agent(object):
                     return v
                 if v > alpha:
                     alpha = v
+            else:
                 if v < best_value:
                     best_value = v
                 if v <= alpha:
@@ -102,4 +104,7 @@ class Agent(object):
                     score += 10
                 elif small_board["status"] != '' and small_board["status"] != 'D':
                     score -= 10
+        if self.max_score < score:
+            self.max_score = score
+            print(score)
         return score
