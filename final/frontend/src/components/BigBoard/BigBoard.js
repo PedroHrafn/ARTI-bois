@@ -9,6 +9,7 @@ import { Row, Col, Button, Modal } from 'react-bootstrap';
 import SmallBoard from "../SmallBoard/SmallBoard";
 
 // CSS
+import styles from "./BigBoard.module.css";
 
 class BigBoard extends Component {
   constructor(props) {
@@ -116,11 +117,13 @@ class BigBoard extends Component {
             let indexOfCell = 3 * ri + i;
             var nextField = false;
             console.log(nextBig);
-            if (nextBig[1] === i && nextBig[0] === ri) { nextField = true }
+            if ((nextBig[1] === i && nextBig[0] === ri) || nextBig.length === 0) { 
+              nextField = true 
+            }
             if (!winnerBoard[ri][i]) {
               // console.log(i);
               return (
-                <Col key={i} style={nextField || nextBig.length === 0 ? { border: '2px solid red', padding: 0, margin: '8px' } : { padding: 0, margin: '10px' }}>
+                <Col key={i} style={nextField ? { border: '2px solid red', padding: 0, margin: '8px' } : { padding: 0, margin: '10px' }}>
                   <SmallBoard
                     board={smallBoard}
                     bigIndex={indexOfCell}
@@ -131,7 +134,7 @@ class BigBoard extends Component {
               );
             }
             return (
-              <Col>
+              <Col className={styles["big-win"]}>
                 {winnerBoard[ri][i]}
               </Col>
             );

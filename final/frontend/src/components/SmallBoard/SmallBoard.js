@@ -6,7 +6,7 @@ import styles from "./SmallBoard.module.css";
 
 class SmallBoard extends Component {
   render() {
-    const { board, bigIndex, makeMove } = this.props;
+    const { board, bigIndex, makeMove, nextField } = this.props;
     let smallBoard = board.map((rows, ri) => {
       return (
         <div key={ri} className={styles["row"]}>
@@ -15,7 +15,7 @@ class SmallBoard extends Component {
             return (
               <div
                 key={i}
-                className={styles["tile"]}
+                className={nextField ? styles["nextTile"]: styles["tile"]}
                 onClick={() => makeMove(bigIndex, indexOfTile)}
               >
                 {tile}
