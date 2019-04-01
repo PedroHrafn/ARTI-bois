@@ -30,6 +30,7 @@ class State(object):
         return moves
 
     def makeMove(self, big_row, big_col, small_row, small_col):
+       
         small_board = self.big_board[big_row][big_col]
         small_board["count"] += 1
         small_board["board"][small_row][small_col] = 'X' if self.x_turn else 'O'
@@ -44,6 +45,22 @@ class State(object):
         elif small_board["count"] == 9:
             small_board["status"] = 'D'
             # check if it is a draw
+        if small_row == 1 and small_col == 1:
+            if self.x_turn:
+                small_board["score"] -= 4
+            else:
+                small_board["score"] += 4
+        elif small_row == 0 and small_col == 0 or small_row == 0 and small_col == 2 or small_row == 2 and small_col == 0 or small_row == 2 and small_col == 2:
+            if self.x_turn:
+                small_board["score"] -= 3
+            else:
+                small_board["score"] += 3
+        else:
+            if self.x_turn:
+                small_board["score"] -= 2
+            else:
+                small_board["score"] += 2
+        
 
         if self.big_board[small_row][small_col]["status"]:
             self.next_big = []
@@ -107,6 +124,7 @@ class State(object):
                 newSmallBoard = newBigBoard[big_board_row][big_board_col]
                 newSmallBoard["status"] = small_board["status"]
                 newSmallBoard["count"] = small_board["count"]
+                newSmallBoard["score"] = small_board["score"]
                 newSmallBoard["board"] = [[small_board["board"][row][col]
                                             for col in range(self.size)] for row in range(self.size)]
         return State(newBigBoard, self.x_turn, self.won, self.next_big[:], self.size)

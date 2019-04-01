@@ -17,7 +17,7 @@ class Agent(object):
     def nextAction(self, state):
         self.state = state.copy_state()
         self.start = time.time()
-        h = 4 # TODO: find better starting value for depth
+        h = 1 # TODO: find better starting value for depth
         # import random
         # return self.state.flatten_move(random.choice(self.state.availableMoves()))
         move = []
@@ -101,9 +101,11 @@ class Agent(object):
         for big_row in self.state.big_board:
             for small_board in big_row:
                 if small_board["status"] == self.symbol:
-                    score += 10
+                    score += 100
                 elif small_board["status"] != '' and small_board["status"] != 'D':
-                    score -= 10
+                    score -= 100
+                else:
+                    score += small_board["score"]
         if self.max_score < score:
             self.max_score = score
             print(score)
