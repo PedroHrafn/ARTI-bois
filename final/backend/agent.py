@@ -17,7 +17,7 @@ class Agent(object):
     def nextAction(self, state):
         self.state = state.copy_state()
         self.start = time.time()
-        h = 4 # TODO: find better starting value for depth
+        h = 1  # TODO: find better starting value for depth
         # import random
         # return self.state.flatten_move(random.choice(self.state.availableMoves()))
         move = []
@@ -32,7 +32,7 @@ class Agent(object):
         print(move)
         print(f"AGENT MOVE: {self.state.flatten_move(move)}, VALUE: {value}")
         return self.state.flatten_move(move)
-    
+
     def abSearchRoot(self, h):
         alpha = float("-inf")
         beta = float("inf")
@@ -44,7 +44,10 @@ class Agent(object):
         # print(f"absearchRPPT nextbig: {self.state.next_big}")
 
         for move in moves:
-            value = self.abSearch(alpha, beta, h, True, None)
+            copystate = self.state.copy_state()
+            self.state.makeMove(move[0], move[1], move[2], move[3])
+            value = self.abSearch(alpha, beta, h, False, None)
+            self.state.undoMove(copystate)
             if value > max_value:
                 max_value = value
                 alpha = value
@@ -68,7 +71,7 @@ class Agent(object):
 
         # Check if max depth is reached
         if h == 0:
-            # took in laststate and 
+            # took in laststate and
             return self.evaluateState()
 
         # Apply alpha beta pruning
