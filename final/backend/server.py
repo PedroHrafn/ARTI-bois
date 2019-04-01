@@ -8,7 +8,7 @@ CORS(app)
 from game import Game
 from agent import Agent
 
-PLAYCLOCK = 5
+PLAYCLOCK = 20 
 
 curr_game = Game()
 agent = Agent(PLAYCLOCK, curr_game.state)
@@ -25,6 +25,8 @@ def get_board():
 
 @app.route("/board/move", methods=['POST'])
 def make_move():
+    if not curr_game.state.x_turn:
+        return "Not your turn", 400
     json_data = json.loads(request.data)
 
     big = int(json_data["big"])
@@ -41,7 +43,7 @@ def make_move():
 
 @app.route("/agent/move", methods=['GET'])
 def agent_move():
-    big, small = agent.nextAction()
+    big, small = agent.nextAction(curr_game.state)
     success, winner = curr_game.make_move(big, small)
     if not success:
         return "Invalid input", 400

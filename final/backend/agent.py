@@ -9,26 +9,27 @@ class Agent(object):
     def __init__(self, playclock, state):
         self.start = time.time()  # Used for stopping the search when the time has run out
         self.symbol = "O"
-        self.last_move = []  # TODO: check if this is correctly initialized
         self.won = []
         self.playclock = playclock
-        self.state = state
+        self.state = state.copy_state()
 
-    def nextAction(self):
+    def nextAction(self, state):
+        self.state = state.copy_state()
         self.start = time.time()
-        h = 1  # TODO: find better starting value for depth
+        h = 4 # TODO: find better starting value for depth
+        import random
+        return self.state.flatten_move(random.choice(self.state.availableMoves()))
         move = []
         value = float("-inf")
         try:
-            while value != WIN:
+            while value != WIN and h < 8:
                 value, move = self.abSearchRoot(h)
                 print(f"Testing height: {h}")
                 h += 1
         except Exception as e:
             print(f"Exception: {e}")
-            print(f"Stopped at height: {h}")
-
-        print(self.state.flatten_move(move))
+        print(move)
+        print(f"AGENT MOVE: {self.state.flatten_move(move)}")
         return self.state.flatten_move(move)
     
     def abSearchRoot(self, h):
@@ -37,9 +38,12 @@ class Agent(object):
         max_value = float("-inf")
         moves = self.state.availableMoves()
         best_move = moves[0]
+        # print(f"BESSST_MOVE: {best_move}")
+        # print(f"absearchRPPT moves: {moves}")
+        # print(f"absearchRPPT nextbig: {self.state.next_big}")
 
         for move in moves:
-            value = self.abSearch(move, self.last_move, alpha, beta, h, True)
+            value = self.abSearch(alpha, beta, h, True, None)
             if value > max_value:
                 max_value = value
                 alpha = value
@@ -47,9 +51,10 @@ class Agent(object):
 
         return max_value, best_move
 
-    def abSearch(self, move, prev_next_big, alpha, beta, h, maximize):
+    def abSearch(self, alpha, beta, h, maximize, last_state):
         # Check if time has ran out
         if time.time() - self.start > self.playclock:
+            print(f"Stopped at height: {h}")
             raise Exception()
 
         # Check if we have reached a terminal state
@@ -69,12 +74,10 @@ class Agent(object):
         best_value = float("-inf") if maximize else float("inf")
         for move in self.state.availableMoves():
             # Get next state, state changes when calling makeMove
-            won = self.state.won
-            prev_next_big = self.state.next_big
+            old_state = self.state.copy_state()
             self.state.makeMove(move[0], move[1], move[2], move[3])
-            v = self.abSearch(move, self.state.next_big,
-                              alpha, beta, h - 1, not maximize)
-            self.state.undoMove(move[0], move[1], move[2], move[3], prev_next_big, won)
+            v = self.abSearch(alpha, beta, h - 1, not maximize, last_state)
+            self.state.undoMove(old_state)
             if maximize:
                 if v > best_value:
                     best_value = v
@@ -82,7 +85,6 @@ class Agent(object):
                     return v
                 if v > alpha:
                     alpha = v
-            else:
                 if v < best_value:
                     best_value = v
                 if v <= alpha:

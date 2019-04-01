@@ -13,6 +13,7 @@ class State(object):
     def availableMoves(self):
         moves = []
         if self.next_big:
+            # print(f"nextbig: {self.next_big}")
             for row in range(self.size):
                 for col in range(self.size):
                     if self.big_board[self.next_big[0]][self.next_big[1]]["board"][row][col] == '':
@@ -50,14 +51,12 @@ class State(object):
             self.next_big = [small_row, small_col]
         self.x_turn = not self.x_turn
 
-    def undoMove(self, big_row, big_col, small_row, small_col, prev_next_big, won):
-        small_board = self.big_board[big_row][big_col]
-        small_board["count"] -= 1
-        small_board["board"][small_row][small_col] = ''
-        small_board["status"] = ''
-        self.next_big = prev_next_big
-        self.x_turn = not self.x_turn
-        self.won = won
+    def undoMove(self, state):
+        self.big_board = state.big_board
+        self.next_big = state.next_big
+        self.x_turn = state.x_turn
+        self.won = state.won
+        self.value = state.value
 
     def checkWinner(self, board, row, col):
         # check if it is row win
@@ -97,3 +96,27 @@ class State(object):
     def flatten_move(self, move):
         big_row, big_col, small_row, small_col = move
         return big_row*self.size + big_col, small_row*self.size + small_col
+    
+    def copy_state(self):
+        newBigBoard = [['' for _ in range(self.size)]
+                        for _ in range(self.size)]
+        for big_board_row in range(self.size):
+            for big_board_col in range(self.size):
+                small_board = self.big_board[big_board_row][big_board_col]
+                newBigBoard[big_board_row][big_board_col] = {}
+                newSmallBoard = newBigBoard[big_board_row][big_board_col]
+                newSmallBoard["status"] = small_board["status"]
+                newSmallBoard["count"] = small_board["count"]
+                newSmallBoard["board"] = [[small_board["board"][row][col]
+                                            for col in range(self.size)] for row in range(self.size)]
+        return State(newBigBoard, self.x_turn, self.won, self.next_big[:], self.size)
+
+    def print_board(self):
+        print(f"nest big: {self.next_big}")
+        for big_row in self.big_board:
+            for small_game in big_row:
+                print(f"status: {small_game['status']}")
+                for small_row in small_game["board"]:
+                    print(small_row)
+                print("\n")
+            print("\n\n")
