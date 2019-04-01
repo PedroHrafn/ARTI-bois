@@ -1,7 +1,7 @@
 import time
 
-LOSS = -100
-WIN = 100
+LOSS = -1000
+WIN = 1000
 DRAW = 0
 
 
@@ -32,7 +32,7 @@ class Agent(object):
         print(move)
         print(f"AGENT MOVE: {self.state.flatten_move(move)}, VALUE: {value}")
         return self.state.flatten_move(move)
-    
+
     def abSearchRoot(self, h):
         alpha = float("-inf")
         beta = float("inf")
@@ -44,7 +44,10 @@ class Agent(object):
         # print(f"absearchRPPT nextbig: {self.state.next_big}")
 
         for move in moves:
-            value = self.abSearch(alpha, beta, h, True, None)
+            copystate = self.state.copy_state()
+            self.state.makeMove(move[0], move[1], move[2], move[3])
+            value = self.abSearch(alpha, beta, h, False, None)
+            self.state.undoMove(copystate)
             if value > max_value:
                 max_value = value
                 alpha = value
@@ -68,7 +71,7 @@ class Agent(object):
 
         # Check if max depth is reached
         if h == 0:
-            # took in laststate and 
+            # took in laststate and
             return self.evaluateState()
 
         # Apply alpha beta pruning
@@ -98,14 +101,26 @@ class Agent(object):
 
     def evaluateState(self):
         score = 0
+        row = 0
+        col = 0
         for big_row in self.state.big_board:
             for small_board in big_row:
                 if small_board["status"] == self.symbol:
-                    score += 100
+                    if row == 1 and col == 1:
+                        score += 50
+                    elif row == 0 and col == 0 or row == 0 and col == 2 or row == 2 and col == 0 or row == 2 and col == 2:
+                        score += 30
+                    else:
+                        score += 25
                 elif small_board["status"] != '' and small_board["status"] != 'D':
-                    score -= 100
-                else:
-                    score += small_board["score"]
+                    if row == 1 and col == 1:
+                        score -= 50
+                    elif row == 0 and col == 0 or row == 0 and col == 2 or row == 2 and col == 0 or row == 2 and col == 2:
+                        score -= 30
+                    else:
+                        score -= 25
+                col += 1
+            row += 1
         if self.max_score < score:
             self.max_score = score
             print(score)

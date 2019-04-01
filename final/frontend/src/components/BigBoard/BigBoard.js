@@ -17,6 +17,7 @@ class BigBoard extends Component {
     this.state = {
       board: [],
       winnersBoard: [],
+      winner: "",
       fetched: false,
       nextBig: [],
       xDoing: true,
@@ -60,9 +61,14 @@ class BigBoard extends Component {
         }
       })
       .then(resp => {
+        console.log(resp.winner)
         if (!resp.notOk) {
           this.setState({ ...resp, xDoing: !this.state.xDoing });
-          this.agentMove()
+          this.agentMove();
+          if (resp.winner === 'X' || resp.winner === 'O' || resp.winner === 'D') {
+            console.log(resp.winner);
+            this.setState({ showModal: true })
+          }
         }
       });
   }
@@ -82,14 +88,19 @@ class BigBoard extends Component {
         }
       })
       .then(resp => {
+        console.log(resp.winner)
         if (!resp.notOk) {
           this.setState({ ...resp, xDoing: !this.state.xDoing });
+          if (resp.winner === 'X' || resp.winner === 'O' || resp.winner === 'D') {
+            console.log(resp.winner);
+            this.setState({ showModal: true })
+          }
         }
       });
   }
 
   reset() {
-    this.setState({showModal: false})
+    this.setState({ showModal: false })
     fetch("http://localhost:5000/board/reset", {
       method: "GET",
       headers: {
@@ -106,7 +117,7 @@ class BigBoard extends Component {
   }
 
   render() {
-    const { fetched, board, winnerBoard, nextBig, xDoing } = this.state;
+    const { fetched, board, winnerBoard, nextBig, xDoing, showModal, winner } = this.state;
     let bigBoard = board.map((row, ri) => {
       // console.log(ri);
       return (
@@ -117,8 +128,8 @@ class BigBoard extends Component {
             let indexOfCell = 3 * ri + i;
             var nextField = false;
             console.log(nextBig);
-            if ((nextBig[1] === i && nextBig[0] === ri) || nextBig.length === 0) { 
-              nextField = true 
+            if ((nextBig[1] === i && nextBig[0] === ri) || nextBig.length === 0) {
+              nextField = true
             }
             if (!winnerBoard[ri][i]) {
               // console.log(i);
@@ -134,7 +145,7 @@ class BigBoard extends Component {
               );
             }
             return (
-              <Col className={styles["big-win"]}>
+              <Col key={i} className={styles["big-win"]}>
                 {winnerBoard[ri][i]}
               </Col>
             );
@@ -149,7 +160,7 @@ class BigBoard extends Component {
     return (
       <div>
         <Modal
-          show={this.state.showModal}
+          show={showModal}
           onHide={() => this.reset()}
           dialogClassName="modal-122w"
           aria-labelledby="example-custom-modal-styling-title"
@@ -158,8 +169,7 @@ class BigBoard extends Component {
             <Modal.Title id="example-custom-modal-styling-title">Game Over</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <h4>LEIK LOKIÐ</h4>
-            <p>Hver vann?</p>
+            <h4>Winner is {winner}</h4>
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={() => this.reset()}>Play Again</Button>

@@ -45,6 +45,7 @@ class State(object):
         elif small_board["count"] == 9:
             small_board["status"] = 'D'
             # check if it is a draw
+            """
         if small_row == 1 and small_col == 1:
             if self.x_turn:
                 small_board["score"] -= 4
@@ -60,7 +61,7 @@ class State(object):
                 small_board["score"] -= 2
             else:
                 small_board["score"] += 2
-        
+        """
 
         if self.big_board[small_row][small_col]["status"]:
             self.next_big = []
@@ -109,14 +110,14 @@ class State(object):
 
     def extract_board(self):
         return [[self.big_board[row][col]["board"] for col in range(self.size)] for row in range(self.size)]
-    
+
     def flatten_move(self, move):
         big_row, big_col, small_row, small_col = move
         return big_row*self.size + big_col, small_row*self.size + small_col
-    
+
     def copy_state(self):
         newBigBoard = [['' for _ in range(self.size)]
-                        for _ in range(self.size)]
+                       for _ in range(self.size)]
         for big_board_row in range(self.size):
             for big_board_col in range(self.size):
                 small_board = self.big_board[big_board_row][big_board_col]
@@ -126,15 +127,21 @@ class State(object):
                 newSmallBoard["count"] = small_board["count"]
                 newSmallBoard["score"] = small_board["score"]
                 newSmallBoard["board"] = [[small_board["board"][row][col]
-                                            for col in range(self.size)] for row in range(self.size)]
+                                           for col in range(self.size)] for row in range(self.size)]
         return State(newBigBoard, self.x_turn, self.won, self.next_big[:], self.size)
 
     def print_board(self):
-        print(f"nest big: {self.next_big}")
-        for big_row in self.big_board:
+        print(f"next big: {self.next_big}")
+        for bigrow in range(3):
+            for smallrow in range(3):
+                print(
+                    f"{ [x if x else ' ' for x in self.big_board[bigrow][0]['board'][smallrow]]} | {[x if x else ' ' for x in self.big_board[bigrow][1]['board'][smallrow]]} | {[x if x else ' ' for x in self.big_board[bigrow][2]['board'][smallrow]]}|")
+                print("                |                 |                |")
+            print("----------------------------------------------------")
+        """ for big_row in self.big_board:
             for small_game in big_row:
                 print(f"status: {small_game['status']}")
                 for small_row in small_game["board"]:
                     print(small_row)
                 print("\n")
-            print("\n\n")
+            print("\n\n") """

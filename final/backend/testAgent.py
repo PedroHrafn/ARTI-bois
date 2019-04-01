@@ -10,8 +10,7 @@ game = Game()
 agent = Agent(playclock, game.state)
 
 while not game.state.won:
-    for row in game.state.big_board:
-        print(row)
+    game.state.print_board()
     available_moves = game.state.availableMoves()
     print(len(available_moves))
     big_row, big_col, small_row, small_col = random.choice(available_moves)
