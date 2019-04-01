@@ -1,5 +1,5 @@
 import time
-
+import random
 LOSS = -100
 WIN = 100
 DRAW = 0
@@ -23,7 +23,7 @@ class Agent(object):
         move = []
         value = float("-inf")
         try:
-            while value != WIN and h < 8:
+            while value != WIN:
                 value, move = self.abSearchRoot(h)
                 print(f"Testing height: {h}")
                 h += 1
@@ -42,7 +42,8 @@ class Agent(object):
         # print(f"BESSST_MOVE: {best_move}")
         # print(f"absearchRPPT moves: {moves}")
         # print(f"absearchRPPT nextbig: {self.state.next_big}")
-
+        # random.shuffle(moves)
+        self.sortMoves(moves)
         for move in moves:
             copystate = self.state.copy_state()
             self.state.makeMove(move[0], move[1], move[2], move[3])
@@ -76,7 +77,9 @@ class Agent(object):
 
         # Apply alpha beta pruning
         best_value = float("-inf") if maximize else float("inf")
-        for move in self.state.availableMoves():
+        moves = self.state.availableMoves()
+        self.sortMoves(moves)
+        for move in moves:
             # Get next state, state changes when calling makeMove
             old_state = self.state.copy_state()
             self.state.makeMove(move[0], move[1], move[2], move[3])
@@ -98,6 +101,46 @@ class Agent(object):
                     beta = v
 
         return best_value
+
+    def sortMoves(self, moves):
+        moves.sort(key=lambda x: self.moveValue(x), reverse=True)
+
+    def moveValue(self, move):
+        smallboard = self.state.big_board[move[0]][move[1]]["board"]
+        board = [['' for _ in range(3)] for _ in range(3)]
+        for row in range(3):
+            for col in range(3):
+                board[row][col] = smallboard[row][col]
+        row = move[2]
+        col = move[3]
+        ourMark = 'X' if self.state.x_turn else 'O'
+        opponentMark = 'O' if self.state.x_turn else 'X'
+        board[row][col] = 'X' if self.state.x_turn else 'O'
+        ourOneOff = False
+        opponentOneOff = False
+        lines = []
+        lines.append([board[0][0], board[0][1], board[0][2]])
+        lines.append([board[1][0], board[1][1], board[1][2]])
+        lines.append([board[2][0], board[2][1], board[2][2]])
+        lines.append([board[0][0], board[1][1], board[2][2]])
+        lines.append([board[0][0], board[1][0], board[2][0]])
+        lines.append([board[0][1], board[1][1], board[2][1]])
+        lines.append([board[0][2], board[1][2], board[2][2]])
+        lines.append([board[0][2], board[1][1], board[2][0]])
+        for line in lines:
+            ourMarkCount = line.count(ourMark)
+            opponentMarkCount = line.count(opponentMark)
+            if ourMarkCount == 2 and opponentMarkCount == 0:
+                ourOneOff = True
+            elif opponentMarkCount == 2 and ourMarkCount == 0:
+                opponentOneOff = True
+            if ourOneOff and opponentOneOff:
+                return 0
+        if ourOneOff:
+            return 1
+        if opponentOneOff:
+            return -1
+        return 0
 
     def evaluateState(self):
         score = 0
