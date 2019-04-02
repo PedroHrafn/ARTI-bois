@@ -25,12 +25,13 @@ class Agent(object):
         try:
             while value != WIN:
                 value, move = self.abSearchRoot(h)
-                print(f"Testing height: {h}")
+                #print(f"Testing height: {h}")
                 h += 1
         except Exception as e:
-            print(f"Exception: {e}")
-        print(move)
-        print(f"AGENT MOVE: {self.state.flatten_move(move)}, VALUE: {value}")
+            #print(f"Exception: {e}")
+            pass
+        # print(move)
+        #print(f"AGENT MOVE: {self.state.flatten_move(move)}, VALUE: {value}")
         return self.state.flatten_move(move)
 
     def abSearchRoot(self, h):
@@ -59,7 +60,7 @@ class Agent(object):
     def abSearch(self, alpha, beta, h, maximize, last_state):
         # Check if time has ran out
         if time.time() - self.start > self.playclock:
-            print(f"Stopped at height: {h}")
+            #print(f"Stopped at height: {h}")
             raise Exception()
 
         # Check if we have reached a terminal state
@@ -168,6 +169,8 @@ class Agent(object):
 
     def evaluateState(self):
         score = 0
+        row = 0
+        col = 0
         for big_row in self.state.big_board:
             for small_board in big_row:
                 if small_board["status"] == self.symbol:
@@ -176,7 +179,14 @@ class Agent(object):
                     score += self.smallBoardValue(small_board["board"])
                 elif small_board["status"] != 'D':
                     score -= 10
+                    """if row == 1 and col == 1:
+                        score -= 50
+                    elif row == 0 and col == 0 or row == 0 and col == 2 or row == 2 and col == 0 or row == 2 and col == 2:
+                        score -= 30
+                    else:
+                        score -= 25"""
+                col += 1
+            row += 1
         if self.max_score < score:
             self.max_score = score
-            print(score)
         return score

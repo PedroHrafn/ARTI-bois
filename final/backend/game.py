@@ -20,6 +20,7 @@ class Game(object):
         small_board["board"] = [
             ["" for _ in range(self.size)] for i in range(self.size)]
         small_board["status"] = ''
+        small_board["score"] = 0
         small_board["count"] = 0
         return small_board
 
