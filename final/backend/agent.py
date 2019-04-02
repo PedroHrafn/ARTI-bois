@@ -1,40 +1,59 @@
 import time
 import random
+import math
 LOSS = -100
 WIN = 100
 DRAW = 0
+DEBUG = False
 
 
 class Agent(object):
-    def __init__(self, playclock, state):
+    def __init__(self, playclock, state, symbol):
         self.start = time.time()  # Used for stopping the search when the time runs out
-        self.symbol = "O"
+        self.symbol = symbol
         self.won = []
         self.playclock = playclock
         self.state = state.copy_state()
-        self.max_score = 0
+        self.node_expanded = 0
+        self.max_depth = float("-inf")
+        self.avg_iter_deep = 0
+        self.avg_iter_deep_cnt = 0
+        self.iteration_avg = 0
+        self.iteration_avg_cnt = 0
 
     def nextAction(self, state):
         self.state = state.copy_state()
         copystate = self.state.copy_state()
         self.start = time.time()
-        h = 3  # TODO: find better starting value for depth
-        # import random
-        # return self.state.flatten_move(random.choice(self.state.availableMoves()))
-        move = []
+        h = 3  
         value = float("-inf")
         try:
             while value != WIN:
                 value, move = self.abSearchRoot(h)
-                #print(f"Testing height: {h}")
+                if DEBUG:
+                    print(f"Testing height: {h}")
                 h += 1
-        except Exception as e:
-            #print(f"Exception: {e}")
-            pass
-        self.state.undoMove(copystate)
+                time_passed = time.time() - self.start
 
-        # print(move)
-        #print(f"AGENT MOVE: {self.state.flatten_move(move)}, VALUE: {value}")
+                #Measurements
+                self.iteration_avg_cnt += 1
+                length = self.iteration_avg_cnt
+                self.iteration_avg = (length*self.iteration_avg+ time_passed)/length 
+
+        except Exception as e:
+            if DEBUG:
+                print(f"Exception: {e}")
+
+        # Measurements
+        self.max_depth = max([h, self.max_depth])
+        time_passed = time.time() - self.start
+        self.avg_iter_deep_cnt += 1
+        length = self.avg_iter_deep_cnt
+        self.avg_iter_deep = (length*self.avg_iter_deep + time_passed)/length 
+
+        self.state.undoMove(copystate)
+        if DEBUG:
+            print(f"AGENT MOVE: {self.state.flatten_move(move)}, VALUE: {value}")
         return self.state.flatten_move(move)
 
     def abSearchRoot(self, h):
@@ -43,9 +62,8 @@ class Agent(object):
         max_value = float("-inf")
         moves = self.state.availableMoves()
         best_move = moves[0]
-        # print(f"BESSST_MOVE: {best_move}")
-        # print(f"absearchRPPT moves: {moves}")
-        # print(f"absearchRPPT nextbig: {self.state.next_big}")
+        # Either if we want to shuffle or sort moves to be unpredictable
+        # Something we tried but worsened the performance of the agent
         # random.shuffle(moves)
         # self.sortMoves(moves)
         for move in moves:
@@ -61,9 +79,13 @@ class Agent(object):
         return max_value, best_move
 
     def abSearch(self, alpha, beta, h, maximize, last_state):
+        # Keep track of nodes expanded        
+        self.node_expanded += 1
+
         # Check if time has ran out
         if time.time() - self.start > self.playclock:
-            #print(f"Stopped at height: {h}")
+            if DEBUG:
+                print(f"Stopped at height: {h}")
             raise Exception()
 
         # Check if we have reached a terminal state
@@ -162,8 +184,6 @@ class Agent(object):
                     score += self.smallBoardValue(small_board["board"])
                 elif small_board["status"] != 'D':
                     score -= 10
-        if self.max_score < score:
-            self.max_score = score
         return score
 
     # Returns evaluated value for a sub-board
@@ -193,3 +213,9 @@ class Agent(object):
             elif opponentMarkCount == 2 and ourMarkCount == 0:
                 opponentOneOff += 1
         return ourOneOff - opponentOneOff
+
+    def printTestResults(self):
+        print(f"Total nodes expanded: {self.node_expanded}")
+        print(f"Max depth: {self.max_depth}")
+        print(f"Average time of Iterative Deepening iteration: {self.iteration_avg:.3}s")
+        print(f"Average time of Iterative Deepening: {self.avg_iter_deep:.3}s")

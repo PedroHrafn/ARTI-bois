@@ -123,10 +123,4 @@ class State(object):
                     f"{ [x if x else ' ' for x in self.big_board[bigrow][0]['board'][smallrow]]} | {[x if x else ' ' for x in self.big_board[bigrow][1]['board'][smallrow]]} | {[x if x else ' ' for x in self.big_board[bigrow][2]['board'][smallrow]]}|")
                 print("                |                 |                |")
             print("----------------------------------------------------")
-        """ for big_row in self.big_board:
-            for small_game in big_row:
-                print(f"status: {small_game['status']}")
-                for small_row in small_game["board"]:
-                    print(small_row)
-                print("\n")
-            print("\n\n") """
+
