@@ -1,10 +1,11 @@
 from game import Game
 from agent import Agent
-import random, time
+import random
+import time
 
 random.seed(time.time())
 
-playclock = 360
+playclock = 4
 
 game = Game()
 agent = Agent(playclock, game.state)
@@ -19,3 +20,4 @@ while not game.state.won:
     game.make_move(big, small)
     bigA, smallA = agent.nextAction(game.state)
     game.make_move(bigA, smallA)
+    game.state.print_board()

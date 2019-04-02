@@ -169,7 +169,7 @@ class BigBoard extends Component {
             <Modal.Title id="example-custom-modal-styling-title">Game Over</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <h4>Winner is {winner}</h4>
+            <h4>{winner === 'D' ? 'Draw' : 'Winner is' + winner}</h4>
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={() => this.reset()}>Play Again</Button>
@@ -177,9 +177,12 @@ class BigBoard extends Component {
         </Modal>
         <Row>
           <Col>
-            <h2 style={{ textAlign: 'center' }}>
+            <h4 style={{ textAlign: 'center' }}>
               {xDoing ? "X has turn" : "O has turn"}
-            </h2>
+            </h4>
+            <p style={{ textAlign: 'center' }}>
+              {!xDoing ? "Waiting for skynet to process next move" : "Your move"}
+            </p>
           </Col>
         </Row>
 
