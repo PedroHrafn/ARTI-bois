@@ -35,27 +35,17 @@ class Game(object):
         if state.won:
             return False, state.won
 
-        # Get indexes and if valid input
-        available_moves = state.availableMoves()
+        # Convert indexes from 1D to 2D
         big_row = big // self.size
         big_col = big % self.size
         small_row = small // self.size
         small_col = small % self.size
 
-        # could not work!! --- - - -
+        # return False if move was not legal
+        available_moves = state.availableMoves()
         if not [big_row, big_col, small_row, small_col] in available_moves:
             return False, state.won
 
+        # make the move
         state.makeMove(big_row, big_col, small_row, small_col)
         return True, state.won
-
-        # Game over if winner or draw!
-        """ if self.check_winner(state.big_won["board"]):
-            state.game_over = True
-            state.big_won["winner"] = "X" if state.x_turn else "O"
-            return True, state.big_won["winner"]
-
-        # TODO: put D in big won when small board ends in draw
-
-        state.x_turn = not state.x_turn
-        return True, state.big_won["winner"] """

@@ -7,7 +7,7 @@ DRAW = 0
 
 class Agent(object):
     def __init__(self, playclock, state):
-        self.start = time.time()  # Used for stopping the search when the time has run out
+        self.start = time.time()  # Used for stopping the search when the time runs out
         self.symbol = "O"
         self.won = []
         self.playclock = playclock
@@ -16,6 +16,7 @@ class Agent(object):
 
     def nextAction(self, state):
         self.state = state.copy_state()
+        copystate = self.state.copy_state()
         self.start = time.time()
         h = 3  # TODO: find better starting value for depth
         # import random
@@ -30,6 +31,8 @@ class Agent(object):
         except Exception as e:
             #print(f"Exception: {e}")
             pass
+        self.state.undoMove(copystate)
+
         # print(move)
         #print(f"AGENT MOVE: {self.state.flatten_move(move)}, VALUE: {value}")
         return self.state.flatten_move(move)
@@ -71,9 +74,8 @@ class Agent(object):
         elif self.state.won:
             return LOSS
 
-        # Check if max depth is reached
+        # If max depth is reached we return the evaluation of the state
         if h == 0:
-            # took in laststate and
             return self.evaluateState()
 
         # Apply alpha beta pruning
@@ -103,33 +105,11 @@ class Agent(object):
 
         return best_value
 
+    # This function takes in a list of moves and sorts them by value
     def sortMoves(self, moves):
         moves.sort(key=lambda x: self.moveValue(x), reverse=True)
 
-    def smallBoardValue(self, board):
-        ourMark = self.symbol
-        opponentMark = 'O' if ourMark == 'X' else 'X'
-        ourOneOff = 0
-        opponentOneOff = 0
-        lines = []
-        lines.append([board[0][0], board[0][1], board[0][2]])
-        lines.append([board[1][0], board[1][1], board[1][2]])
-        lines.append([board[2][0], board[2][1], board[2][2]])
-        lines.append([board[0][0], board[1][1], board[2][2]])
-        lines.append([board[0][0], board[1][0], board[2][0]])
-        lines.append([board[0][1], board[1][1], board[2][1]])
-        lines.append([board[0][2], board[1][2], board[2][2]])
-        lines.append([board[0][2], board[1][1], board[2][0]])
-
-        for line in lines:
-            ourMarkCount = line.count(ourMark)
-            opponentMarkCount = line.count(opponentMark)
-            if ourMarkCount == 2 and opponentMarkCount == 0:
-                ourOneOff += 1
-            elif opponentMarkCount == 2 and ourMarkCount == 0:
-                opponentOneOff += 1
-        return ourOneOff - opponentOneOff
-
+    # This function is for sorting moves. Not used.
     def moveValue(self, move):
         smallboard = self.state.big_board[move[0]][move[1]]["board"]
         board = [['' for _ in range(3)] for _ in range(3)]
@@ -168,9 +148,12 @@ class Agent(object):
         return 0
 
     def evaluateState(self):
+        """ 
+        A won sub-board gives 10 points, if a sub-board is still in
+        progress a point will be given for each empty cell that would 
+        make the player win the sub-board by adding it's symbol to it
+        """
         score = 0
-        row = 0
-        col = 0
         for big_row in self.state.big_board:
             for small_board in big_row:
                 if small_board["status"] == self.symbol:
@@ -179,14 +162,34 @@ class Agent(object):
                     score += self.smallBoardValue(small_board["board"])
                 elif small_board["status"] != 'D':
                     score -= 10
-                    """if row == 1 and col == 1:
-                        score -= 50
-                    elif row == 0 and col == 0 or row == 0 and col == 2 or row == 2 and col == 0 or row == 2 and col == 2:
-                        score -= 30
-                    else:
-                        score -= 25"""
-                col += 1
-            row += 1
         if self.max_score < score:
             self.max_score = score
         return score
+
+    # Returns evaluated value for a sub-board
+    def smallBoardValue(self, board):
+        ourMark = self.symbol
+        opponentMark = 'O' if ourMark == 'X' else 'X'
+        ourOneOff = 0
+        opponentOneOff = 0
+        lines = []
+        # horizontal lines
+        lines.append([board[0][0], board[0][1], board[0][2]])
+        lines.append([board[1][0], board[1][1], board[1][2]])
+        lines.append([board[2][0], board[2][1], board[2][2]])
+        # diagonal lines
+        lines.append([board[0][0], board[1][1], board[2][2]])
+        lines.append([board[0][2], board[1][1], board[2][0]])
+        # vertical lines
+        lines.append([board[0][0], board[1][0], board[2][0]])
+        lines.append([board[0][1], board[1][1], board[2][1]])
+        lines.append([board[0][2], board[1][2], board[2][2]])
+
+        for line in lines:
+            ourMarkCount = line.count(ourMark)
+            opponentMarkCount = line.count(opponentMark)
+            if ourMarkCount == 2 and opponentMarkCount == 0:
+                ourOneOff += 1
+            elif opponentMarkCount == 2 and ourMarkCount == 0:
+                opponentOneOff += 1
+        return ourOneOff - opponentOneOff

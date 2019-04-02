@@ -1,19 +1,21 @@
 class State(object):
     def __init__(self, board, x_turn, won, next_big, size):
         # State variables
+
+        # big_board[row][col] = a dictionary with data for a sub-board
         self.big_board = board
         self.x_turn = x_turn
+        # won is empty string while state is not terminal, 'D' for draw
         self.won = ''
         self.size = size
-        self.value = 0
-
-        # What cell next player does, if [] then any.
+        # What sub-board next player does, if empty then any
         self.next_big = next_big  # [row, col]
 
+    # returns all legal moves from a state
     def availableMoves(self):
         moves = []
+        # if next_big is not empty the move has to be within that sub-board
         if self.next_big:
-            # print(f"nextbig: {self.next_big}")
             for row in range(self.size):
                 for col in range(self.size):
                     if self.big_board[self.next_big[0]][self.next_big[1]]["board"][row][col] == '':
@@ -29,6 +31,8 @@ class State(object):
                                     moves.append([brow, bcol, row, col])
         return moves
 
+    # executes a move and checks if the status of the sub-board needs to be changed
+    # also checks if the game has reached a terminal state after the move
     def makeMove(self, big_row, big_col, small_row, small_col):
 
         small_board = self.big_board[big_row][big_col]
@@ -44,24 +48,6 @@ class State(object):
                 return
         elif small_board["count"] == 9:
             small_board["status"] = 'D'
-            # check if it is a draw
-            """
-        if small_row == 1 and small_col == 1:
-            if self.x_turn:
-                small_board["score"] -= 4
-            else:
-                small_board["score"] += 4
-        elif small_row == 0 and small_col == 0 or small_row == 0 and small_col == 2 or small_row == 2 and small_col == 0 or small_row == 2 and small_col == 2:
-            if self.x_turn:
-                small_board["score"] -= 3
-            else:
-                small_board["score"] += 3
-        else:
-            if self.x_turn:
-                small_board["score"] -= 2
-            else:
-                small_board["score"] += 2
-        """
 
         if self.big_board[small_row][small_col]["status"]:
             self.next_big = []
@@ -74,7 +60,6 @@ class State(object):
         self.next_big = state.next_big
         self.x_turn = state.x_turn
         self.won = state.won
-        self.value = state.value
 
     def checkWinner(self, board, row, col):
         # check if it is row win

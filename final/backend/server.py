@@ -8,7 +8,7 @@ CORS(app)
 from game import Game
 from agent import Agent
 
-PLAYCLOCK = 8
+PLAYCLOCK = 3
 
 curr_game = Game()
 agent = Agent(PLAYCLOCK, curr_game.state)
@@ -46,7 +46,6 @@ def make_move():
 def agent_move():
     big, small = agent.nextAction(curr_game.state)
     success, winner = curr_game.make_move(big, small)
-    print(f"LALALALALA CURRENT BOARD SCORE: {agent.evaluateState()}")
     if not success:
         return "Invalid input", 400
     return jsonify({
