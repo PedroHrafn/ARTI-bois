@@ -25,12 +25,13 @@ class Agent(object):
         try:
             while value != WIN:
                 value, move = self.abSearchRoot(h)
-                print(f"Testing height: {h}")
+                #print(f"Testing height: {h}")
                 h += 1
         except Exception as e:
-            print(f"Exception: {e}")
-        print(move)
-        print(f"AGENT MOVE: {self.state.flatten_move(move)}, VALUE: {value}")
+            #print(f"Exception: {e}")
+            pass
+        #print(move)
+        #print(f"AGENT MOVE: {self.state.flatten_move(move)}, VALUE: {value}")
         return self.state.flatten_move(move)
 
     def abSearchRoot(self, h):
@@ -59,7 +60,7 @@ class Agent(object):
     def abSearch(self, alpha, beta, h, maximize, last_state):
         # Check if time has ran out
         if time.time() - self.start > self.playclock:
-            print(f"Stopped at height: {h}")
+            #print(f"Stopped at height: {h}")
             raise Exception()
 
         # Check if we have reached a terminal state
@@ -168,5 +169,4 @@ class Agent(object):
             row += 1
         if self.max_score < score:
             self.max_score = score
-            print(score)
         return score

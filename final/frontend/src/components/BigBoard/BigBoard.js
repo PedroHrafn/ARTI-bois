@@ -169,7 +169,7 @@ class BigBoard extends Component {
             <Modal.Title id="example-custom-modal-styling-title">Game Over</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <h4>{winner === 'D' ? 'Draw' : 'Winner is' + winner}</h4>
+            <h4>{winner === 'D' ? 'Draw' : 'Winner is ' + winner}</h4>
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={() => this.reset()}>Play Again</Button>
