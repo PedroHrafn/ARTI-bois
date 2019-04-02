@@ -17,7 +17,7 @@ class Agent(object):
     def nextAction(self, state):
         self.state = state.copy_state()
         self.start = time.time()
-        h = 1  # TODO: find better starting value for depth
+        h = 3  # TODO: find better starting value for depth
         # import random
         # return self.state.flatten_move(random.choice(self.state.availableMoves()))
         move = []
@@ -78,7 +78,7 @@ class Agent(object):
         # Apply alpha beta pruning
         best_value = float("-inf") if maximize else float("inf")
         moves = self.state.availableMoves()
-        self.sortMoves(moves)
+        # self.sortMoves(moves)
         for move in moves:
             # Get next state, state changes when calling makeMove
             old_state = self.state.copy_state()
@@ -105,6 +105,30 @@ class Agent(object):
     def sortMoves(self, moves):
         moves.sort(key=lambda x: self.moveValue(x), reverse=True)
 
+    def smallBoardValue(self, board):
+        ourMark = self.symbol
+        opponentMark = 'O' if ourMark == 'X' else 'X'
+        ourOneOff = 0
+        opponentOneOff = 0
+        lines = []
+        lines.append([board[0][0], board[0][1], board[0][2]])
+        lines.append([board[1][0], board[1][1], board[1][2]])
+        lines.append([board[2][0], board[2][1], board[2][2]])
+        lines.append([board[0][0], board[1][1], board[2][2]])
+        lines.append([board[0][0], board[1][0], board[2][0]])
+        lines.append([board[0][1], board[1][1], board[2][1]])
+        lines.append([board[0][2], board[1][2], board[2][2]])
+        lines.append([board[0][2], board[1][1], board[2][0]])
+
+        for line in lines:
+            ourMarkCount = line.count(ourMark)
+            opponentMarkCount = line.count(opponentMark)
+            if ourMarkCount == 2 and opponentMarkCount == 0:
+                ourOneOff += 1
+            elif opponentMarkCount == 2 and ourMarkCount == 0:
+                opponentOneOff += 1
+        return ourOneOff - opponentOneOff
+
     def moveValue(self, move):
         smallboard = self.state.big_board[move[0]][move[1]]["board"]
         board = [['' for _ in range(3)] for _ in range(3)]
@@ -113,11 +137,11 @@ class Agent(object):
                 board[row][col] = smallboard[row][col]
         row = move[2]
         col = move[3]
-        ourMark = 'X' if self.state.x_turn else 'O'
-        opponentMark = 'O' if self.state.x_turn else 'X'
+        ourMark = self.symbol
+        opponentMark = 'O' if ourMark == 'X' else 'X'
         board[row][col] = 'X' if self.state.x_turn else 'O'
-        ourOneOff = False
-        opponentOneOff = False
+        ourOneOff = 0
+        opponentOneOff = 0
         lines = []
         lines.append([board[0][0], board[0][1], board[0][2]])
         lines.append([board[1][0], board[1][1], board[1][2]])
@@ -148,7 +172,9 @@ class Agent(object):
             for small_board in big_row:
                 if small_board["status"] == self.symbol:
                     score += 10
-                elif small_board["status"] != '' and small_board["status"] != 'D':
+                elif small_board["status"] == '':
+                    score += self.smallBoardValue(small_board["board"])
+                elif small_board["status"] != 'D':
                     score -= 10
         if self.max_score < score:
             self.max_score = score
