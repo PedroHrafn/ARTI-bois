@@ -44,7 +44,7 @@ class Agent(object):
         # print(f"absearchRPPT moves: {moves}")
         # print(f"absearchRPPT nextbig: {self.state.next_big}")
         # random.shuffle(moves)
-        self.sortMoves(moves)
+        # self.sortMoves(moves)
         for move in moves:
             copystate = self.state.copy_state()
             self.state.makeMove(move[0], move[1], move[2], move[3])
