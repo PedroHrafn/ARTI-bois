@@ -219,3 +219,11 @@ class Agent(object):
         print(f"Max depth: {self.max_depth}")
         print(f"Average time of Iterative Deepening iteration: {self.iteration_avg:.3}s")
         print(f"Average time of Iterative Deepening: {self.avg_iter_deep:.3}s")
+    
+    def reset_test(self):
+        self.node_expanded = 0
+        self.max_depth = float("-inf")
+        self.iteration_avg = 0
+        self.iteration_avg_cnt = 0
+        self.avg_iter_deep = 0
+        self.avg_iter_deep_cnt = 0
