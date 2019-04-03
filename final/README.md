@@ -34,6 +34,16 @@ yarn install
 yarn start
 ```
 
+## Tests
+
+To run the tests simply run the following command in the backend directory
+
+```bash
+python testAgent.py
+```
+
+This command test the agent against a random agent as well as an instance of the agent itself.
+
 ## Note
 
 This should get the system up and running, if not please contact us through alexmargunn@gmail.com

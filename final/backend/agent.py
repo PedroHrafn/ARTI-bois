@@ -18,8 +18,6 @@ class Agent(object):
         self.max_depth = float("-inf")
         self.avg_iter_deep = 0
         self.avg_iter_deep_cnt = 0
-        self.iteration_avg = 0
-        self.iteration_avg_cnt = 0
 
     def nextAction(self, state):
         self.state = state.copy_state()
@@ -33,13 +31,6 @@ class Agent(object):
                 if DEBUG:
                     print(f"Testing height: {h}")
                 h += 1
-                time_passed = time.time() - self.start
-
-                #Measurements
-                self.iteration_avg_cnt += 1
-                length = self.iteration_avg_cnt
-                self.iteration_avg = (length*self.iteration_avg+ time_passed)/length 
-
         except Exception as e:
             if DEBUG:
                 print(f"Exception: {e}")
@@ -61,6 +52,8 @@ class Agent(object):
         beta = float("inf")
         max_value = float("-inf")
         moves = self.state.availableMoves()
+        if len(moves) == 1 or len(moves) == 0:
+            self.printTestResults()
         best_move = moves[0]
         # Either if we want to shuffle or sort moves to be unpredictable
         # Something we tried but worsened the performance of the agent
@@ -217,7 +210,6 @@ class Agent(object):
     def printTestResults(self):
         print(f"Total nodes expanded: {self.node_expanded}")
         print(f"Max depth: {self.max_depth}")
-        print(f"Average time of Iterative Deepening iteration: {self.iteration_avg:.3}s")
         print(f"Average time of Iterative Deepening: {self.avg_iter_deep:.3}s")
     
     def reset_test(self):

@@ -6,6 +6,7 @@ class Game(object):
 
     def __init__(self):
         self.state = State(self._initBoard(), True, '', [], self.size)
+        self.moves_made = 0
 
     def _next_big(self, big_col, big_row):
         return self.state.next_big != [] and self.state.next_big != [big_col, big_row]
@@ -48,4 +49,8 @@ class Game(object):
 
         # make the move
         state.makeMove(big_row, big_col, small_row, small_col)
+        self.moves_made += 1
+        if self.moves_made == 81:
+            state.won = "D"
+
         return True, state.won

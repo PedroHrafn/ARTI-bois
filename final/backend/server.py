@@ -34,6 +34,8 @@ def make_move():
     success, winner = curr_game.make_move(big, small)
     if not success:
         return "Invalid input", 400
+    if winner:
+        agent.printTestResults()
     return jsonify({
         "board": curr_game.state.extract_board(),
         "winnerBoard": curr_game.state.big_to_small(),
